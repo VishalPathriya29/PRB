@@ -16,17 +16,16 @@ const validationCheck = async (value: any) => {
 
 // ===========================================================================
 
+/** AUTH VALIDATIONS */
+
 export const registrationValidation = async (req: Request, res: Response, next: NextFunction) => {
     const schema = Joi.object({
-        name: Joi.string().trim().min(3).max(70).trim().required(),
+        name: Joi.string().trim().min(3).max(70).allow("", null),
         email: Joi.string().email().max(80).required(),
         password: Joi.string().min(3).max(30).required(),
-        username: Joi.string().trim().min(2).max(50).required(),
-        country: Joi.number().integer(),
-        phone: Joi.string().trim().min(8).max(20).trim().required(),
-        country_name: Joi.string().trim().allow(''),
-        dial_code: Joi.string().required(),
-        fcmToken: Joi.string().trim().required(),
+        fcm_token: Joi.string().trim().required(),
+        device_id: Joi.string().allow("", null),
+        device_type: Joi.string().allow("", null),
     });
 
     const value = schema.validate(req.body);
@@ -40,3 +39,41 @@ export const registrationValidation = async (req: Request, res: Response, next: 
 
 // ===========================================================================
 // ===========================================================================
+
+export const loginValidation = async (req: Request,res: Response,next: NextFunction) => {
+    const schema = Joi.object({
+        email: Joi.string().email().max(80).required(),
+        password: Joi.string().min(3).max(30).required(),
+        fcm_token: Joi.string().trim().required(),
+        device_id: Joi.string().allow("", null),
+        device_type: Joi.string().allow("", null),
+    });
+  
+    const value = schema.validate(req.body);
+  
+    if (value.error) {
+        const errMsg = await validationCheck(value);
+        return await apiResponse.errorMessage(res,400, errMsg);
+    }
+    next();
+};
+
+// ===========================================================================
+// ===========================================================================
+
+/** USERS VALIDATIONS */
+export const updateProfileValidation = async (req: Request, res: Response, next: NextFunction) => {
+    const schema = Joi.object({
+        name: Joi.string().trim().min(3).max(70).required(),
+        phone: Joi.string().min(10).max(15).allow("", null),
+        image: Joi.string().trim().allow("", null),
+    });
+
+    const value = schema.validate(req.body);
+
+    if (value.error) {
+        const errMsg = await validationCheck(value);
+        return await apiResponse.validationErrorWithData(res, errMsg);
+    }
+    next();
+}
