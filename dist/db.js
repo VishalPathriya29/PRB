@@ -23,7 +23,7 @@ else {
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
         // port: process.env.DB_PORT,
-        // connectTimeout: 10000,
+        connectTimeout: 10000,
     };
 }
 const pool = mysql2_1.default.createPool({

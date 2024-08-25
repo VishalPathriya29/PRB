@@ -6,7 +6,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import fs from 'fs';
 import apiRouter from "./apis/index.route";
-import { rateLimiterUsingThirdParty } from './middleware/rateLimiter';
+// import { rateLimiterUsingThirdParty } from './middleware/rateLimiter';
 
 export default (app: Express) => {
     app.use(express.json());
@@ -20,7 +20,8 @@ export default (app: Express) => {
         stream: fs.createWriteStream(__dirname+ '/access.log', {flags: 'a'})
     }));
 
-    app.use('/api', rateLimiterUsingThirdParty, apiRouter);
+    // app.use('/api', rateLimiterUsingThirdParty, apiRouter);
+    app.use('/api', apiRouter);
     app.use('/', (req, res) => {
         res.status(200).json('OK');
     });

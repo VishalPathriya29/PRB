@@ -10,7 +10,7 @@ const helmet_1 = __importDefault(require("helmet"));
 const morgan_1 = __importDefault(require("morgan"));
 const fs_1 = __importDefault(require("fs"));
 const index_route_1 = __importDefault(require("./apis/index.route"));
-const rateLimiter_1 = require("./middleware/rateLimiter");
+// import { rateLimiterUsingThirdParty } from './middleware/rateLimiter';
 exports.default = (app) => {
     app.use(express_1.default.json());
     app.use(express_1.default.urlencoded({ extended: true, limit: '50mb' }));
@@ -21,7 +21,8 @@ exports.default = (app) => {
     app.use((0, morgan_1.default)('common', {
         stream: fs_1.default.createWriteStream(__dirname + '/access.log', { flags: 'a' })
     }));
-    app.use('/api', rateLimiter_1.rateLimiterUsingThirdParty, index_route_1.default);
+    // app.use('/api', rateLimiterUsingThirdParty, apiRouter);
+    app.use('/api', index_route_1.default);
     app.use('/', (req, res) => {
         res.status(200).json('OK');
     });
