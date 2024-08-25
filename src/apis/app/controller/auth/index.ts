@@ -2,8 +2,8 @@ import {Router} from "express";
 
 import * as authController from './auth';
 
-import {authenticatingToken} from '../../middleware/authorization';
-import * as validation from '../../middleware/validation';
+import {authenticatingToken} from '../../../../middleware/authorization';
+import * as validation from '../../../../middleware/validation';
 
 const authRouter = Router();
 

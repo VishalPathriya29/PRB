@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import pool from "../../db";
-import * as apiResponse from '../../helper/response';
-import * as utility from '../../helper/utility';
+import pool from "../../../../db";
+import * as apiResponse from '../../../../helper/response';
+import * as utility from '../../../../helper/utility';
 
 
 export const profile = async (req: Request, res: Response) => {

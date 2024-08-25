@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import pool from "../../db";
+import pool from "../../../../db";
 import bcrypt from 'bcryptjs';
-import * as apiResponse from '../../helper/response';
-import * as utility from '../../helper/utility';
+import * as apiResponse from '../../../../helper/response';
+import * as utility from '../../../../helper/utility';
 
 export const register =async (req:Request, res:Response) => {
     try {

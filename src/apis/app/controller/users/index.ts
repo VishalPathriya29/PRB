@@ -2,8 +2,8 @@ import {Router} from "express";
 
 import * as profileController from './profile';
 
-import {authenticatingToken} from '../../middleware/authorization';
-import * as validation from '../../middleware/validation';
+import {authenticatingToken} from '../../../../middleware/authorization';
+import * as validation from '../../../../middleware/validation';
 
 const userRouter = Router();
 

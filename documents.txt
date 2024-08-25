@@ -3,13 +3,62 @@ CREATE TABLE `users` (
     `name` VARCHAR(55) NULL DEFAULT NULL , 
     `email` VARCHAR(55) NOT NULL , 
     `phone` VARCHAR(25) NULL DEFAULT NULL,
-    `image` VARCHAR(255) NULL DEFAULT NULL,
+    `image` VARCHAR(255) NULL DEFAULT NULL
     `password` VARCHAR(255) NOT NULL , 
     `fcm_token` TEXT NOT NULL , 
     `device_id` VARCHAR(55) NULL DEFAULT NULL,
-    `fcm_token`, ADD `device_type` VARCHAR(55) NULL DEFAULT NULL,
+    `device_type` VARCHAR(55) NULL DEFAULT NULL,
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , 
     `deleted_at` DATETIME NULL DEFAULT NULL , 
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
+
+CREATE TABLE `membership_plans` ( 
+    `id` INT(11) NOT NULL AUTO_INCREMENT , 
+    `name` VARCHAR(55) NOT NULL , 
+    `slug` VARCHAR(25) NOT NULL , 
+    `details` TEXT NOT NULL , 
+    `status` BOOLEAN NOT NULL DEFAULT TRUE , 
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , 
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , 
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
+
+CREATE TABLE `membership_prices` ( 
+    `id` INT(11) NOT NULL AUTO_INCREMENT , 
+    `membership_plan_id` INT(11) NOT NULL , 
+    `name` VARCHAR(55) NOT NULL , 
+    `currency` VARCHAR(10) NOT NULL , 
+    `price` DOUBLE NOT NULL , 
+    `duration` INT(2) NOT NULL , 
+    `status` BOOLEAN NOT NULL DEFAULT TRUE , 
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , 
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
+
+ALTER TABLE membership_prices
+ADD FOREIGN KEY (membership_plan_id) REFERENCES membership_plans(id);
+
+CREATE TABLE `templates` ( 
+    `id` INT(11) NOT NULL AUTO_INCREMENT , 
+    `name` VARCHAR(55) NOT NULL , 
+    `description` TEXT NOT NULL , 
+    `image` VARCHAR(255) NOT NULL , 
+    `html` TEXT NOT NULL , 
+    `status` BOOLEAN NOT NULL DEFAULT TRUE , 
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , 
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
+
+CREATE TABLE `resumes` ( 
+    `id` INT(11) NOT NULL AUTO_INCREMENT , 
+    `user_id` INT(11) NOT NULL , 
+    `resume_data` TEXT NOT NULL , 
+    `image` VARCHAR(255) NULL DEFAULT NULL , 
+    `url` VARCHAR(255) NULL DEFAULT NULL , 
+    `created_at` DATETIME NULL DEFAULT NULL , 
+    `deleted_at` DATETIME NULL DEFAULT NULL 
+) ENGINE = InnoDB;
+ALTER TABLE resumes ADD FOREIGN KEY (user_id) REFERENCES users(id);
+
 

@@ -18,28 +18,6 @@ const validationCheck = async (value: any) => {
 
 /** AUTH VALIDATIONS */
 
-export const registrationValidation = async (req: Request, res: Response, next: NextFunction) => {
-    const schema = Joi.object({
-        name: Joi.string().trim().min(3).max(70).allow("", null),
-        email: Joi.string().email().max(80).required(),
-        password: Joi.string().min(3).max(30).required(),
-        fcm_token: Joi.string().trim().required(),
-        device_id: Joi.string().allow("", null),
-        device_type: Joi.string().allow("", null),
-    });
-
-    const value = schema.validate(req.body);
-
-    if (value.error) {
-        const errMsg = await validationCheck(value);
-        return await apiResponse.validationErrorWithData(res, errMsg);
-    }
-    next();
-};
-
-// ===========================================================================
-// ===========================================================================
-
 export const loginValidation = async (req: Request,res: Response,next: NextFunction) => {
     const schema = Joi.object({
         email: Joi.string().email().max(80).required(),
@@ -61,36 +39,25 @@ export const loginValidation = async (req: Request,res: Response,next: NextFunct
 // ===========================================================================
 // ===========================================================================
 
-/** USERS VALIDATIONS */
-export const updateProfileValidation = async (req: Request, res: Response, next: NextFunction) => {
+/** MEMBERSHIP VALIDATIONS */
+
+export const addMembershipValidation = async (req: Request,res: Response,next: NextFunction) => {
     const schema = Joi.object({
         name: Joi.string().trim().min(3).max(70).required(),
-        phone: Joi.string().min(10).max(15).allow("", null),
-        image: Joi.string().trim().allow("", null),
-    });
-
-    const value = schema.validate(req.body);
-
-    if (value.error) {
-        const errMsg = await validationCheck(value);
-        return await apiResponse.validationErrorWithData(res, errMsg);
-    }
-    next();
-}
-
-// ===========================================================================
-// ===========================================================================
-
-/** RESUMES VALIDATIONS */
-export const addResumeValidation = async (req: Request, res: Response, next: NextFunction) => {
-    const schema = Joi.object({
-        resume_data: Joi.required(),
+        slug: Joi.string().trim().min(3).max(70).required(),
+        details: Joi.array().required(),
+        prices: Joi.array().items({
+            price_name: Joi.string().required(),
+            currency: Joi.string().required(),
+            price: Joi.number().required(),
+            duration: Joi.number().required()
+        }),
     });
     const value = schema.validate(req.body);
-
+  
     if (value.error) {
         const errMsg = await validationCheck(value);
-        return await apiResponse.validationErrorWithData(res, errMsg);
+        return await apiResponse.errorMessage(res,400, errMsg);
     }
     next();
 };
@@ -98,19 +65,42 @@ export const addResumeValidation = async (req: Request, res: Response, next: Nex
 // ===========================================================================
 // ===========================================================================
 
-export const updateResumeValidation = async (req: Request, res: Response, next: NextFunction) => {
+export const addTemplateValidation = async (req: Request,res: Response,next: NextFunction) => {
     const schema = Joi.object({
-        resume_id: Joi.number().required(),
-        resume_data: Joi.required(),
+        name: Joi.string().trim().min(3).max(70).required(),
+        description: Joi.string().required(),
+        image: Joi.string().allow("", null),
+        html: Joi.string().required(),
     });
     const value = schema.validate(req.body);
-
+  
     if (value.error) {
         const errMsg = await validationCheck(value);
-        return await apiResponse.validationErrorWithData(res, errMsg);
+        return await apiResponse.errorMessage(res,400, errMsg);
     }
     next();
 }
 
 // ===========================================================================
 // ===========================================================================
+
+export const updateTemplateValidation = async (req: Request,res: Response,next: NextFunction) => {
+    const schema = Joi.object({
+        templateId: Joi.number().required(),
+        name: Joi.string().trim().min(3).max(70).required(),
+        description: Joi.string().required(),
+        image: Joi.string().allow("", null),
+        html: Joi.string().required(),
+    });
+    const value = schema.validate(req.body);
+  
+    if (value.error) {
+        const errMsg = await validationCheck(value);
+        return await apiResponse.errorMessage(res,400, errMsg);
+    }
+    next();
+}
+
+// ===========================================================================
+// ===========================================================================
+
