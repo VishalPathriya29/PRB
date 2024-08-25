@@ -57,7 +57,8 @@ CREATE TABLE `resumes` (
     `image` VARCHAR(255) NULL DEFAULT NULL , 
     `url` VARCHAR(255) NULL DEFAULT NULL , 
     `created_at` DATETIME NULL DEFAULT NULL , 
-    `deleted_at` DATETIME NULL DEFAULT NULL 
+    `deleted_at` DATETIME NULL DEFAULT NULL,
+    PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 ALTER TABLE resumes ADD FOREIGN KEY (user_id) REFERENCES users(id);
 

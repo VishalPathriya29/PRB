@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateResumeValidation = exports.addResumeValidation = exports.updateProfileValidation = exports.loginValidation = exports.registrationValidation = void 0;
+exports.updateTemplateValidation = exports.addTemplateValidation = exports.addMembershipValidation = exports.loginValidation = void 0;
 const joi_1 = __importDefault(require("joi"));
 const apiResponse = __importStar(require("../helper/response"));
 const validationCheck = (value) => __awaiter(void 0, void 0, void 0, function* () {
@@ -49,25 +49,6 @@ const validationCheck = (value) => __awaiter(void 0, void 0, void 0, function* (
 });
 // ===========================================================================
 /** AUTH VALIDATIONS */
-const registrationValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const schema = joi_1.default.object({
-        name: joi_1.default.string().trim().min(3).max(70).allow("", null),
-        email: joi_1.default.string().email().max(80).required(),
-        password: joi_1.default.string().min(3).max(30).required(),
-        fcm_token: joi_1.default.string().trim().required(),
-        device_id: joi_1.default.string().allow("", null),
-        device_type: joi_1.default.string().allow("", null),
-    });
-    const value = schema.validate(req.body);
-    if (value.error) {
-        const errMsg = yield validationCheck(value);
-        return yield apiResponse.validationErrorWithData(res, errMsg);
-    }
-    next();
-});
-exports.registrationValidation = registrationValidation;
-// ===========================================================================
-// ===========================================================================
 const loginValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const schema = joi_1.default.object({
         email: joi_1.default.string().email().max(80).required(),
@@ -86,50 +67,61 @@ const loginValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
 exports.loginValidation = loginValidation;
 // ===========================================================================
 // ===========================================================================
-/** USERS VALIDATIONS */
-const updateProfileValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+/** MEMBERSHIP VALIDATIONS */
+const addMembershipValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const schema = joi_1.default.object({
         name: joi_1.default.string().trim().min(3).max(70).required(),
-        phone: joi_1.default.string().min(10).max(15).allow("", null),
-        image: joi_1.default.string().trim().allow("", null),
+        slug: joi_1.default.string().trim().min(3).max(70).required(),
+        details: joi_1.default.array().required(),
+        prices: joi_1.default.array().items({
+            price_name: joi_1.default.string().required(),
+            currency: joi_1.default.string().required(),
+            price: joi_1.default.number().required(),
+            duration: joi_1.default.number().required()
+        }),
     });
     const value = schema.validate(req.body);
     if (value.error) {
         const errMsg = yield validationCheck(value);
-        return yield apiResponse.validationErrorWithData(res, errMsg);
+        return yield apiResponse.errorMessage(res, 400, errMsg);
     }
     next();
 });
-exports.updateProfileValidation = updateProfileValidation;
+exports.addMembershipValidation = addMembershipValidation;
 // ===========================================================================
 // ===========================================================================
-/** RESUMES VALIDATIONS */
-const addResumeValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const addTemplateValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const schema = joi_1.default.object({
-        resume_data: joi_1.default.required(),
+        name: joi_1.default.string().trim().min(3).max(70).required(),
+        description: joi_1.default.string().required(),
+        image: joi_1.default.string().allow("", null),
+        html: joi_1.default.string().required(),
     });
     const value = schema.validate(req.body);
     if (value.error) {
         const errMsg = yield validationCheck(value);
-        return yield apiResponse.validationErrorWithData(res, errMsg);
+        return yield apiResponse.errorMessage(res, 400, errMsg);
     }
     next();
 });
-exports.addResumeValidation = addResumeValidation;
+exports.addTemplateValidation = addTemplateValidation;
 // ===========================================================================
 // ===========================================================================
-const updateResumeValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const updateTemplateValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const schema = joi_1.default.object({
-        resume_id: joi_1.default.number().required(),
-        resume_data: joi_1.default.required(),
+        templateId: joi_1.default.number().required(),
+        name: joi_1.default.string().trim().min(3).max(70).required(),
+        description: joi_1.default.string().required(),
+        image: joi_1.default.string().allow("", null),
+        html: joi_1.default.string().required(),
     });
     const value = schema.validate(req.body);
     if (value.error) {
         const errMsg = yield validationCheck(value);
-        return yield apiResponse.validationErrorWithData(res, errMsg);
+        return yield apiResponse.errorMessage(res, 400, errMsg);
     }
     next();
 });
-exports.updateResumeValidation = updateResumeValidation;
+exports.updateTemplateValidation = updateTemplateValidation;
 // ===========================================================================
 // ===========================================================================
