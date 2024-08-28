@@ -31,7 +31,7 @@ export default (app: Express) => {
     app.use((err: any, req: any, res: any, next: any) => {
         if(err){ 
             res.status(500).json({
-                status: false,
+                status: false, 
                 message: "Something went wrong",
                 error : err 
             });
