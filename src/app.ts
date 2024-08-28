@@ -33,7 +33,7 @@ export default (app: Express) => {
             res.status(500).json({
                 status: false,
                 message: "Something went wrong",
-                error : err
+                error : err 
             });
         }
         if (res.headersSent) {
