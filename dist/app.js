@@ -23,7 +23,7 @@ exports.default = (app) => {
     }));
     // app.use('/api', rateLimiterUsingThirdParty, apiRouter);
     app.use('/api', index_route_1.default);
-    app.use('/', (req, res) => {
+    app.get('/', (req, res) => {
         res.status(200).json('OK');
     });
     app.use('*', (req, res) => {
