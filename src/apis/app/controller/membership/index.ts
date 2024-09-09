@@ -6,6 +6,6 @@ import {authenticatingToken} from '../../../../middleware/authorization';
 
 const membershipRouter = Router();
 
-membershipRouter.get('/membership', authenticatingToken, membershipController.membershipList);
+membershipRouter.get('/membership', membershipController.membershipList);
 
 export default membershipRouter;
