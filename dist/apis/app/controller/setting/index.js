@@ -24,10 +24,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const membershipController = __importStar(require("./membership"));
-const authorization_1 = require("../../../../middleware/authorization");
-const validation = __importStar(require("../../../../middleware/validation"));
-const membershipRouter = (0, express_1.Router)();
-membershipRouter.get('/membership', membershipController.membershipList);
-membershipRouter.post('/purchase', authorization_1.authenticatingToken, validation.purchaseMembershipValidation, membershipController.purchaseMembership);
-exports.default = membershipRouter;
+const blogsController = __importStar(require("./blogs"));
+const settingRouter = (0, express_1.Router)();
+settingRouter.get('/blog/list', blogsController.blogList);
+exports.default = settingRouter;

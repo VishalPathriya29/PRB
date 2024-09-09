@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateTemplateValidation = exports.addTemplateValidation = exports.addMembershipValidation = exports.loginValidation = void 0;
+exports.updateBlogValidation = exports.addBlogValidation = exports.updateBlogCategoryValidation = exports.addBlogCategoryValidation = exports.updateTemplateValidation = exports.addTemplateValidation = exports.addMembershipValidation = exports.loginValidation = void 0;
 const joi_1 = __importDefault(require("joi"));
 const apiResponse = __importStar(require("../helper/response"));
 const validationCheck = (value) => __awaiter(void 0, void 0, void 0, function* () {
@@ -123,5 +123,75 @@ const updateTemplateValidation = (req, res, next) => __awaiter(void 0, void 0, v
     next();
 });
 exports.updateTemplateValidation = updateTemplateValidation;
+// ===========================================================================
+// ===========================================================================
+const addBlogCategoryValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const schema = joi_1.default.object({
+        name: joi_1.default.string().trim().min(3).max(70).required(),
+        description: joi_1.default.string().required(),
+        image: joi_1.default.string().allow("", null),
+    });
+    const value = schema.validate(req.body);
+    if (value.error) {
+        const errMsg = yield validationCheck(value);
+        return yield apiResponse.errorMessage(res, 400, errMsg);
+    }
+    next();
+});
+exports.addBlogCategoryValidation = addBlogCategoryValidation;
+// ===========================================================================
+// ===========================================================================
+const updateBlogCategoryValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const schema = joi_1.default.object({
+        cat_id: joi_1.default.number().required(),
+        name: joi_1.default.string().trim().min(3).max(70).required(),
+        description: joi_1.default.string().required(),
+        image: joi_1.default.string().allow("", null),
+    });
+    const value = schema.validate(req.body);
+    if (value.error) {
+        const errMsg = yield validationCheck(value);
+        return yield apiResponse.errorMessage(res, 400, errMsg);
+    }
+    next();
+});
+exports.updateBlogCategoryValidation = updateBlogCategoryValidation;
+// ===========================================================================
+// ===========================================================================
+const addBlogValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const schema = joi_1.default.object({
+        cat_id: joi_1.default.number().required(),
+        slug: joi_1.default.string().trim().min(3).max(70).required(),
+        title: joi_1.default.string().trim().min(3).max(70).required(),
+        description: joi_1.default.string().required(),
+        image: joi_1.default.string().allow("", null),
+    });
+    const value = schema.validate(req.body);
+    if (value.error) {
+        const errMsg = yield validationCheck(value);
+        return yield apiResponse.errorMessage(res, 400, errMsg);
+    }
+    next();
+});
+exports.addBlogValidation = addBlogValidation;
+// ===========================================================================
+// ===========================================================================
+const updateBlogValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const schema = joi_1.default.object({
+        blog_id: joi_1.default.number().required(),
+        cat_id: joi_1.default.number().required(),
+        slug: joi_1.default.string().trim().min(3).max(70).required(),
+        title: joi_1.default.string().trim().min(3).max(70).required(),
+        description: joi_1.default.string().required(),
+        image: joi_1.default.string().allow("", null),
+    });
+    const value = schema.validate(req.body);
+    if (value.error) {
+        const errMsg = yield validationCheck(value);
+        return yield apiResponse.errorMessage(res, 400, errMsg);
+    }
+    next();
+});
+exports.updateBlogValidation = updateBlogValidation;
 // ===========================================================================
 // ===========================================================================
