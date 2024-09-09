@@ -33,5 +33,5 @@ resumeRouter.post('/addResume', authorization_1.authenticatingToken, validation.
 resumeRouter.get('/resumes', authorization_1.authenticatingToken, resumeController.resumeList);
 resumeRouter.patch('/updateResume', authorization_1.authenticatingToken, validation.updateResumeValidation, resumeController.updateResume);
 resumeRouter.delete('/deleteResume', authorization_1.authenticatingToken, resumeController.deleteResume);
-resumeRouter.get('/template', authorization_1.authenticatingToken, templateController.templateList);
+resumeRouter.get('/template', templateController.templateList);
 exports.default = resumeRouter;

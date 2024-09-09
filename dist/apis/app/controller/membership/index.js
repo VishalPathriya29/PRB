@@ -25,7 +25,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const membershipController = __importStar(require("./membership"));
-const authorization_1 = require("../../../../middleware/authorization");
 const membershipRouter = (0, express_1.Router)();
-membershipRouter.get('/membership', authorization_1.authenticatingToken, membershipController.membershipList);
+membershipRouter.get('/membership', membershipController.membershipList);
 exports.default = membershipRouter;

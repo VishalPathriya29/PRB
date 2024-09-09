@@ -4,9 +4,9 @@ require("dotenv/config");
 exports.default = {
     smtp: {
         name: "",
-        host: "",
-        secure: true,
-        port: 465,
+        host: "", //process.env.SMTP_HOST, 
+        secure: true, //true
+        port: 465, //process.env.SMTP_PORT,//465
         secureConnection: false,
         // requireTLS: true,
         auth: {

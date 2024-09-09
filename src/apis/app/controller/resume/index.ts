@@ -13,6 +13,6 @@ resumeRouter.get('/resumes', authenticatingToken, resumeController.resumeList);
 resumeRouter.patch('/updateResume', authenticatingToken, validation.updateResumeValidation, resumeController.updateResume);
 resumeRouter.delete('/deleteResume', authenticatingToken, resumeController.deleteResume);
 
-resumeRouter.get('/template', authenticatingToken, templateController.templateList);
+resumeRouter.get('/template', templateController.templateList);
 
 export default resumeRouter;

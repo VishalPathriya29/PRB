@@ -12,7 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.randomNumber = exports.randomString = exports.jwtGenerate = exports.timeDiff = exports.utcDateWithExtraTime = exports.utcDate = void 0;
+exports.jwtGenerate = exports.timeDiff = exports.utcDateWithExtraTime = exports.utcDate = void 0;
+exports.randomString = randomString;
+exports.randomNumber = randomNumber;
 const moment_1 = __importDefault(require("moment"));
 require("moment-timezone");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -111,7 +113,6 @@ function randomString(length) {
     }
     return text;
 }
-exports.randomString = randomString;
 // ====================================================================================================
 // ====================================================================================================
 function randomNumber(length) {
@@ -123,6 +124,5 @@ function randomNumber(length) {
     }
     return Number(text);
 }
-exports.randomNumber = randomNumber;
 // ====================================================================================================
 // ====================================================================================================
