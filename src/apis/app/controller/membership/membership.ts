@@ -33,3 +33,22 @@ export const membershipList = async (req: Request, res: Response) => {
 // =======================================================================
 // =======================================================================
 
+// Purchase Membership
+export const purchaseMembership = async (req: Request, res: Response) => {
+    try {
+        const { membership_plan_id, payment_details } = req.body;
+        const created_at = utility.utcDate();
+
+        // const sql = `INSERT INTO user_memberships (membership_plan_id, user_id, transaction_id, payment_status, amount, created_at) VALUES (?, ?, ?, ?, ?, ?)`;
+        // await pool.query(sql, [membership_plan_id, user_id, transaction_id, payment_status, payment_response, created_at]);
+
+        return apiResponse.successResponse(res, "Membership Purchased Successfully", []);
+    } catch (error) {
+        console.log(error);
+        return apiResponse.errorMessage(res, 400, "Something Went Wrong")
+    }
+}
+
+// =======================================================================
+// =======================================================================
+

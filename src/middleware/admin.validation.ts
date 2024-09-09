@@ -104,3 +104,81 @@ export const updateTemplateValidation = async (req: Request,res: Response,next: 
 // ===========================================================================
 // ===========================================================================
 
+export const addBlogCategoryValidation = async (req: Request,res: Response,next: NextFunction) => {
+    const schema = Joi.object({
+        name: Joi.string().trim().min(3).max(70).required(),
+        description: Joi.string().required(),
+        image: Joi.string().allow("", null),
+    });
+    const value = schema.validate(req.body);
+  
+    if (value.error) {
+        const errMsg = await validationCheck(value);
+        return await apiResponse.errorMessage(res,400, errMsg);
+    }
+    next();
+}
+
+// ===========================================================================
+// ===========================================================================
+
+export const updateBlogCategoryValidation = async (req: Request,res: Response,next: NextFunction) => {
+    const schema = Joi.object({
+        cat_id: Joi.number().required(),
+        name: Joi.string().trim().min(3).max(70).required(),
+        description: Joi.string().required(),
+        image: Joi.string().allow("", null),
+    });
+    const value = schema.validate(req.body);
+  
+    if (value.error) {
+        const errMsg = await validationCheck(value);
+        return await apiResponse.errorMessage(res,400, errMsg);
+    }
+    next();
+}
+
+// ===========================================================================
+// ===========================================================================
+
+export const addBlogValidation = async (req: Request,res: Response,next: NextFunction) => {
+    const schema = Joi.object({
+        cat_id: Joi.number().required(),
+        slug: Joi.string().trim().min(3).max(70).required(),
+        title: Joi.string().trim().min(3).max(70).required(),
+        description: Joi.string().required(),
+        image: Joi.string().allow("", null),
+    });
+    const value = schema.validate(req.body);
+  
+    if (value.error) {
+        const errMsg = await validationCheck(value);
+        return await apiResponse.errorMessage(res,400, errMsg);
+    }
+    next();
+}
+
+// ===========================================================================
+// ===========================================================================
+
+export const updateBlogValidation = async (req: Request,res: Response,next: NextFunction) => {
+    const schema = Joi.object({
+        blog_id: Joi.number().required(),
+        cat_id: Joi.number().required(),
+        slug: Joi.string().trim().min(3).max(70).required(),
+        title: Joi.string().trim().min(3).max(70).required(),
+        description: Joi.string().required(),
+        image: Joi.string().allow("", null),
+    });
+    const value = schema.validate(req.body);
+  
+    if (value.error) {
+        const errMsg = await validationCheck(value);
+        return await apiResponse.errorMessage(res,400, errMsg);
+    }
+    next();
+}
+
+// ===========================================================================
+// ===========================================================================
+

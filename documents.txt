@@ -63,3 +63,25 @@ CREATE TABLE `resumes` (
 ALTER TABLE resumes ADD FOREIGN KEY (user_id) REFERENCES users(id);
 
 
+CREATE TABLE blog_categories (
+    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description text,
+    url VARCHAR(55),
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE blog_posts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cat_id INT NOT NULL,
+    slug varchar(55) not null,
+    title VARCHAR(255) NOT NULL,
+    description  TEXT NOT NULL,
+    `status` BOOLEAN NOT NULL DEFAULT TRUE , 
+    image varchar(255) default null,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+--     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+
