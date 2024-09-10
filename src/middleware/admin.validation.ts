@@ -71,9 +71,10 @@ export const addTemplateValidation = async (req: Request,res: Response,next: Nex
         description: Joi.string().required(),
         image: Joi.string().allow("", null),
         html: Joi.string().required(),
+        css: Joi.string().required(),
     });
     const value = schema.validate(req.body);
-  
+    
     if (value.error) {
         const errMsg = await validationCheck(value);
         return await apiResponse.errorMessage(res,400, errMsg);
@@ -91,6 +92,7 @@ export const updateTemplateValidation = async (req: Request,res: Response,next: 
         description: Joi.string().required(),
         image: Joi.string().allow("", null),
         html: Joi.string().required(),
+        css: Joi.string().required(),
     });
     const value = schema.validate(req.body);
   

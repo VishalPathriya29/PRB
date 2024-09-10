@@ -6,11 +6,11 @@ import { utcDate } from '../../../../helper/utility';
 
 export const addTemplate = async (req: Request, res: Response) => {
     try {
-        const { name, description, image, html } = req.body;
+        const { name, description, image, html, css } = req.body;
         const createdAt = utcDate();
 
-        const sql = `INSERT INTO templates (name, description, image, html, created_at) VALUES (?, ?, ?, ?, ?)`;
-        const VALUES = [name, description, image, html, createdAt];
+        const sql = `INSERT INTO templates (name, description, image, html, css, created_at) VALUES (?, ?, ?, ?, ?, ?)`;
+        const VALUES = [name, description, image, html, css, createdAt];
         await pool.query(sql, VALUES);
 
         return apiResponse.successResponse(res, "Template Added Successfully", {});
@@ -44,14 +44,14 @@ export const templateList = async (req: Request, res: Response) => {
 
 export const updateTemplate = async (req: Request, res: Response) => {
     try {
-        const { templateId, name, description, image, html } = req.body;
+        const { templateId, name, description, image, html, css } = req.body;
 
         const checkTemplate = `SELECT id FROM templates WHERE id = ?`;
         const [template]: any = await pool.query(checkTemplate, [templateId]);
         if (template.length === 0) return apiResponse.errorMessage(res, 400, "Template Not Found");
 
-        const updateSql = `UPDATE templates SET name = ?, description = ?, image = ?, html = ? WHERE id = ?`;
-        const VALUES = [name, description, image, html, templateId];
+        const updateSql = `UPDATE templates SET name = ?, description = ?, image = ?, html = ?, css = ? WHERE id = ?`;
+        const VALUES = [name, description, image, html, css, templateId];
         const [data]: any = await pool.query(updateSql, VALUES);
 
         if (data.affectedRows > 0) {

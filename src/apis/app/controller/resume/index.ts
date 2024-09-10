@@ -2,6 +2,7 @@ import {Router} from "express";
 
 import * as templateController from './template';
 import * as resumeController from './resume';
+import * as generateResumeController from './generateResume';
 
 import {authenticatingToken} from '../../../../middleware/authorization';
 import * as validation from '../../../../middleware/validation';
@@ -14,5 +15,7 @@ resumeRouter.patch('/updateResume', authenticatingToken, validation.updateResume
 resumeRouter.delete('/deleteResume', authenticatingToken, resumeController.deleteResume);
 
 resumeRouter.get('/template', templateController.templateList);
+
+resumeRouter.post('/generateResume', authenticatingToken, validation.generateResumeValidation, generateResumeController.generateResume);
 
 export default resumeRouter;

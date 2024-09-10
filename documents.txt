@@ -45,11 +45,12 @@ CREATE TABLE `templates` (
     `description` TEXT NOT NULL , 
     `image` VARCHAR(255) NOT NULL , 
     `html` TEXT NOT NULL , 
+    `css` text not null,
     `status` BOOLEAN NOT NULL DEFAULT TRUE , 
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , 
     PRIMARY KEY (`id`)
+    
 ) ENGINE = InnoDB;
-
 CREATE TABLE `resumes` ( 
     `id` INT(11) NOT NULL AUTO_INCREMENT , 
     `user_id` INT(11) NOT NULL , 
