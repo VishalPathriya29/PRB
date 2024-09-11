@@ -1215,10 +1215,6 @@ const generateResume = (req, res) => __awaiter(void 0, void 0, void 0, function*
                 const url = `${process.env.BASE_URL}/resumes/${fileName}`;
                 const updateSql = `UPDATE resumes SET url = ? WHERE id = ?`;
                 yield db_1.default.query(updateSql, [url, resume_id]);
-                // now upload the file  using following api and unlink the file
-                //             curl --location 'https://lookingforresume.com/lfrbuilder/uploadFile.php' \
-                // --form 'filename=@"/C:/Users/Sonali Pathriya/OneDrive/Pictures/Screenshots/Screenshot 2024-07-31 231741.png"' \
-                // --form 'type="image"'
                 // upload the file
                 const formData = {
                     filename: fs_1.default.createReadStream(filePath),
