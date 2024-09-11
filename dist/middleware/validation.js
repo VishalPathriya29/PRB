@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.purchaseMembershipValidation = exports.updateResumeValidation = exports.addResumeValidation = exports.updateProfileValidation = exports.loginValidation = exports.registrationValidation = void 0;
+exports.generateResumeValidation = exports.purchaseMembershipValidation = exports.updateResumeValidation = exports.addResumeValidation = exports.updateProfileValidation = exports.loginValidation = exports.registrationValidation = void 0;
 const joi_1 = __importDefault(require("joi"));
 const apiResponse = __importStar(require("../helper/response"));
 const validationCheck = (value) => __awaiter(void 0, void 0, void 0, function* () {
@@ -153,5 +153,19 @@ const purchaseMembershipValidation = (req, res, next) => __awaiter(void 0, void 
 exports.purchaseMembershipValidation = purchaseMembershipValidation;
 // ===========================================================================
 // ===========================================================================
+// Generate Resume Validation
+const generateResumeValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const schema = joi_1.default.object({
+        resume_id: joi_1.default.number().required(),
+        template_id: joi_1.default.number().required(),
+    });
+    const value = schema.validate(req.body);
+    if (value.error) {
+        const errMsg = yield validationCheck(value);
+        return yield apiResponse.validationErrorWithData(res, errMsg);
+    }
+    next();
+});
+exports.generateResumeValidation = generateResumeValidation;
 // ===========================================================================
 // ===========================================================================

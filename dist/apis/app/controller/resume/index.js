@@ -26,6 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const templateController = __importStar(require("./template"));
 const resumeController = __importStar(require("./resume"));
+const generateResumeController = __importStar(require("./generateResume"));
 const authorization_1 = require("../../../../middleware/authorization");
 const validation = __importStar(require("../../../../middleware/validation"));
 const resumeRouter = (0, express_1.Router)();
@@ -34,4 +35,5 @@ resumeRouter.get('/resumes', authorization_1.authenticatingToken, resumeControll
 resumeRouter.patch('/updateResume', authorization_1.authenticatingToken, validation.updateResumeValidation, resumeController.updateResume);
 resumeRouter.delete('/deleteResume', authorization_1.authenticatingToken, resumeController.deleteResume);
 resumeRouter.get('/template', templateController.templateList);
+resumeRouter.post('/generateResume', authorization_1.authenticatingToken, validation.generateResumeValidation, generateResumeController.generateResume);
 exports.default = resumeRouter;

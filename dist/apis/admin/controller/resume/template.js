@@ -41,10 +41,10 @@ const apiResponse = __importStar(require("../../../../helper/response"));
 const utility_1 = require("../../../../helper/utility");
 const addTemplate = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, description, image, html } = req.body;
+        const { name, description, image, html, css } = req.body;
         const createdAt = (0, utility_1.utcDate)();
-        const sql = `INSERT INTO templates (name, description, image, html, created_at) VALUES (?, ?, ?, ?, ?)`;
-        const VALUES = [name, description, image, html, createdAt];
+        const sql = `INSERT INTO templates (name, description, image, html, css, created_at) VALUES (?, ?, ?, ?, ?, ?)`;
+        const VALUES = [name, description, image, html, css, createdAt];
         yield db_1.default.query(sql, VALUES);
         return apiResponse.successResponse(res, "Template Added Successfully", {});
     }
@@ -77,13 +77,13 @@ exports.templateList = templateList;
 // =======================================================================
 const updateTemplate = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { templateId, name, description, image, html } = req.body;
+        const { templateId, name, description, image, html, css } = req.body;
         const checkTemplate = `SELECT id FROM templates WHERE id = ?`;
         const [template] = yield db_1.default.query(checkTemplate, [templateId]);
         if (template.length === 0)
             return apiResponse.errorMessage(res, 400, "Template Not Found");
-        const updateSql = `UPDATE templates SET name = ?, description = ?, image = ?, html = ? WHERE id = ?`;
-        const VALUES = [name, description, image, html, templateId];
+        const updateSql = `UPDATE templates SET name = ?, description = ?, image = ?, html = ?, css = ? WHERE id = ?`;
+        const VALUES = [name, description, image, html, css, templateId];
         const [data] = yield db_1.default.query(updateSql, VALUES);
         if (data.affectedRows > 0) {
             return apiResponse.successResponse(res, "Template Updated Successfully", {});

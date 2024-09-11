@@ -96,6 +96,7 @@ const addTemplateValidation = (req, res, next) => __awaiter(void 0, void 0, void
         description: joi_1.default.string().required(),
         image: joi_1.default.string().allow("", null),
         html: joi_1.default.string().required(),
+        css: joi_1.default.string().required(),
     });
     const value = schema.validate(req.body);
     if (value.error) {
@@ -114,6 +115,7 @@ const updateTemplateValidation = (req, res, next) => __awaiter(void 0, void 0, v
         description: joi_1.default.string().required(),
         image: joi_1.default.string().allow("", null),
         html: joi_1.default.string().required(),
+        css: joi_1.default.string().required(),
     });
     const value = schema.validate(req.body);
     if (value.error) {
