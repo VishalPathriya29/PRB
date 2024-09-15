@@ -25,6 +25,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const blogsController = __importStar(require("./blogs"));
+const policyController = __importStar(require("./policy"));
 const settingRouter = (0, express_1.Router)();
 settingRouter.get('/blog/list', blogsController.blogList);
+settingRouter.get('/plolicy/list', policyController.policyList);
 exports.default = settingRouter;

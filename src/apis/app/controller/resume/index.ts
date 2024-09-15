@@ -16,6 +16,7 @@ resumeRouter.delete('/deleteResume', authenticatingToken, resumeController.delet
 
 resumeRouter.get('/template', templateController.templateList);
 
-resumeRouter.post('/generateResume', authenticatingToken, validation.generateResumeValidation, generateResumeController.generateResume);
+resumeRouter.post('/generateResume', authenticatingToken, validation.generateResumeValidation, generateResumeController.createResume);
+resumeRouter.post('/downloadResume', authenticatingToken, validation.generateResumeValidation, generateResumeController.downloadResume);
 
 export default resumeRouter;

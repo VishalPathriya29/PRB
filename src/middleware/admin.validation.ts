@@ -184,3 +184,42 @@ export const updateBlogValidation = async (req: Request,res: Response,next: Next
 // ===========================================================================
 // ===========================================================================
 
+export const addPolicyValidation = async (req: Request, res: Response, next: NextFunction) => {
+    const schema = Joi.object({
+        name: Joi.string().trim().min(3).max(70).required(),
+        slug: Joi.string().trim().min(3).max(70).required(),
+        content: Joi.string().trim().required(),
+        url: Joi.string().trim().allow("", null),
+    });
+    const value = schema.validate(req.body);
+
+    if (value.error) {
+        const errMsg = await validationCheck(value);
+        return await apiResponse.validationErrorWithData(res, errMsg);
+    }
+    next();
+}
+
+// ===========================================================================
+// ===========================================================================
+
+export const updatePolicyValidation = async (req: Request, res: Response, next: NextFunction) => {
+    const schema = Joi.object({
+        policy_id: Joi.number().required(),
+        name: Joi.string().trim().min(3).max(70).required(),
+        slug: Joi.string().trim().min(3).max(70).required(),
+        content: Joi.string().trim().required(),
+        url: Joi.string().trim().allow("", null),
+        status: Joi.number().required(),
+    });
+    const value = schema.validate(req.body);
+
+    if (value.error) {
+        const errMsg = await validationCheck(value);
+        return await apiResponse.validationErrorWithData(res, errMsg);
+    }
+    next();
+}
+
+// ===========================================================================
+// ===========================================================================

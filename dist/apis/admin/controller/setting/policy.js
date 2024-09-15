@@ -35,29 +35,38 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.purchaseMembership = exports.membershipList = void 0;
+exports.updatePolicy = exports.policyList = exports.addPolicy = void 0;
 const db_1 = __importDefault(require("../../../../db"));
 const apiResponse = __importStar(require("../../../../helper/response"));
-const utility = __importStar(require("../../../../helper/utility"));
-const membershipList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const addPolicy = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const sql = `SELECT id, name, slug, details FROM membership_plans WHERE status = 1`;
+        const { name, slug, content, url } = req.body;
+        const checkPolicy = `SELECT id FROM policies WHERE slug = ?`;
+        const [policy] = yield db_1.default.query(checkPolicy, [slug]);
+        if (policy.length > 0)
+            return apiResponse.errorMessage(res, 400, "Policy Already Exist With This Slug");
+        const sql = `INSERT INTO policies (name, slug, content, url) VALUES (?, ?, ?, ?)`;
+        const VALUES = [name, slug, content, url];
+        yield db_1.default.query(sql, VALUES);
+        return apiResponse.successResponse(res, "Policy Added Successfully", {});
+    }
+    catch (error) {
+        console.log(error);
+        return apiResponse.errorMessage(res, 400, "Something Went Wrong");
+    }
+});
+exports.addPolicy = addPolicy;
+// =======================================================================
+// =======================================================================
+const policyList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const sql = `SELECT * FROM policies`;
         const [rows] = yield db_1.default.query(sql);
-        const membershipList = `SELECT membership_plan_id, name, currency, price, duration FROM membership_prices WHERE status = 1`;
-        const [prices] = yield db_1.default.query(membershipList);
-        let index = -1;
-        for (const iterator of rows) {
-            index++;
-            rows[index].details = iterator.details.split(',');
-            const priceList = prices.filter((price) => price.membership_plan_id === iterator.id);
-            rows[index].prices = priceList;
-        }
-        ;
         if (rows.length > 0) {
-            return apiResponse.successResponse(res, "Membership List", rows);
+            return apiResponse.successResponse(res, "Policy List", rows);
         }
         else {
-            return apiResponse.successResponse(res, "No Membership Found", []);
+            return apiResponse.successResponse(res, "No Policy Found", []);
         }
     }
     catch (error) {
@@ -65,25 +74,31 @@ const membershipList = (req, res) => __awaiter(void 0, void 0, void 0, function*
         return apiResponse.errorMessage(res, 400, "Something Went Wrong");
     }
 });
-exports.membershipList = membershipList;
+exports.policyList = policyList;
 // =======================================================================
 // =======================================================================
-// Purchase Membership
-const purchaseMembership = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const updatePolicy = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { membership_plan_id, payment_details } = req.body;
-        const created_at = utility.utcDate();
-        // const sql = `INSERT INTO user_memberships (membership_plan_id, user_id, transaction_id, payment_status, amount, created_at) VALUES (?, ?, ?, ?, ?, ?)`;
-        // await pool.query(sql, [membership_plan_id, user_id, transaction_id, payment_status, payment_response, created_at]);
-        return apiResponse.successResponse(res, "Membership Purchased Successfully", []);
+        const { policy_id, name, slug, content, url, status } = req.body;
+        const checkPolicy = `SELECT id, slug FROM policies WHERE id != ? AND slug = ?`;
+        const [policy] = yield db_1.default.query(checkPolicy, [policy_id, slug]);
+        if (policy.length > 0)
+            return apiResponse.errorMessage(res, 400, "Policy Already Exist With This Slug");
+        const updateSql = `UPDATE policies SET name = ?, slug = ?, content = ?, url = ?, status = ? WHERE id = ?`;
+        const VALUES = [name, slug, content, url, status, policy_id];
+        const [data] = yield db_1.default.query(updateSql, VALUES);
+        if (data.affectedRows > 0) {
+            return apiResponse.successResponse(res, "Policy Updated Successfully", {});
+        }
+        else {
+            return apiResponse.errorMessage(res, 400, "Something Went Wrong");
+        }
     }
     catch (error) {
         console.log(error);
         return apiResponse.errorMessage(res, 400, "Something Went Wrong");
     }
 });
-exports.purchaseMembership = purchaseMembership;
-// =======================================================================
-// =======================================================================
+exports.updatePolicy = updatePolicy;
 // =======================================================================
 // =======================================================================

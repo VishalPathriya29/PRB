@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateBlogValidation = exports.addBlogValidation = exports.updateBlogCategoryValidation = exports.addBlogCategoryValidation = exports.updateTemplateValidation = exports.addTemplateValidation = exports.addMembershipValidation = exports.loginValidation = void 0;
+exports.updatePolicyValidation = exports.addPolicyValidation = exports.updateBlogValidation = exports.addBlogValidation = exports.updateBlogCategoryValidation = exports.addBlogCategoryValidation = exports.updateTemplateValidation = exports.addTemplateValidation = exports.addMembershipValidation = exports.loginValidation = void 0;
 const joi_1 = __importDefault(require("joi"));
 const apiResponse = __importStar(require("../helper/response"));
 const validationCheck = (value) => __awaiter(void 0, void 0, void 0, function* () {
@@ -195,5 +195,41 @@ const updateBlogValidation = (req, res, next) => __awaiter(void 0, void 0, void 
     next();
 });
 exports.updateBlogValidation = updateBlogValidation;
+// ===========================================================================
+// ===========================================================================
+const addPolicyValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const schema = joi_1.default.object({
+        name: joi_1.default.string().trim().min(3).max(70).required(),
+        slug: joi_1.default.string().trim().min(3).max(70).required(),
+        content: joi_1.default.string().trim().required(),
+        url: joi_1.default.string().trim().allow("", null),
+    });
+    const value = schema.validate(req.body);
+    if (value.error) {
+        const errMsg = yield validationCheck(value);
+        return yield apiResponse.validationErrorWithData(res, errMsg);
+    }
+    next();
+});
+exports.addPolicyValidation = addPolicyValidation;
+// ===========================================================================
+// ===========================================================================
+const updatePolicyValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const schema = joi_1.default.object({
+        policy_id: joi_1.default.number().required(),
+        name: joi_1.default.string().trim().min(3).max(70).required(),
+        slug: joi_1.default.string().trim().min(3).max(70).required(),
+        content: joi_1.default.string().trim().required(),
+        url: joi_1.default.string().trim().allow("", null),
+        status: joi_1.default.number().required(),
+    });
+    const value = schema.validate(req.body);
+    if (value.error) {
+        const errMsg = yield validationCheck(value);
+        return yield apiResponse.validationErrorWithData(res, errMsg);
+    }
+    next();
+});
+exports.updatePolicyValidation = updatePolicyValidation;
 // ===========================================================================
 // ===========================================================================

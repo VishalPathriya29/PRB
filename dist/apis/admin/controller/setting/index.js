@@ -25,6 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const blogController = __importStar(require("./blog"));
+const policyController = __importStar(require("./policy"));
 const authorization_1 = require("../../../../middleware/authorization");
 const adminValidation = __importStar(require("../../../../middleware/admin.validation"));
 const settingRouter = (0, express_1.Router)();
@@ -34,4 +35,7 @@ settingRouter.patch('/blog/category', authorization_1.authenticatingToken, admin
 settingRouter.post('/blogPost', authorization_1.authenticatingToken, adminValidation.addBlogValidation, blogController.addBlog);
 settingRouter.get('/blogPosts', authorization_1.authenticatingToken, blogController.blogList);
 settingRouter.patch('/blogPost', authorization_1.authenticatingToken, adminValidation.updateBlogValidation, blogController.updateBlog);
+settingRouter.post('/policy', authorization_1.authenticatingToken, adminValidation.addPolicyValidation, policyController.addPolicy);
+settingRouter.get('/policies', authorization_1.authenticatingToken, policyController.policyList);
+settingRouter.patch('/policy', authorization_1.authenticatingToken, adminValidation.updatePolicyValidation, policyController.updatePolicy);
 exports.default = settingRouter;
