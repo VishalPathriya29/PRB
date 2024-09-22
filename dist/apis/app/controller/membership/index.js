@@ -30,4 +30,5 @@ const validation = __importStar(require("../../../../middleware/validation"));
 const membershipRouter = (0, express_1.Router)();
 membershipRouter.get('/membership', membershipController.membershipList);
 membershipRouter.post('/purchase', authorization_1.authenticatingToken, validation.purchaseMembershipValidation, membershipController.purchaseMembership);
+membershipRouter.post('/createOrder', authorization_1.authenticatingToken, validation.createOrderValidation, membershipController.createOrder);
 exports.default = membershipRouter;

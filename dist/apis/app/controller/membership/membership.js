@@ -35,10 +35,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.purchaseMembership = exports.membershipList = void 0;
+exports.createOrder = exports.purchaseMembership = exports.membershipList = void 0;
 const db_1 = __importDefault(require("../../../../db"));
 const apiResponse = __importStar(require("../../../../helper/response"));
 const utility = __importStar(require("../../../../helper/utility"));
+const razorpay_1 = __importDefault(require("razorpay"));
 const membershipList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const sql = `SELECT id, name, slug, details FROM membership_plans WHERE status = 1`;
@@ -85,5 +86,44 @@ const purchaseMembership = (req, res) => __awaiter(void 0, void 0, void 0, funct
 exports.purchaseMembership = purchaseMembership;
 // =======================================================================
 // =======================================================================
+const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const { amount, currency } = req.body;
+        let instance = new razorpay_1.default({
+            key_id: (_a = process.env.RAZORPAY_KEY_ID) !== null && _a !== void 0 ? _a : '',
+            key_secret: process.env.RAZORPAY_KEY_SECRET
+        });
+        const options = {
+            amount: parseInt((amount * 100).toFixed(0)),
+            currency: currency,
+            receipt: `receipt_${Date.now()}`,
+        };
+        // const options = {
+        //     amount: amount,
+        //     currency: currency,
+        //     receipt: receipt,
+        //     payment_capture: payment_capture
+        // };
+        instance.orders.create(options, (err, order) => {
+            if (err) {
+                console.log("err", err);
+                return apiResponse.errorMessage(res, 400, "Failed to generate Razorpay order");
+            }
+            const resultResp = {
+                gatewayOrderId: order.id,
+            };
+            return apiResponse.successResponse(res, "Razorpay order generated successfully", resultResp);
+        });
+        // return apiResponse.successResponse(res, "Razorpay order generated successfully", {});
+    }
+    catch (e) {
+        console.log(e);
+        return apiResponse.somethingWentWrongMsg(res);
+    }
+});
+exports.createOrder = createOrder;
+// ====================================================================================================
+// ====================================================================================================
 // =======================================================================
 // =======================================================================

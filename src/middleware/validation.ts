@@ -156,3 +156,20 @@ export const generateResumeValidation = async (req: Request, res: Response, next
 // ===========================================================================
 // ===========================================================================
 
+export const createOrderValidation = async (req: Request, res: Response, next: NextFunction) => {
+    const schema = Joi.object({
+        amount: Joi.number().required(),
+        currency: Joi.string().required(),
+    });
+
+    const value = schema.validate(req.body);
+
+    if (value.error) {
+        const errMsg = await validationCheck(value);
+        return await apiResponse.errorMessage(res, 400, errMsg);
+    }
+    next();
+}
+
+// ====================================================================================================
+// ====================================================================================================

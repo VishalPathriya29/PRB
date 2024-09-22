@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import pool from "../../../../db";
 import * as apiResponse from '../../../../helper/response';
 import * as utility from '../../../../helper/utility';
+import Razorpay from "razorpay"
+import crypto from 'crypto';
 
 export const membershipList = async (req: Request, res: Response) => {
     try {
@@ -51,6 +53,46 @@ export const purchaseMembership = async (req: Request, res: Response) => {
 
 // =======================================================================
 // =======================================================================
+
+export const createOrder = async (req: Request, res: Response) => {
+    try {
+        const { amount, currency } = req.body;
+        let instance = new Razorpay({
+            key_id: process.env.RAZORPAY_KEY_ID ?? '',
+            key_secret: process.env.RAZORPAY_KEY_SECRET
+        });
+        const options = {
+            amount: parseInt((amount * 100).toFixed(0)),
+            currency: currency,
+            receipt: `receipt_${Date.now()}`,
+        }
+        // const options = {
+        //     amount: amount,
+        //     currency: currency,
+        //     receipt: receipt,
+        //     payment_capture: payment_capture
+        // };
+
+        instance.orders.create(options, (err: any, order: any) => {
+            if (err) {
+                console.log("err", err);
+                return apiResponse.errorMessage(res, 400, "Failed to generate Razorpay order");
+            }
+            const resultResp = {
+                gatewayOrderId: order.id,
+            };
+            return apiResponse.successResponse(res, "Razorpay order generated successfully", resultResp);
+        });
+        // return apiResponse.successResponse(res, "Razorpay order generated successfully", {});
+    } catch (e) {
+        console.log(e);
+        return apiResponse.somethingWentWrongMsg(res);
+    }
+}
+
+// ====================================================================================================
+// ====================================================================================================
+
 
 // =======================================================================
 // =======================================================================
