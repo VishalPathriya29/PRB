@@ -139,8 +139,8 @@ const purchaseMembershipValidation = (req, res, next) => __awaiter(void 0, void 
         membership_plan_id: joi_1.default.number().required(),
         payment_details: joi_1.default.object({
             transaction_id: joi_1.default.string().required(),
-            paymentSignature: joi_1.default.string().required(),
-            paymentTimestamp: joi_1.default.string().required(),
+            payment_signature: joi_1.default.string().required(),
+            payment_timestamp: joi_1.default.string().required(),
         }).required(),
     });
     const value = schema.validate(req.body);

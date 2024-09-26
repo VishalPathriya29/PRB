@@ -97,3 +97,30 @@ CREATE TABLE `policies` (
     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , 
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
+
+CREATE TABLE `gateway_created_orders` (
+    `id` INT NOT NULL AUTO_INCREMENT , 
+    `user_id` INT NOT NULL , 
+    `amount` DOUBLE NOT NULL , 
+    `currency` VARCHAR(15) NULL DEFAULT NULL , 
+    `gateway_name` VARCHAR(25) NOT NULL DEFAULT 'razorpay' , 
+    `gateway_order_id` VARCHAR(1555) NOT NULL , 
+    `order_status` VARCHAR(25) NOT NULL DEFAULT 'pending' COMMENT 'pending, completed, canceled' , 
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , 
+    `updated_at` DATETIME NULL DEFAULT NULL , 
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
+
+CREATE TABLE `payment_details` (
+    `id` INT NOT NULL AUTO_INCREMENT , 
+    `user_id` INT NOT NULL , 
+    `membership_plan_id` INT NOT NULL , 
+    `transaction_id` VARCHAR(155) NOT NULL , 
+    `payment_signature` VARCHAR(255) NOT NULL , 
+    `payment_timestamp` VARCHAR(25) NOT NULL , 
+    `amount` DOUBLE NOT NULL , 
+    `currency` VARCHAR(15) NULL DEFAULT NULL , 
+    `payment_status` VARCHAR(25) NOT NULL DEFAULT 'pending' , 
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , 
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB;

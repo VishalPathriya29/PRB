@@ -71,9 +71,16 @@ exports.membershipList = membershipList;
 // =======================================================================
 // Purchase Membership
 const purchaseMembership = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
+        const userId = res.locals.jwt.userId;
+        // payment_details:- { transaction_id, payment_signature, payment_timestamp }
         const { membership_plan_id, payment_details } = req.body;
         const created_at = utility.utcDate();
+        const membershipSql = `SELECT id, name, currency, price FROM membership_prices WHERE id = ? AND status = 1`;
+        const [membership] = yield db_1.default.query(membershipSql, [membership_plan_id]);
+        const sql = `INSERT INTO payment_details (user_id, membership_plan_id, transaction_id, payment_signature, payment_timestamp, amount, currency, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        const values = [userId, membership_plan_id, payment_details.transaction_id, payment_details.payment_signature, payment_details.payment_timestamp, (_a = membership === null || membership === void 0 ? void 0 : membership.price) !== null && _a !== void 0 ? _a : 0, 'INR', created_at];
         // const sql = `INSERT INTO user_memberships (membership_plan_id, user_id, transaction_id, payment_status, amount, created_at) VALUES (?, ?, ?, ?, ?, ?)`;
         // await pool.query(sql, [membership_plan_id, user_id, transaction_id, payment_status, payment_response, created_at]);
         return apiResponse.successResponse(res, "Membership Purchased Successfully", []);
@@ -89,6 +96,7 @@ exports.purchaseMembership = purchaseMembership;
 const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
+        const userId = res.locals.jwt.userId;
         const { amount, currency } = req.body;
         let instance = new razorpay_1.default({
             key_id: (_a = process.env.RAZORPAY_KEY_ID) !== null && _a !== void 0 ? _a : '',
@@ -105,7 +113,7 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         //     receipt: receipt,
         //     payment_capture: payment_capture
         // };
-        instance.orders.create(options, (err, order) => {
+        instance.orders.create(options, (err, order) => __awaiter(void 0, void 0, void 0, function* () {
             if (err) {
                 console.log("err", err);
                 return apiResponse.errorMessage(res, 400, "Failed to generate Razorpay order");
@@ -113,8 +121,11 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             const resultResp = {
                 gatewayOrderId: order.id,
             };
+            const sql = `INSERT INTO gateway_created_orders(user_id, gateway_order_id, amount, currency, gateway_name, created_at) VALUES (?, ?, ?, ?, ?, ?)`;
+            const values = [userId, order.id, amount, currency, 'razorpay', utility.utcDate()];
+            const [rows] = yield db_1.default.query(sql, values);
             return apiResponse.successResponse(res, "Razorpay order generated successfully", resultResp);
-        });
+        }));
         // return apiResponse.successResponse(res, "Razorpay order generated successfully", {});
     }
     catch (e) {

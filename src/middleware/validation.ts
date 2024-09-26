@@ -121,8 +121,8 @@ export const purchaseMembershipValidation = async (req: Request, res: Response, 
         membership_plan_id: Joi.number().required(),
         payment_details: Joi.object({
             transaction_id: Joi.string().required(),
-            paymentSignature: Joi.string().required(),
-            paymentTimestamp: Joi.string().required(),
+            payment_signature: Joi.string().required(),
+            payment_timestamp: Joi.string().required(),
         }).required(),
     });
     const value = schema.validate(req.body);
