@@ -20,5 +20,28 @@ export const policyList = async (req: Request, res: Response) => {
     }
 }
 
+export const getLegalPages = async (req: Request, res: Response)=>{
+    try{
+       const type = req.query.type;
+       if ( !type ){
+        return apiResponse.errorMessage(res, 400, "Type is required");
+       } 
+       const types: string[] = ["cookiesPolicy", "privacyPolicy", "refundPolicy", "termAndCondition"];
+       if (types.includes(type.toString())){
+        const checkpagetype = `select description from legalAndPolicyPages where type = ?`
+
+        const [page] :any = await pool.query(checkpagetype, [type]);
+        apiResponse.successResponse(res, "Data Found",page[0])
+       } else {
+        return apiResponse.errorMessage(res, 400, `Type must be one of: ${types.join(', ')}`);
+       }
+     } catch (error){
+        console.log(error);
+        return apiResponse.errorMessage(res, 400, "Something Went Wrong")
+    }
+}
+
+
+
 // =======================================================================
 // =======================================================================
