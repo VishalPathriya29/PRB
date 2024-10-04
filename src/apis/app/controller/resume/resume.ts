@@ -11,15 +11,22 @@ export const addResume = async (req: Request, res: Response) => {
         const createdAt = utility.utcDate();
 
         const sql = `INSERT INTO resumes (user_id, resume_data, created_at) VALUES (?, ?, ?)`;
-        const VALUES = [userId, `${resume_data}`, createdAt];
-        await pool.query(sql, VALUES);
+        const VALUES = [userId, resume_data, createdAt];
+        const result: any = await pool.query(sql, VALUES);
 
-        return apiResponse.successResponse(res, "Resume Added Successfully", {});
+        const resumeId = result.insertId;
+
+        const checkResume = `SELECT id FROM resumes WHERE id = ? AND user_id = ?`;
+        const [resume]: any = await pool.query(checkResume, [resumeId, userId]);
+
+        if (resume.length === 0) return apiResponse.errorMessage(res, 400, "Resume Not Found");
+
+        return apiResponse.successResponse(res, "Resume Added Successfully", { id: resumeId });
     } catch (error) {
         console.log(error);
-        return apiResponse.errorMessage(res, 400, "Something Went Wrong")
+        return apiResponse.errorMessage(res, 400, "Something Went Wrong");
     }
-}
+};
 
 // =======================================================================
 // =======================================================================
