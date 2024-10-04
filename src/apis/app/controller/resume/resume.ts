@@ -12,9 +12,14 @@ export const addResume = async (req: Request, res: Response) => {
 
         const sql = `INSERT INTO resumes (user_id, resume_data, created_at) VALUES (?, ?, ?)`;
         const VALUES = [userId, resume_data, createdAt];
-        const result: any = await pool.query(sql, VALUES);
+        
+        const [result]: any = await pool.query(sql, VALUES);
 
         const resumeId = result.insertId;
+
+        if (!resumeId) {
+            return apiResponse.errorMessage(res, 400, "Failed to add resume.");
+        }
 
         const checkResume = `SELECT id FROM resumes WHERE id = ? AND user_id = ?`;
         const [resume]: any = await pool.query(checkResume, [resumeId, userId]);
@@ -27,6 +32,7 @@ export const addResume = async (req: Request, res: Response) => {
         return apiResponse.errorMessage(res, 400, "Something Went Wrong");
     }
 };
+
 
 // =======================================================================
 // =======================================================================
