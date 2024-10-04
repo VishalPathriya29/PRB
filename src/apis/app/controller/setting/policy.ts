@@ -26,9 +26,9 @@ export const getLegalPages = async (req: Request, res: Response)=>{
        if ( !type ){
         return apiResponse.errorMessage(res, 400, "Type is required");
        } 
-       const types: string[] = ["cookiesPolicy", "privacyPolicy", "refundPolicy", "termAndCondition"];
+       const types: string[] = ["cookiesPolicy", "privacyPolicy", "refundPolicy", "termAndCondition","aboutUs"];
        if (types.includes(type.toString())){
-        const checkpagetype = `select description from legalAndPolicyPages where type = ?`
+        const checkpagetype = `select  type, description from legalAndPolicyPages where type = ?`
 
         const [page] :any = await pool.query(checkpagetype, [type]);
         apiResponse.successResponse(res, "Data Found",page[0])
