@@ -5,6 +5,7 @@ import userRouter from "./controller/users";
 import membershipRouter from "./controller/membership";
 import resumeRouter from "./controller/resume";
 import settingRouter from "./controller/setting";
+import promptsRouter from "./controller/prompts";
 
 const appRoute = Router();
 
@@ -13,5 +14,6 @@ appRoute.use('/users', userRouter);
 appRoute.use('/membership', membershipRouter);  
 appRoute.use('/resume', resumeRouter);
 appRoute.use('/setting', settingRouter);
+appRoute.use('/prompts', promptsRouter);
 
 export default appRoute;

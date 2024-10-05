@@ -5,9 +5,6 @@ import * as policyController from './policy';
 import * as contactController from './ticket';
 import * as faqController from './faq';
 
-import {authenticatingToken} from '../../../../middleware/authorization';
-import * as validation from '../../../../middleware/validation';
-
 const settingRouter = Router();
 
 settingRouter.get('/blog/list', blogsController.blogList);
