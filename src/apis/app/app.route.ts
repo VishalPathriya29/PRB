@@ -6,6 +6,7 @@ import membershipRouter from "./controller/membership";
 import resumeRouter from "./controller/resume";
 import settingRouter from "./controller/setting";
 import promptsRouter from "./controller/prompts";
+import uploadSignatures from "./controller/uploads";
 
 const appRoute = Router();
 
@@ -15,5 +16,6 @@ appRoute.use('/membership', membershipRouter);
 appRoute.use('/resume', resumeRouter);
 appRoute.use('/setting', settingRouter);
 appRoute.use('/prompts', promptsRouter);
+appRoute.use('/upload', uploadSignatures);
 
 export default appRoute;

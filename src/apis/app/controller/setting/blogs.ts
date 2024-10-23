@@ -26,6 +26,7 @@ export const getBlogDetails = async (req: Request, res: Response) => {
     try {
         const blogId = req.query.id;
         
+        
         if (!blogId) return apiResponse.errorMessage(res, 400, "Blog Id is Required");
 
         const checkBlog = `SELECT * FROM blog_posts WHERE id = ?`;

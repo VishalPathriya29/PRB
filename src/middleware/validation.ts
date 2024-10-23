@@ -141,6 +141,7 @@ export const purchaseMembershipValidation = async (req: Request, res: Response, 
 // Generate Resume Validation
 export const generateResumeValidation = async (req: Request, res: Response, next: NextFunction) => {
     const schema = Joi.object({
+        type : Joi.string(),
         resume_id: Joi.number().required(),
         template_id: Joi.number().required(),
     });

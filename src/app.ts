@@ -6,9 +6,14 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import fs from 'fs';
 import apiRouter from "./apis/index.route";
+import path from 'path'
 // import { rateLimiterUsingThirdParty } from './middleware/rateLimiter';
 
 export default (app: Express) => {
+
+
+    app.use(express.static(path.join(__dirname, '..', 'public')));
+    app.use(express.static(path.join(__dirname, '..', 'uploads')));
     app.use(express.json());
     app.use(express.urlencoded({extended: true, limit: '50mb'}));
     app.use(cors());

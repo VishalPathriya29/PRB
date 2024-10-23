@@ -7,13 +7,18 @@ import * as apiResponse from '../../../../helper/response';
 import * as utility from '../../../../helper/utility';
 import pdf from 'html-pdf';
 import axios from "axios";
+import  htmlDocx from 'html-docx-js'; 
+import { Document, Packer, Paragraph } from 'docx';
+import mammoth from 'mammoth' ;
+const htmlToDocx = require('html-to-docx');
+
 
 
 
 export const downloadResume = async (req: Request, res: Response) => {
     try {
         const userId = res.locals.jwt.userId;
-        const { resume_id, template_id } = req.body;
+        const { resume_id, template_id, type } = req.body;
         let fullHtml: any;
 
         const checkResume = `SELECT id, resume_data FROM resumes WHERE id = ? AND user_id = ?`;
@@ -1240,7 +1245,6 @@ export const downloadResume = async (req: Request, res: Response) => {
                 message: 'Resume created.'
             };
 
-            console.log("PHP to JS Converter", JSON.stringify(response));
         } else {
             console.log(JSON.stringify({ status: 'error', message: 'No record found.' }));
         }
@@ -1265,47 +1269,53 @@ export const downloadResume = async (req: Request, res: Response) => {
         </html>
         `;
         */
-
+        
         // create resume pdf
-        const options: any = { format: 'A4' };
-        const fileName = `${utility.randomString(10)}.pdf`;
-        const filePath = path.join(__dirname, '../../../../../public/resumes', fileName);
+        if (type === 'pdf') {
+            // PDF Generation (same as before)
+            const options: any = { format: 'A4' };
+            const fileName = `${utility.randomString(10)}.pdf`;
+            const filePath = path.join(__dirname, '../../../../../public/resumes', fileName);
 
-        pdf.create(fullHtml, options).toFile(filePath, async function (err: any, response: any) {
-            if (err) {
-                console.log(err);
-                return apiResponse.errorMessage(res, 400, "Failed to Generate Resume, Please try again later")
-            }
-
-            const url = `${process.env.BASE_URL}/resumes/${fileName}`;
-            const updateSql = `UPDATE resumes SET url = ? WHERE id = ?`;
-            await pool.query(updateSql, [url, resume_id]);
-
-            // upload the file
-            const formData = {
-                filename: fs.createReadStream(filePath),
-                type: 'image'
-            };
-
-            const uploadResponse:any = await axios.post('https://lookingforresume.com/lfrbuilder/uploadFile.php', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-
-            // unlink the file
-            fs.unlink(filePath, (err) => {
+            pdf.create(fullHtml, options).toFile(filePath, async function (err: any, response: any) {
                 if (err) {
-                    console.error(err)
-                    return apiResponse.errorMessage(res, 400, "Failed to Generate Resume, Please try again later")
+                    console.log(err);
+                    return apiResponse.errorMessage(res, 400, "Failed to Generate Resume, Please try again later");
                 }
+
+                const url = `${process.env.BASE_URL}/resumes/${fileName}`;
+                const updateSql = `UPDATE resumes SET url = ? WHERE id = ?`;
+                await pool.query(updateSql, [url, resume_id]);
+
+                return apiResponse.successResponse(res, "Resume Generated Successfully", { url });
             });
-            return apiResponse.successResponse(res, "Resume Generated Successfully", { url: uploadResponse.data.data.image });
-        });
+
+        } else if (type === 'docx') {
+            const docxBuffer = await htmlToDocx(fullHtml, null, {
+                table: { row: { cantSplit: true } },
+                footer: true,
+              });
+              fs.writeFileSync('output.docx', docxBuffer);
+              console.log('DOCX file created successfully!');
+
+              const url = `localhost:3000/output.docx`;
+            // const fileName = `${utility.randomString(10)}.docx`;
+            // const filePath = path.join(__dirname, '../../../../../public/resumes', fileName);
+
+            // const url = 'localhost:3000/' + fileName;
+
+            // const docxBuffer = htmlDocx.asBlob(fullHtml);
+            // fs.writeFileSync(filePath, (docxBuffer).toString());
+
+            return apiResponse.successResponse(res, "Resume Generated Successfully", { url });
+           
+        } else {
+            return apiResponse.errorMessage(res, 400, "Invalid resume type");
+        }
     } catch (error) {
         console.log(error);
         return apiResponse.errorMessage(res, 400, "Something Went Wrong")
-    }
+    } 
 }
 // =======================================================================
 // =======================================================================
