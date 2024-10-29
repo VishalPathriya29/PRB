@@ -156,6 +156,7 @@ exports.purchaseMembershipValidation = purchaseMembershipValidation;
 // Generate Resume Validation
 const generateResumeValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const schema = joi_1.default.object({
+        type: joi_1.default.string(),
         resume_id: joi_1.default.number().required(),
         template_id: joi_1.default.number().required(),
     });

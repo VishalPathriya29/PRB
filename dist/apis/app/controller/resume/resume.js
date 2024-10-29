@@ -46,9 +46,17 @@ const addResume = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         resume_data = JSON.stringify(resume_data);
         const createdAt = utility.utcDate();
         const sql = `INSERT INTO resumes (user_id, resume_data, created_at) VALUES (?, ?, ?)`;
-        const VALUES = [userId, `${resume_data}`, createdAt];
-        yield db_1.default.query(sql, VALUES);
-        return apiResponse.successResponse(res, "Resume Added Successfully", {});
+        const VALUES = [userId, resume_data, createdAt];
+        const [result] = yield db_1.default.query(sql, VALUES);
+        const resumeId = result.insertId;
+        if (!resumeId) {
+            return apiResponse.errorMessage(res, 400, "Failed to add resume.");
+        }
+        const checkResume = `SELECT id FROM resumes WHERE id = ? AND user_id = ?`;
+        const [resume] = yield db_1.default.query(checkResume, [resumeId, userId]);
+        if (resume.length === 0)
+            return apiResponse.errorMessage(res, 400, "Resume Not Found");
+        return apiResponse.successResponse(res, "Resume Added Successfully", { id: resumeId });
     }
     catch (error) {
         console.log(error);

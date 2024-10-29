@@ -35,42 +35,50 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBlogDetails = exports.blogList = void 0;
+exports.uploadSignatures = void 0;
 const db_1 = __importDefault(require("../../../../db"));
 const apiResponse = __importStar(require("../../../../helper/response"));
-const blogList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const sql = `SELECT * FROM blog_posts WHERE status = 1`;
-        const [rows] = yield db_1.default.query(sql);
-        if (rows.length > 0) {
-            return apiResponse.successResponse(res, "Blog List", rows);
-        }
-        else {
-            return apiResponse.successResponse(res, "No Blog Found", []);
-        }
-    }
-    catch (error) {
-        console.log(error);
-        return apiResponse.errorMessage(res, 400, "Something Went Wrong");
+const multer_1 = __importDefault(require("multer"));
+const path_1 = __importDefault(require("path"));
+const storage = multer_1.default.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/signatures/');
+    },
+    filename: (req, file, cb) => {
+        const ext = path_1.default.extname(file.originalname);
+        cb(null, `${Date.now()}${ext}`);
+        console.log(file);
     }
 });
-exports.blogList = blogList;
-// =======================================================================
-// =======================================================================
-const getBlogDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const blogId = req.query.id;
-        if (!blogId)
-            return apiResponse.errorMessage(res, 400, "Blog Id is Required");
-        const checkBlog = `SELECT * FROM blog_posts WHERE id = ?`;
-        const [blog] = yield db_1.default.query(checkBlog, [blogId]);
-        if (blog.length === 0)
-            return apiResponse.errorMessage(res, 400, "Blog Not Found");
-        apiResponse.successResponse(res, "Data Found", blog[0]);
-    }
-    catch (error) {
-        console.log(error);
-        return apiResponse.errorMessage(res, 400, "Something Went Wrong");
-    }
+const upload = (0, multer_1.default)({ storage }).single('signature');
+const uploadSignatures = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    upload(req, res, (err) => __awaiter(void 0, void 0, void 0, function* () {
+        if (err) {
+            console.log(err);
+            return apiResponse.errorMessage(res, 400, 'Error uploading file');
+        }
+        const userId = req.body.user_id;
+        const file = req.file;
+        if (!userId || !file) {
+            console.log(userId, file);
+            return apiResponse.errorMessage(res, 400, "User id and signature file are required");
+        }
+        const [rows] = yield db_1.default.query('SELECT id FROM users WHERE id = ?', [userId]);
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const signatureUrl = `/uploads/signatures/${file.filename}`;
+        try {
+            const [result] = yield db_1.default.query('INSERT INTO user_signatures (user_id, signature_url) VALUES (?, ?)', [userId, signatureUrl]);
+            return apiResponse.successResponse(res, "Signature uploaded successfully", {
+                signature: signatureUrl
+            });
+        }
+        catch (error) {
+            console.log(error);
+            return apiResponse.errorMessage(res, 400, "Something went wrong");
+        }
+    }));
 });
-exports.getBlogDetails = getBlogDetails;
+exports.uploadSignatures = uploadSignatures;
+exports.default = exports.uploadSignatures;

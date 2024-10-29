@@ -10,8 +10,11 @@ const helmet_1 = __importDefault(require("helmet"));
 const morgan_1 = __importDefault(require("morgan"));
 const fs_1 = __importDefault(require("fs"));
 const index_route_1 = __importDefault(require("./apis/index.route"));
+const path_1 = __importDefault(require("path"));
 // import { rateLimiterUsingThirdParty } from './middleware/rateLimiter';
 exports.default = (app) => {
+    app.use(express_1.default.static(path_1.default.join(__dirname, '..', 'public')));
+    app.use(express_1.default.static(path_1.default.join(__dirname, '..', 'uploads')));
     app.use(express_1.default.json());
     app.use(express_1.default.urlencoded({ extended: true, limit: '50mb' }));
     app.use((0, cors_1.default)());

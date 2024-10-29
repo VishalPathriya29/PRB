@@ -35,42 +35,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBlogDetails = exports.blogList = void 0;
+exports.createTicket = void 0;
 const db_1 = __importDefault(require("../../../../db"));
 const apiResponse = __importStar(require("../../../../helper/response"));
-const blogList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const createTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const sql = `SELECT * FROM blog_posts WHERE status = 1`;
-        const [rows] = yield db_1.default.query(sql);
-        if (rows.length > 0) {
-            return apiResponse.successResponse(res, "Blog List", rows);
+        const { first_name, email, last_name, message } = req.body;
+        const fields = ["first name", "email", "message"];
+        if (!first_name || !email || !message) {
+            return apiResponse.errorMessage(res, 400, `Required fields are: ${fields.join(', ')}`);
         }
-        else {
-            return apiResponse.successResponse(res, "No Blog Found", []);
-        }
+        const createTicketForContact = `INSERT INTO tickets( first_name, last_name,message, email) VALUES (?, ?, ?, ?)`;
+        const VALUES = [first_name, last_name, message, email];
+        const [data] = yield db_1.default.query(createTicketForContact, VALUES);
+        return apiResponse.successResponse(res, "Ticket Created Successfull", null);
     }
     catch (error) {
         console.log(error);
         return apiResponse.errorMessage(res, 400, "Something Went Wrong");
     }
 });
-exports.blogList = blogList;
-// =======================================================================
-// =======================================================================
-const getBlogDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const blogId = req.query.id;
-        if (!blogId)
-            return apiResponse.errorMessage(res, 400, "Blog Id is Required");
-        const checkBlog = `SELECT * FROM blog_posts WHERE id = ?`;
-        const [blog] = yield db_1.default.query(checkBlog, [blogId]);
-        if (blog.length === 0)
-            return apiResponse.errorMessage(res, 400, "Blog Not Found");
-        apiResponse.successResponse(res, "Data Found", blog[0]);
-    }
-    catch (error) {
-        console.log(error);
-        return apiResponse.errorMessage(res, 400, "Something Went Wrong");
-    }
-});
-exports.getBlogDetails = getBlogDetails;
+exports.createTicket = createTicket;

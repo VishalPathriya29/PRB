@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authenticatingToken = authenticatingToken;
+exports.authenticatingToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 require("dotenv/config");
 const secretKey = process.env.SECRET;
@@ -38,3 +38,4 @@ function authenticatingToken(req, res, next) {
         next();
     }));
 }
+exports.authenticatingToken = authenticatingToken;

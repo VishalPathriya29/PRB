@@ -94,12 +94,12 @@ exports.purchaseMembership = purchaseMembership;
 // =======================================================================
 // =======================================================================
 const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _b;
     try {
         const userId = res.locals.jwt.userId;
         const { amount, currency } = req.body;
         let instance = new razorpay_1.default({
-            key_id: (_a = process.env.RAZORPAY_KEY_ID) !== null && _a !== void 0 ? _a : '',
+            key_id: (_b = process.env.RAZORPAY_KEY_ID) !== null && _b !== void 0 ? _b : '',
             key_secret: process.env.RAZORPAY_KEY_SECRET
         });
         const options = {

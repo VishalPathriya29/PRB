@@ -35,18 +35,45 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBlogDetails = exports.blogList = void 0;
+exports.getFaqs = void 0;
 const db_1 = __importDefault(require("../../../../db"));
 const apiResponse = __importStar(require("../../../../helper/response"));
-const blogList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getFaqs = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const sql = `SELECT * FROM blog_posts WHERE status = 1`;
-        const [rows] = yield db_1.default.query(sql);
-        if (rows.length > 0) {
-            return apiResponse.successResponse(res, "Blog List", rows);
+        const type = req.query.type;
+        if (!type || type === "all") {
+            const faqCategoriesQuery = `SELECT * FROM faq_category`;
+            const [faqCategories] = yield db_1.default.query(faqCategoriesQuery);
+            const faqsQuery = `SELECT * FROM faqs`;
+            const [faqs] = yield db_1.default.query(faqsQuery);
+            const result = faqCategories.map((category) => {
+                const categoryFaqs = faqs.filter((faq) => faq.category_id === category.id);
+                return {
+                    type: category.type,
+                    faqData: categoryFaqs.map((faq) => ({
+                        question: faq.question,
+                        answer: faq.answer
+                    }))
+                };
+            });
+            return apiResponse.successResponse(res, "FAQs fetched successfully", result);
         }
         else {
-            return apiResponse.successResponse(res, "No Blog Found", []);
+            const faqCategoryQuery = `SELECT * FROM faq_category WHERE type = ?`;
+            const [faqCategory] = yield db_1.default.query(faqCategoryQuery, [type]);
+            if (faqCategory.length === 0) {
+                return apiResponse.errorMessage(res, 400, "FAQ category not found");
+            }
+            const faqsQuery = `SELECT * FROM faqs WHERE category_id = ?`;
+            const [faqs] = yield db_1.default.query(faqsQuery, [faqCategory[0].id]);
+            const result = faqCategory.map((category) => ({
+                type: category.type,
+                faqData: faqs.map((faq) => ({
+                    question: faq.question,
+                    answer: faq.answer
+                }))
+            }));
+            return apiResponse.successResponse(res, "FAQs fetched successfully", result);
         }
     }
     catch (error) {
@@ -54,23 +81,4 @@ const blogList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return apiResponse.errorMessage(res, 400, "Something Went Wrong");
     }
 });
-exports.blogList = blogList;
-// =======================================================================
-// =======================================================================
-const getBlogDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const blogId = req.query.id;
-        if (!blogId)
-            return apiResponse.errorMessage(res, 400, "Blog Id is Required");
-        const checkBlog = `SELECT * FROM blog_posts WHERE id = ?`;
-        const [blog] = yield db_1.default.query(checkBlog, [blogId]);
-        if (blog.length === 0)
-            return apiResponse.errorMessage(res, 400, "Blog Not Found");
-        apiResponse.successResponse(res, "Data Found", blog[0]);
-    }
-    catch (error) {
-        console.log(error);
-        return apiResponse.errorMessage(res, 400, "Something Went Wrong");
-    }
-});
-exports.getBlogDetails = getBlogDetails;
+exports.getFaqs = getFaqs;
