@@ -41,63 +41,68 @@ export const addResume = async (req: Request, res: Response) => {
 export const resumeList = async (req: Request, res: Response) => {
     try {
         const userId = res.locals.jwt.userId;
-        const sql = `SELECT resumes.id, resumes.resume_data, resumes.url, templates.html, templates.css FROM resumes 
-        LEFT JOIN templates ON resumes.templates_id = templates.id
-        WHERE resumes.user_id = ${userId} AND resumes.deleted_at IS NULL`;
+        const sql = `SELECT id, resume_data, url, templates_id FROM resumes WHERE user_id = ${userId} AND deleted_at IS NULL`;
         const [rows]: any = await pool.query(sql);
-
+        let fullHtml: any;
+        let resumeArrayData: Array<Map<string, any>> = [];
         if (rows.length > 0) {
-            // Merge HTML and CSS into one field and exclude original html and css fields
-            const mergedRows = rows.map((row: any) => {
+            console.log("rows length", rows.length);
 
-         let fullHtml :any 
+            for (const resume of rows) {
+                console.log("resume", resume);
+                const checkTemplate = `SELECT * FROM templates WHERE id = ? AND status = 1`;
+                const [template]: any = await pool.query(checkTemplate, [resume.templates_id]);
+                if (template.length === 0) {
+                  return apiResponse.errorMessage(res, 400, "Template Not Found");
+                }
 
-                const resumeData = JSON.parse(row.resume_data);
+                console.log("template data is  ", template);
+                const resumeData = JSON.parse(resume.resume_data);
+                console.log("template data is  ", resumeData);
+
+                const templateData = template[0];
+   
+                const html = templateData.html;
+                const css = templateData.css;
         
-                // get html and css from templateData and use them
-                const html = row.html;
-                const css = row.css;
-        
-                // create template from html
-                const templateHtml = Handlebars.compile(html);
-                const templateCss = Handlebars.compile(css);
-        
-                // TODO: Check all empty fields and remove them from resumeData
+               
+
+
                 const replaceData = (data: any, find: any, replace: any) => {
                     return data.replace(find, replace);
                 };
-        
-                let tempStyle = css;
-        
-                let dataNew = html;
-                let dataNew1 = `
-                <html lang="en" dir="ltr">
-                <head>
-                    <style> ${tempStyle} 
-                    .fa-heart:before {content: "\\f004"} 
-                    .resume_right ul{margin-left: 15px;} 
-                    .resume_exp{display:block;} 
-                    .resume_right ol{margin-left: 15px;} 
-                    .resume_right .resume_references ul{margin-left:0px !important;} 
-                    .resume_right .resume_skills ul{margin-left:0px !important;} 
-                    .resume_right .resume_interest ul{margin-left:0px !important;} 
-                    .resume_right .resume_language ul{margin-left:0px !important;}
-                    </style>
-                </head>
-                <body id="resume" cz-shortcut-listen="true" contentEditable="true" spellcheck="true">`;
-        
-                let dataNew3 = `</body></html>`;
-        
-        
-                  
+                console.log("template is ", template.length);
+                if (template.length > 0) {
+                    console.log("template is ", template);
+                    const templateList = template[0];
         
                     let data: any = {};
                     data.content = resumeData;
                     data.style = css;
                     let content = data.content;
         
-                    // console.log('content', content);
+                    console.log('content is asd', content);
         
+                    let dataNew = html;
+                    let tempStyle = data.style;
+        
+                    let dataNew1 = `
+                    <html lang="en" dir="ltr">
+                    <head>
+                        <style> ${tempStyle} 
+                        .fa-heart:before {content: "\\f004"} 
+                        .resume_right ul{margin-left: 15px;} 
+                        .resume_exp{display:block;} 
+                        .resume_right ol{margin-left: 15px;} 
+                        .resume_right .resume_references ul{margin-left:0px !important;} 
+                        .resume_right .resume_skills ul{margin-left:0px !important;} 
+                        .resume_right .resume_interest ul{margin-left:0px !important;} 
+                        .resume_right .resume_language ul{margin-left:0px !important;}
+                        </style>
+                    </head>
+                    <body id="resume" cz-shortcut-listen="true" contentEditable="true" spellcheck="true">`;
+                      
+                    let dataNew3 = `</body></html>`;
         
                     if (content?.resumePurpose) {
                         dataNew = dataNew.replace('{job_position}', content.resumePurpose);
@@ -1252,22 +1257,27 @@ export const resumeList = async (req: Request, res: Response) => {
                         dataNew = dataNew.replace('{newDeclaration}', '');
                     }
         
-
         
-                fullHtml = dataNew + dataNew1 + dataNew3;
+                    fullHtml = dataNew + dataNew1 + dataNew3;
+                    const resumeEntry = new Map<string, any>();
+
+                    resumeEntry.set("resumeData", resume.resume_data);
+                    resumeEntry.set("html", fullHtml);
+                    resumeEntry.set("id", resume.id);
+
+                    console.log("resumeEntry", resumeEntry);
+    
+                    
+                    resumeArrayData.push(resumeEntry);
         
+                } else {
+                    console.log(JSON.stringify({ status: 'error', message: 'No record found.' }));
+                }
+              }
+             console.log("resumeArrayData", resumeArrayData);
+             const formattedResumeArrayData = resumeArrayData.map(entry => mapToObject(entry));
 
-
-
-                return {
-                    id: row.id,
-                    url: row.url,
-
-                    fullContent: fullHtml,
-                };
-            });
-
-            return apiResponse.successResponse(res, "Resume List", mergedRows);
+            return apiResponse.successResponse(res, "Resume List", formattedResumeArrayData);
         } else {
             return apiResponse.successResponse(res, "No Resume Found", []);
         }
@@ -1277,6 +1287,13 @@ export const resumeList = async (req: Request, res: Response) => {
     }
 }
 
+const mapToObject = (map: Map<string, any>): { [key: string]: any } => {
+    const obj: { [key: string]: any } = {};
+    map.forEach((value, key) => {
+        obj[key] = value;
+    });
+    return obj;
+};
 // =======================================================================
 // =======================================================================
 
