@@ -18,7 +18,7 @@ const htmlToDocx = require('html-to-docx');
 export const downloadResume = async (req: Request, res: Response) => {
     try {
         const userId = res.locals.jwt.userId;
-        const { resume_id, template_id, type } = req.body;
+        const { resume_id, template_id } = req.body;
         let fullHtml: any;
 
         const checkResume = `SELECT id, resume_data FROM resumes WHERE id = ? AND user_id = ?`;
@@ -1271,8 +1271,10 @@ export const downloadResume = async (req: Request, res: Response) => {
         */
         
         // create resume pdf
-        if (type === 'pdf') {
+        // if (type === 'pdf') {
             // PDF Generation (same as before)
+
+
             const options: any = { format: 'A4' };
             const fileName = `${utility.randomString(10)}.pdf`;
             const filePath = path.join(__dirname, '../../../../../public/resumes', fileName);
@@ -1290,28 +1292,28 @@ export const downloadResume = async (req: Request, res: Response) => {
                 return apiResponse.successResponse(res, "Resume Generated Successfully", { url });
             });
 
-        } else if (type === 'docx') {
-            const docxBuffer = await htmlToDocx(fullHtml, null, {
-                table: { row: { cantSplit: true } },
-                footer: true,
-              });
-              fs.writeFileSync('output.docx', docxBuffer);
-              console.log('DOCX file created successfully!');
+        // } else if (type === 'docx') {
+        //     const docxBuffer = await htmlToDocx(fullHtml, null, {
+        //         table: { row: { cantSplit: true } },
+        //         footer: true,
+        //       });
+        //       fs.writeFileSync('output.docx', docxBuffer);
+        //       console.log('DOCX file created successfully!');
 
-              const url = `localhost:3000/output.docx`;
-            // const fileName = `${utility.randomString(10)}.docx`;
-            // const filePath = path.join(__dirname, '../../../../../public/resumes', fileName);
+        //       const url = `localhost:3000/output.docx`;
+        //     // const fileName = `${utility.randomString(10)}.docx`;
+        //     // const filePath = path.join(__dirname, '../../../../../public/resumes', fileName);
 
-            // const url = 'localhost:3000/' + fileName;
+        //     // const url = 'localhost:3000/' + fileName;
 
-            // const docxBuffer = htmlDocx.asBlob(fullHtml);
-            // fs.writeFileSync(filePath, (docxBuffer).toString());
+        //     // const docxBuffer = htmlDocx.asBlob(fullHtml);
+        //     // fs.writeFileSync(filePath, (docxBuffer).toString());
 
-            return apiResponse.successResponse(res, "Resume Generated Successfully", { url });
+        //     return apiResponse.successResponse(res, "Resume Generated Successfully", { url });
            
-        } else {
-            return apiResponse.errorMessage(res, 400, "Invalid resume type");
-        }
+        // } else {
+        //     return apiResponse.errorMessage(res, 400, "Invalid resume type");
+        // }
     } catch (error) {
         console.log(error);
         return apiResponse.errorMessage(res, 400, "Something Went Wrong")
@@ -1324,11 +1326,15 @@ export const downloadResume = async (req: Request, res: Response) => {
 export const createResume = async (req: Request, res: Response) => {
     try {
         const userId = res.locals.jwt.userId;
+        console.log(userId);
+        
         const { resume_id, template_id } = req.body;
         let fullHtml: any;
 
         const checkResume = `SELECT id, resume_data FROM resumes WHERE id = ? AND user_id = ?`;
         const [resume]: any = await pool.query(checkResume, [resume_id, userId]);
+        console.log(resume);
+        
         if (resume.length === 0) return apiResponse.errorMessage(res, 400, "Resume Not Found");
 
         const checkTemplate = `SELECT * FROM templates WHERE id = ? AND status = 1`;
@@ -1390,7 +1396,7 @@ export const createResume = async (req: Request, res: Response) => {
                 dataNew = dataNew.replace('{job_position}', '');
             }
 
-            // Email Replacement
+            // Email Replacementf
             if (content?.personalDetails?.email) {
                 dataNew = dataNew.replace('{email}', content.personalDetails.email);
                 dataNew = dataNew.replace('{emailone}', `<li> 

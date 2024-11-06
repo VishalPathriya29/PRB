@@ -35,18 +35,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBlogDetails = exports.blogList = void 0;
-const db_1 = __importDefault(require("../../../../db"));
+exports.getLanguageSuggestion = void 0;
 const apiResponse = __importStar(require("../../../../helper/response"));
-const blogList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const language_json_1 = __importDefault(require("../../../../config/language.json"));
+const getLanguageSuggestion = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const sql = `SELECT * FROM blog_posts WHERE status = 1`;
-        const [rows] = yield db_1.default.query(sql);
-        if (rows.length > 0) {
-            return apiResponse.successResponse(res, "Blog List", rows);
+        // const keyword = req.query.keyword as string;
+        // if (!keyword) {
+        //     return apiResponse.successResponse(res, "Type a word to get suggestions", []);
+        // }
+        const suggestions = language_json_1.default.languages;
+        // .filter((lang: string) =>
+        //     lang.toLowerCase().includes(keyword.toLowerCase())
+        // );
+        if (suggestions.length <= 0) {
+            return apiResponse.successResponse(res, "No Data Found", []);
         }
         else {
-            return apiResponse.successResponse(res, "No Blog Found", []);
+            return apiResponse.successResponse(res, "Data fetch successfully", suggestions);
         }
     }
     catch (error) {
@@ -54,23 +60,4 @@ const blogList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return apiResponse.errorMessage(res, 400, "Something Went Wrong");
     }
 });
-exports.blogList = blogList;
-// =======================================================================
-// =======================================================================
-const getBlogDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const blogId = req.query.id;
-        if (!blogId)
-            return apiResponse.errorMessage(res, 400, "Blog Id is Required");
-        const checkBlog = `SELECT * FROM blog_posts WHERE id = ?`;
-        const [blog] = yield db_1.default.query(checkBlog, [blogId]);
-        if (blog.length === 0)
-            return apiResponse.errorMessage(res, 400, "Blog Not Found");
-        apiResponse.successResponse(res, "Data Found", blog[0]);
-    }
-    catch (error) {
-        console.log(error);
-        return apiResponse.errorMessage(res, 400, "Something Went Wrong");
-    }
-});
-exports.getBlogDetails = getBlogDetails;
+exports.getLanguageSuggestion = getLanguageSuggestion;

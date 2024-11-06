@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.jwtGenerate = exports.timeDiff = exports.utcDateWithExtraTime = exports.utcDate = void 0;
 exports.randomString = randomString;
 exports.randomNumber = randomNumber;
+exports.uploadImage = uploadImage;
 const moment_1 = __importDefault(require("moment"));
 require("moment-timezone");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -123,6 +124,8 @@ function randomNumber(length) {
         text += i > 0 && sup == i ? "0" : possibleChar.charAt(sup);
     }
     return Number(text);
+}
+function uploadImage() {
 }
 // ====================================================================================================
 // ====================================================================================================

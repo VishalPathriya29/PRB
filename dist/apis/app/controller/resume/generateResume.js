@@ -37,13 +37,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createResume = exports.downloadResume = void 0;
 const path_1 = __importDefault(require("path"));
-const fs_1 = __importDefault(require("fs"));
 const handlebars_1 = __importDefault(require("handlebars"));
 const db_1 = __importDefault(require("../../../../db"));
 const apiResponse = __importStar(require("../../../../helper/response"));
 const utility = __importStar(require("../../../../helper/utility"));
 const html_pdf_1 = __importDefault(require("html-pdf"));
-const axios_1 = __importDefault(require("axios"));
+const htmlToDocx = require('html-to-docx');
 const downloadResume = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6;
     try {
@@ -1179,7 +1178,6 @@ const downloadResume = (req, res) => __awaiter(void 0, void 0, void 0, function*
                 data: fullHtml,
                 message: 'Resume created.'
             };
-            console.log("PHP to JS Converter", JSON.stringify(response));
         }
         else {
             console.log(JSON.stringify({ status: 'error', message: 'No record found.' }));
@@ -1202,6 +1200,8 @@ const downloadResume = (req, res) => __awaiter(void 0, void 0, void 0, function*
         `;
         */
         // create resume pdf
+        // if (type === 'pdf') {
+        // PDF Generation (same as before)
         const options = { format: 'A4' };
         const fileName = `${utility.randomString(10)}.pdf`;
         const filePath = path_1.default.join(__dirname, '../../../../../public/resumes', fileName);
@@ -1214,26 +1214,26 @@ const downloadResume = (req, res) => __awaiter(void 0, void 0, void 0, function*
                 const url = `${process.env.BASE_URL}/resumes/${fileName}`;
                 const updateSql = `UPDATE resumes SET url = ? WHERE id = ?`;
                 yield db_1.default.query(updateSql, [url, resume_id]);
-                // upload the file
-                const formData = {
-                    filename: fs_1.default.createReadStream(filePath),
-                    type: 'image'
-                };
-                const uploadResponse = yield axios_1.default.post('https://lookingforresume.com/lfrbuilder/uploadFile.php', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-                // unlink the file
-                fs_1.default.unlink(filePath, (err) => {
-                    if (err) {
-                        console.error(err);
-                        return apiResponse.errorMessage(res, 400, "Failed to Generate Resume, Please try again later");
-                    }
-                });
-                return apiResponse.successResponse(res, "Resume Generated Successfully", { url: uploadResponse.data.data.image });
+                return apiResponse.successResponse(res, "Resume Generated Successfully", { url });
             });
         });
+        // } else if (type === 'docx') {
+        //     const docxBuffer = await htmlToDocx(fullHtml, null, {
+        //         table: { row: { cantSplit: true } },
+        //         footer: true,
+        //       });
+        //       fs.writeFileSync('output.docx', docxBuffer);
+        //       console.log('DOCX file created successfully!');
+        //       const url = `localhost:3000/output.docx`;
+        //     // const fileName = `${utility.randomString(10)}.docx`;
+        //     // const filePath = path.join(__dirname, '../../../../../public/resumes', fileName);
+        //     // const url = 'localhost:3000/' + fileName;
+        //     // const docxBuffer = htmlDocx.asBlob(fullHtml);
+        //     // fs.writeFileSync(filePath, (docxBuffer).toString());
+        //     return apiResponse.successResponse(res, "Resume Generated Successfully", { url });
+        // } else {
+        //     return apiResponse.errorMessage(res, 400, "Invalid resume type");
+        // }
     }
     catch (error) {
         console.log(error);
@@ -1248,10 +1248,12 @@ const createResume = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6;
     try {
         const userId = res.locals.jwt.userId;
+        console.log(userId);
         const { resume_id, template_id } = req.body;
         let fullHtml;
         const checkResume = `SELECT id, resume_data FROM resumes WHERE id = ? AND user_id = ?`;
         const [resume] = yield db_1.default.query(checkResume, [resume_id, userId]);
+        console.log(resume);
         if (resume.length === 0)
             return apiResponse.errorMessage(res, 400, "Resume Not Found");
         const checkTemplate = `SELECT * FROM templates WHERE id = ? AND status = 1`;
@@ -1301,7 +1303,7 @@ const createResume = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             else {
                 dataNew = dataNew.replace('{job_position}', '');
             }
-            // Email Replacement
+            // Email Replacementf
             if ((_a = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _a === void 0 ? void 0 : _a.email) {
                 dataNew = dataNew.replace('{email}', content.personalDetails.email);
                 dataNew = dataNew.replace('{emailone}', `<li> 

@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.policyList = void 0;
+exports.getLegalPages = exports.policyList = void 0;
 const db_1 = __importDefault(require("../../../../db"));
 const apiResponse = __importStar(require("../../../../helper/response"));
 const policyList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -55,5 +55,27 @@ const policyList = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.policyList = policyList;
+const getLegalPages = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const type = req.query.type;
+        if (!type) {
+            return apiResponse.errorMessage(res, 400, "Type is required");
+        }
+        const types = ["cookiesPolicy", "privacyPolicy", "refundPolicy", "termAndCondition", "aboutUs"];
+        if (types.includes(type.toString())) {
+            const checkpagetype = `select  type, description from legalAndPolicyPages where type = ?`;
+            const [page] = yield db_1.default.query(checkpagetype, [type]);
+            apiResponse.successResponse(res, "Data Found", page[0]);
+        }
+        else {
+            return apiResponse.errorMessage(res, 400, `Type must be one of: ${types.join(', ')}`);
+        }
+    }
+    catch (error) {
+        console.log(error);
+        return apiResponse.errorMessage(res, 400, "Something Went Wrong");
+    }
+});
+exports.getLegalPages = getLegalPages;
 // =======================================================================
 // =======================================================================
