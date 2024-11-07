@@ -71,6 +71,8 @@ export const createOrder = async (req: Request, res: Response) => {
             key_id: process.env.RAZORPAY_KEY_ID ?? '',
             key_secret: process.env.RAZORPAY_KEY_SECRET
         });
+
+ 
         const options = {
             amount: parseInt((amount * 100).toFixed(0)),
             currency: currency,
@@ -81,7 +83,10 @@ export const createOrder = async (req: Request, res: Response) => {
         //     currency: currency,
         //     receipt: receipt,
         //     payment_capture: payment_capture
-        // };
+        // }
+
+        console.log(options, "opeionss");
+        
 
         instance.orders.create(options, async (err: any, order: any) => {
             if (err) {
