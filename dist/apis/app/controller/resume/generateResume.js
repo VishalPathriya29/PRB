@@ -15,13 +15,23 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -1248,7 +1258,7 @@ exports.downloadResume = downloadResume;
 // =======================================================================
 // CREATE RESUME Generate resume
 const createResume = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36, _37;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6;
     try {
         const userId = res.locals.jwt.userId;
         const { resume_id, template_id } = req.body;
@@ -1305,7 +1315,7 @@ const createResume = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 dataNew = dataNew.replace('{job_position}', '');
             }
             // Email Replacement
-            if ((_7 = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _7 === void 0 ? void 0 : _7.email) {
+            if ((_a = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _a === void 0 ? void 0 : _a.email) {
                 dataNew = dataNew.replace('{email}', content.personalDetails.email);
                 dataNew = dataNew.replace('{emailone}', `<li> 
                     <div class="icon"><i class="fas fa-envelope"></i></div>
@@ -1327,7 +1337,7 @@ const createResume = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 dataNew = dataNew.replace('{emailfour}', '');
             }
             // Address Replacement
-            if ((_8 = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _8 === void 0 ? void 0 : _8.address) {
+            if ((_b = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _b === void 0 ? void 0 : _b.address) {
                 dataNew = dataNew.replace('{address}', content.personalDetails.address);
                 dataNew = dataNew.replace('{addresstwo}', `<li class="exper_dot">${content.personalDetails.address}</li>`);
                 dataNew = dataNew.replace('{addressthree}', `<li> <div class="icon"> <i class="fas fa-map-marker-alt"></i>
@@ -1345,7 +1355,7 @@ const createResume = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 dataNew = dataNew.replace('{addressone}', '');
             }
             // Phone Replacement
-            if ((_9 = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _9 === void 0 ? void 0 : _9.phone) {
+            if ((_c = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _c === void 0 ? void 0 : _c.phone) {
                 dataNew = dataNew.replace('{phone}', content.personalDetails.phone);
                 dataNew = dataNew.replace('{phonedesignone}', `<li><div class="icon"><i class="fas fa-phone-alt"></i></div>
                     <div class="data"> ${content.personalDetails.phone} </div></li>`);
@@ -1363,7 +1373,7 @@ const createResume = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 dataNew = dataNew.replace('{phonedesignfour}', '');
             }
             // Date of Birth Replacement
-            if ((_10 = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _10 === void 0 ? void 0 : _10.dob) {
+            if ((_d = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _d === void 0 ? void 0 : _d.dob) {
                 dataNew = dataNew.replace('{dob}', `<li>DOB: ${content.personalDetails.dob}</li>`);
                 dataNew = dataNew.replace('{dobone}', `<li class="exper_dot">${content.personalDetails.dob}</li>`);
                 dataNew = dataNew.replace('{dobdesign}', `<li><div class="icon"><i class="fas fa-birthday-cake"></i></div>
@@ -1381,7 +1391,7 @@ const createResume = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 dataNew = dataNew.replace('{dobdesignfour}', '');
             }
             // Nationality
-            if ((_11 = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _11 === void 0 ? void 0 : _11.nationality) {
+            if ((_e = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _e === void 0 ? void 0 : _e.nationality) {
                 dataNew = replaceData(dataNew, '{nationality}', `<li class="exper_dot"> ${content.personalDetails.nationality} </li>`);
                 dataNew = replaceData(dataNew, '{nationalitydesign}', `<li><div class="icon"><i class="fas fa-flag"></i></div><div class="data"> ${content.personalDetails.nationality} </div></li>`);
                 dataNew = replaceData(dataNew, '{nationalitydesigntwo}', `<li><div class="data"> ${content.personalDetails.nationality} </div><div class="icon"><i class="fas fa-flag"></i></div></li>`);
@@ -1394,7 +1404,7 @@ const createResume = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 dataNew = replaceData(dataNew, '{nationalitydesignthree}', '');
             }
             // Marital Status
-            if ((_12 = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _12 === void 0 ? void 0 : _12.maritalStatus) {
+            if ((_f = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _f === void 0 ? void 0 : _f.maritalStatus) {
                 dataNew = replaceData(dataNew, '{marital}', content.personalDetails.maritalStatus);
                 dataNew = replaceData(dataNew, '{maritaldesigntwo}', `<li><div class="data">${content.personalDetails.maritalStatus}</div><div class="icon"><i class="fa fa-heart"></i></div></li>`);
                 dataNew = replaceData(dataNew, '{maritaldesignthree}', `<li><div class="icon"><span class="data"><i class="fa fa-heart"></i>${content.personalDetails.maritalStatus}</span></div></li>`);
@@ -1413,7 +1423,7 @@ const createResume = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 dataNew = replaceData(dataNew, '{maritaldesignseven}', '');
             }
             // Father Name
-            if ((_13 = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _13 === void 0 ? void 0 : _13.fatherName) {
+            if ((_g = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _g === void 0 ? void 0 : _g.fatherName) {
                 dataNew = replaceData(dataNew, '{ftName}', content.personalDetails.fatherName);
                 dataNew = replaceData(dataNew, '{ftNamedesigntwo}', `<li><div class="data">${content.personalDetails.fatherName}</div><div class="icon"><i class="fas fa-child"></i></div></li>`);
                 dataNew = replaceData(dataNew, '{ftNamedesignthree}', `<li><div class="icon"><span class="data"><i class="fas fa-child"></i>${content.personalDetails.fatherName}</span></div></li>`);
@@ -1432,20 +1442,20 @@ const createResume = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 dataNew = replaceData(dataNew, '{ftNamedesignseven}', '');
             }
             // Image
-            if ((_14 = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _14 === void 0 ? void 0 : _14.imageUrl) {
+            if ((_h = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _h === void 0 ? void 0 : _h.imageUrl) {
                 dataNew = replaceData(dataNew, '{image}', content.personalDetails.imageUrl);
             }
-            else if (((_15 = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _15 === void 0 ? void 0 : _15.gender) === 'Male') {
+            else if (((_j = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _j === void 0 ? void 0 : _j.gender) === 'Male') {
                 dataNew = replaceData(dataNew, '{image}', 'https://lookingforresume.com/images/male-img.png');
             }
-            else if (((_16 = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _16 === void 0 ? void 0 : _16.gender) === 'Female') {
+            else if (((_k = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _k === void 0 ? void 0 : _k.gender) === 'Female') {
                 dataNew = replaceData(dataNew, '{image}', 'https://lookingforresume.com/images/female-img.png');
             }
             else {
                 dataNew = replaceData(dataNew, '{image}', 'http://lookingforresume.com/images/noavatar.png');
             }
             // Website
-            if ((_17 = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _17 === void 0 ? void 0 : _17.website) {
+            if ((_l = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _l === void 0 ? void 0 : _l.website) {
                 dataNew = replaceData(dataNew, '{website}', content.personalDetails.website);
                 dataNew = replaceData(dataNew, '{secoundwebsite}', `<li><div class="icon"><i class="fas fa-globe"></i></div><div class="data">${content.personalDetails.website}</div></li>`);
                 dataNew = replaceData(dataNew, '{websitethree}', `<li><div class="data">${content.personalDetails.website}</div><div class="icon"><i class="fas fa-globe"></i></div></li>`);
@@ -1458,7 +1468,7 @@ const createResume = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 dataNew = replaceData(dataNew, '{websitefour}', '');
             }
             // Name
-            if ((_18 = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _18 === void 0 ? void 0 : _18.name) {
+            if ((_m = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _m === void 0 ? void 0 : _m.name) {
                 dataNew = replaceData(dataNew, '{name}', content.personalDetails.name);
             }
             else {
@@ -1994,8 +2004,8 @@ const createResume = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 dataNew = replaceData(dataNew, '{newSkillListTwo}', '');
             }
             // Process About Me and Objective
-            if (((_19 = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _19 === void 0 ? void 0 : _19.aboutUs) || content.objective) {
-                const aboutData = (_20 = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _20 === void 0 ? void 0 : _20.aboutUs;
+            if (((_o = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _o === void 0 ? void 0 : _o.aboutUs) || content.objective) {
+                const aboutData = (_p = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _p === void 0 ? void 0 : _p.aboutUs;
                 const objectData = content.objective;
                 if (aboutData) {
                     dataNew = replaceData(dataNew, '{aboutusObjective}', `
@@ -2145,7 +2155,7 @@ const createResume = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 dataNew = replaceData(dataNew, '{objectivedata}', '');
                 dataNew = replaceData(dataNew, '{objectivedatas}', '');
             }
-            if (((_21 = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _21 === void 0 ? void 0 : _21.aboutUs) && content.objective) {
+            if (((_q = content === null || content === void 0 ? void 0 : content.personalDetails) === null || _q === void 0 ? void 0 : _q.aboutUs) && content.objective) {
                 // Replace placeholders with the content
                 dataNew = dataNew.replace('{aboutObjective}', `
                   <div class="polaroid">
@@ -2285,14 +2295,14 @@ const createResume = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 let socialLinksHtml = '';
                 let socialLinksIcons = '';
                 const socialLinks = {
-                    facebook: { icon: 'fab fa-facebook-f', url: (_23 = (_22 = content === null || content === void 0 ? void 0 : content.socialLinks) === null || _22 === void 0 ? void 0 : _22.facebook) === null || _23 === void 0 ? void 0 : _23.url },
-                    twitter: { icon: 'fab fa-twitter', url: (_25 = (_24 = content === null || content === void 0 ? void 0 : content.socialLinks) === null || _24 === void 0 ? void 0 : _24.twitter) === null || _25 === void 0 ? void 0 : _25.url },
-                    youtube: { icon: 'fab fa-youtube', url: (_27 = (_26 = content === null || content === void 0 ? void 0 : content.socialLinks) === null || _26 === void 0 ? void 0 : _26.youtube) === null || _27 === void 0 ? void 0 : _27.url },
-                    linkedin: { icon: 'fab fa-linkedin-in', url: (_29 = (_28 = content === null || content === void 0 ? void 0 : content.socialLinks) === null || _28 === void 0 ? void 0 : _28.linkedin) === null || _29 === void 0 ? void 0 : _29.url },
-                    skype: { icon: 'fab fa-skype', url: (_31 = (_30 = content === null || content === void 0 ? void 0 : content.socialLinks) === null || _30 === void 0 ? void 0 : _30.skype) === null || _31 === void 0 ? void 0 : _31.url },
-                    github: { icon: 'fab fa-github', url: (_33 = (_32 = content === null || content === void 0 ? void 0 : content.socialLinks) === null || _32 === void 0 ? void 0 : _32.github) === null || _33 === void 0 ? void 0 : _33.url },
-                    lfj: { icon: 'fas fa-briefcase', url: (_35 = (_34 = content === null || content === void 0 ? void 0 : content.socialLinks) === null || _34 === void 0 ? void 0 : _34.lfj) === null || _35 === void 0 ? void 0 : _35.url },
-                    instagram: { icon: 'fab fa-instagram', url: (_37 = (_36 = content === null || content === void 0 ? void 0 : content.socialLinks) === null || _36 === void 0 ? void 0 : _36.instagram) === null || _37 === void 0 ? void 0 : _37.url }
+                    facebook: { icon: 'fab fa-facebook-f', url: (_s = (_r = content === null || content === void 0 ? void 0 : content.socialLinks) === null || _r === void 0 ? void 0 : _r.facebook) === null || _s === void 0 ? void 0 : _s.url },
+                    twitter: { icon: 'fab fa-twitter', url: (_u = (_t = content === null || content === void 0 ? void 0 : content.socialLinks) === null || _t === void 0 ? void 0 : _t.twitter) === null || _u === void 0 ? void 0 : _u.url },
+                    youtube: { icon: 'fab fa-youtube', url: (_w = (_v = content === null || content === void 0 ? void 0 : content.socialLinks) === null || _v === void 0 ? void 0 : _v.youtube) === null || _w === void 0 ? void 0 : _w.url },
+                    linkedin: { icon: 'fab fa-linkedin-in', url: (_y = (_x = content === null || content === void 0 ? void 0 : content.socialLinks) === null || _x === void 0 ? void 0 : _x.linkedin) === null || _y === void 0 ? void 0 : _y.url },
+                    skype: { icon: 'fab fa-skype', url: (_0 = (_z = content === null || content === void 0 ? void 0 : content.socialLinks) === null || _z === void 0 ? void 0 : _z.skype) === null || _0 === void 0 ? void 0 : _0.url },
+                    github: { icon: 'fab fa-github', url: (_2 = (_1 = content === null || content === void 0 ? void 0 : content.socialLinks) === null || _1 === void 0 ? void 0 : _1.github) === null || _2 === void 0 ? void 0 : _2.url },
+                    lfj: { icon: 'fas fa-briefcase', url: (_4 = (_3 = content === null || content === void 0 ? void 0 : content.socialLinks) === null || _3 === void 0 ? void 0 : _3.lfj) === null || _4 === void 0 ? void 0 : _4.url },
+                    instagram: { icon: 'fab fa-instagram', url: (_6 = (_5 = content === null || content === void 0 ? void 0 : content.socialLinks) === null || _5 === void 0 ? void 0 : _5.instagram) === null || _6 === void 0 ? void 0 : _6.url }
                 };
                 for (const [key, { icon, url }] of Object.entries(socialLinks)) {
                     if (url) {
