@@ -18,4 +18,21 @@ exports.default = {
         //     rejectUnauthorized: false
         // }
     },
+    RAZORPAY_DETAIL: {
+        STATUS: {
+            // created, authorized, captured, refunded, failed
+            AUTHORIZED: "authorized",
+            CAPTURED: "captured",
+            REFUNDED: "refunded",
+            FAILED: "failed",
+            CREATED: "created"
+        }
+    },
+    PAYMENT_STATUS: {
+        PAID: "paid",
+        PENDING: "pending",
+        FAILED: "failed",
+        REFUNDED: "refunded",
+        CANCELLED: "cancelled",
+    },
 };

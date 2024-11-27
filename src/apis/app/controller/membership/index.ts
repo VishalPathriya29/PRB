@@ -11,6 +11,6 @@ const membershipRouter = Router();
 membershipRouter.get('/membership', membershipController.membershipList);
 membershipRouter.post('/purchase', authenticatingToken, validation.purchaseMembershipValidation, membershipController.purchaseMembership);
 membershipRouter.post('/createOrder', authenticatingToken, validation.createOrderValidation, membershipController.createOrder);
-membershipRouter.post('/wehbook/razorpay', authenticatingToken, razorpayWebhook);
+membershipRouter.post('/wehbook/razorpay', razorpayWebhook);
 
 export default membershipRouter;

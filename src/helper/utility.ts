@@ -148,8 +148,8 @@ export const sendWebhokMail = async (subject:string, body:any) =>{
         host: "sandbox.smtp.mailtrap.io",
         port: 2525,
         auth: {
-          user: "9d775e4c80786e",
-          pass: "4672d9c2a36070"
+          user: "a687ea4af9383e",
+          pass: "94b5c88bd2e62b"
         }
       });
 

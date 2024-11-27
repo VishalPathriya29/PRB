@@ -3,57 +3,51 @@ import crypto from "crypto";
 import pool from "../../../../db";
 import * as apiResponse from '../../../../helper/response';
 import * as utility from '../../../../helper/utility';
+import config from '../../../../config/config';
 
 // Razorpay Webhook Handler
 export const razorpayWebhook = async (req: Request, res: Response) => {
     try {
         const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET ?? '';
-        const receivedSignature = req.headers['x-razorpay-signature'] as string;
+      
         
         if (!webhookSecret) {
             console.error("Razorpay webhook secret not found");
             return apiResponse.errorMessage(res, 400 ,"Razorpay webhook secret not found");
         }
 
-        const generatedSignature = crypto
-            .createHmac('sha256', webhookSecret)
-            .update(JSON.stringify(req.body))
-            .digest('hex');
+        const data = crypto.createHmac('sha256', webhookSecret)
+        data.update(JSON.stringify(req.body))
+        const digest = data.digest('hex')
 
-        if (generatedSignature !== receivedSignature) {
-            console.error("Invalid webhook signature");
-            return apiResponse.errorMessage(res, 400 ,"Invalid webhook signature");
+        if (!(digest === req.headers['x-razorpay-signature'])) {
+          console.log('Invalid signature',"req.headers:", req.headers['x-razorpay-signature']);
+          return res.status(200).send('ok');
         }
 
-        const event = req.body;
+
+        const { AUTHORIZED, CAPTURED, FAILED, REFUNDED} = config.RAZORPAY_DETAIL.STATUS;
+        const { PAID, PENDING} = config.PAYMENT_STATUS;
+    
+    
+        const { id, order_id, status} = req.body.payload.payment.entity;
 
 
-          const resultz = {
-      body: req.body,
-      headers: req.headers,
-    };
+        let paymentStatus = "";
 
-    const sendResponsez = await utility.sendWebhokMail('Subscription webhook', resultz);
-    console.log('Email Sent Response:', sendResponsez);
- 
-    return
-        // switch (event.event) {
-        //     case 'order.paid':
-        //         await handleOrderPaid(event.payload.payment.entity);
-        //         await utility.sendMail('ruchimittal594@gmail.com', `test webhook ${event.payload.payment.entity}`, JSON.stringify(req.body))
-        //         break;
+        if (status === CAPTURED || status === AUTHORIZED) paymentStatus = PAID;
+        else if (status === FAILED)  paymentStatus = FAILED;
+        else if(status === REFUNDED) paymentStatus = REFUNDED
+        else  paymentStatus = PENDING;
 
-        //     case 'payment.failed':
-        //         await handlePaymentFailed(event.payload.payment.entity);
-        //         await utility.sendMail('ruchimittal594@gmail.com', `test webhook ${event.payload.payment.entity}`, JSON.stringify(req.body))
-                
-        //         break;
-                
-        //     default:
-        //         console.log(`Unhandled event type: ${event.event}`);
-        // }
 
-        // return apiResponse.successResponse(res,"Webhook success",event.payload);
+        const updateOrder = `UPDATE gateway_created_orders SET payment_status = ?, order_status = ?, transaction_id = ? WHERE gateway_order_id = ? `;
+        const updateOrderVal = [status, paymentStatus, id, order_id];
+        const [rows]: any = await pool.query(updateOrder, updateOrderVal);
+
+
+        return res.status(200).send('ok');
+
     } catch (error) {
         console.error("Error in Razorpay webhook:", error);
         return apiResponse.errorMessage(res,500 ,"Internal server error");

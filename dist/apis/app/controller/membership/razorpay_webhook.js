@@ -47,47 +47,41 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.razorpayWebhook = void 0;
 const crypto_1 = __importDefault(require("crypto"));
+const db_1 = __importDefault(require("../../../../db"));
 const apiResponse = __importStar(require("../../../../helper/response"));
-const utility = __importStar(require("../../../../helper/utility"));
+const config_1 = __importDefault(require("../../../../config/config"));
 // Razorpay Webhook Handler
 const razorpayWebhook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const webhookSecret = (_a = process.env.RAZORPAY_WEBHOOK_SECRET) !== null && _a !== void 0 ? _a : '';
-        const receivedSignature = req.headers['x-razorpay-signature'];
         if (!webhookSecret) {
             console.error("Razorpay webhook secret not found");
             return apiResponse.errorMessage(res, 400, "Razorpay webhook secret not found");
         }
-        const generatedSignature = crypto_1.default
-            .createHmac('sha256', webhookSecret)
-            .update(JSON.stringify(req.body))
-            .digest('hex');
-        if (generatedSignature !== receivedSignature) {
-            console.error("Invalid webhook signature");
-            return apiResponse.errorMessage(res, 400, "Invalid webhook signature");
+        const data = crypto_1.default.createHmac('sha256', webhookSecret);
+        data.update(JSON.stringify(req.body));
+        const digest = data.digest('hex');
+        if (!(digest === req.headers['x-razorpay-signature'])) {
+            console.log('Invalid signature', "req.headers:", req.headers['x-razorpay-signature']);
+            return res.status(200).send('ok');
         }
-        const event = req.body;
-        const resultz = {
-            body: req.body,
-            headers: req.headers,
-        };
-        const sendResponsez = yield utility.sendWebhokMail('Subscription webhook', resultz);
-        console.log('Email Sent Response:', sendResponsez);
-        return;
-        // switch (event.event) {
-        //     case 'order.paid':
-        //         await handleOrderPaid(event.payload.payment.entity);
-        //         await utility.sendMail('ruchimittal594@gmail.com', `test webhook ${event.payload.payment.entity}`, JSON.stringify(req.body))
-        //         break;
-        //     case 'payment.failed':
-        //         await handlePaymentFailed(event.payload.payment.entity);
-        //         await utility.sendMail('ruchimittal594@gmail.com', `test webhook ${event.payload.payment.entity}`, JSON.stringify(req.body))
-        //         break;
-        //     default:
-        //         console.log(`Unhandled event type: ${event.event}`);
-        // }
-        // return apiResponse.successResponse(res,"Webhook success",event.payload);
+        const { AUTHORIZED, CAPTURED, FAILED, REFUNDED } = config_1.default.RAZORPAY_DETAIL.STATUS;
+        const { PAID, PENDING } = config_1.default.PAYMENT_STATUS;
+        const { id, order_id, status } = req.body.payload.payment.entity;
+        let paymentStatus = "";
+        if (status === CAPTURED || status === AUTHORIZED)
+            paymentStatus = PAID;
+        else if (status === FAILED)
+            paymentStatus = FAILED;
+        else if (status === REFUNDED)
+            paymentStatus = REFUNDED;
+        else
+            paymentStatus = PENDING;
+        const updateOrder = `UPDATE gateway_created_orders SET payment_status = ?, order_status = ?, transaction_id = ? WHERE gateway_order_id = ? `;
+        const updateOrderVal = [status, paymentStatus, id, order_id];
+        const [rows] = yield db_1.default.query(updateOrder, updateOrderVal);
+        return res.status(200).send('ok');
     }
     catch (error) {
         console.error("Error in Razorpay webhook:", error);
