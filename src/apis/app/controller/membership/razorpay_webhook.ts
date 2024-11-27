@@ -10,8 +10,10 @@ export const razorpayWebhook = async (req: Request, res: Response) => {
         const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET ?? '';
         const receivedSignature = req.headers['x-razorpay-signature'] as string;
         
-        
-
+        if (!webhookSecret) {
+            console.error("Razorpay webhook secret not found");
+            return apiResponse.errorMessage(res, 400 ,"Razorpay webhook secret not found");
+        }
 
         const generatedSignature = crypto
             .createHmac('sha256', webhookSecret)
@@ -25,23 +27,33 @@ export const razorpayWebhook = async (req: Request, res: Response) => {
 
         const event = req.body;
 
-        switch (event.event) {
-            case 'order.paid':
-                await handleOrderPaid(event.payload.payment.entity);
-                await utility.sendMail('ruchimittal594@gmail.com', `test webhook ${event.payload.payment.entity}`, JSON.stringify(req.body))
-                break;
 
-            case 'payment.failed':
-                await handlePaymentFailed(event.payload.payment.entity);
-                await utility.sendMail('ruchimittal594@gmail.com', `test webhook ${event.payload.payment.entity}`, JSON.stringify(req.body))
-                
-                break;
-                
-            default:
-                console.log(`Unhandled event type: ${event.event}`);
-        }
+          const resultz = {
+      body: req.body,
+      headers: req.headers,
+    };
 
-        return apiResponse.successResponse(res,"Webhook success",event.payload);
+    const sendResponsez = await utility.sendWebhokMail('Subscription webhook', resultz);
+    console.log('Email Sent Response:', sendResponsez);
+ 
+    return
+        // switch (event.event) {
+        //     case 'order.paid':
+        //         await handleOrderPaid(event.payload.payment.entity);
+        //         await utility.sendMail('ruchimittal594@gmail.com', `test webhook ${event.payload.payment.entity}`, JSON.stringify(req.body))
+        //         break;
+
+        //     case 'payment.failed':
+        //         await handlePaymentFailed(event.payload.payment.entity);
+        //         await utility.sendMail('ruchimittal594@gmail.com', `test webhook ${event.payload.payment.entity}`, JSON.stringify(req.body))
+                
+        //         break;
+                
+        //     default:
+        //         console.log(`Unhandled event type: ${event.event}`);
+        // }
+
+        // return apiResponse.successResponse(res,"Webhook success",event.payload);
     } catch (error) {
         console.error("Error in Razorpay webhook:", error);
         return apiResponse.errorMessage(res,500 ,"Internal server error");
@@ -49,29 +61,29 @@ export const razorpayWebhook = async (req: Request, res: Response) => {
 };
 
 
-const handleOrderPaid = async (payment: any) => {
-    try {
-        const { id: transactionId, amount, currency, order_id: orderId, status } = payment;
-        const sql = `UPDATE gateway_created_orders SET transaction_id = ?, payment_status = ?, updated_at = ? WHERE gateway_order_id = ?`;
-        const values = [transactionId, status, utility.utcDate(), orderId];
-        await pool.query(sql, values);
-        console.log("Order payment successful:", transactionId);
-    } catch (error) { 
-        console.error("Error processing 'order.paid' event:", error);
-    }
-};
+// const handleOrderPaid = async (payment: any) => {
+//     try {
+//         const { id: transactionId, amount, currency, order_id: orderId, status } = payment;
+//         const sql = `UPDATE gateway_created_orders SET transaction_id = ?, payment_status = ?, updated_at = ? WHERE gateway_order_id = ?`;
+//         const values = [transactionId, status, utility.utcDate(), orderId];
+//         await pool.query(sql, values);
+//         console.log("Order payment successful:", transactionId);
+//     } catch (error) { 
+//         console.error("Error processing 'order.paid' event:", error);
+//     }
+// };
 
 
-const handlePaymentFailed = async (payment: any) => {
-    try {
-        const { id: transactionId, error_code, error_description, order_id: orderId } = payment;
+// const handlePaymentFailed = async (payment: any) => {
+//     try {
+//         const { id: transactionId, error_code, error_description, order_id: orderId } = payment;
 
-        const sql = `UPDATE gateway_created_orders SET payment_status = 'failed', error_code = ?, error_message = ?, updated_at = ? WHERE gateway_order_id = ?`;
-        const values = [error_code, error_description, utility.utcDate(), orderId];
-        await pool.query(sql, values);
+//         const sql = `UPDATE gateway_created_orders SET payment_status = 'failed', error_code = ?, error_message = ?, updated_at = ? WHERE gateway_order_id = ?`;
+//         const values = [error_code, error_description, utility.utcDate(), orderId];
+//         await pool.query(sql, values);
 
-        console.error("Payment failed:", transactionId);
-    } catch (error) {
-        console.error("Error processing 'payment.failed' event:", error);
-    }
-};
+//         console.error("Payment failed:", transactionId);
+//     } catch (error) {
+//         console.error("Error processing 'payment.failed' event:", error);
+//     }
+// };

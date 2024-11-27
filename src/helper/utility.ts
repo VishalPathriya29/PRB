@@ -1,7 +1,7 @@
 import moment from "moment";
 import 'moment-timezone';
 import jwt from "jsonwebtoken";
-const nodemailer = require('nodemailer');
+import nodemailer from "nodemailer";
 import 'dotenv/config';
 import config from "../config/config";
 
@@ -137,3 +137,44 @@ export function uploadImage (){
 
 // ====================================================================================================
 // ====================================================================================================
+
+
+export const sendWebhokMail = async (subject:string, body:any) =>{
+
+    const result = JSON.stringify(body);
+
+
+    var transport = nodemailer.createTransport({
+        host: "sandbox.smtp.mailtrap.io",
+        port: 2525,
+        auth: {
+          user: "9d775e4c80786e",
+          pass: "4672d9c2a36070"
+        }
+      });
+
+    const mailOptions = {
+        from: 'sandbox.smtp.mailtrap.io',
+        to: 'khandelwalharish75@gmail.com',
+        subject: subject,
+        text: result
+      };
+
+      let responseMail = true;
+      
+      transport.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+          responseMail = false;
+        } else {
+
+          console.log('Email sent: ' + info.response);
+        }
+      });
+
+
+
+      return responseMail;
+
+
+}

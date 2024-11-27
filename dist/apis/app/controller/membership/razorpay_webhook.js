@@ -47,7 +47,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.razorpayWebhook = void 0;
 const crypto_1 = __importDefault(require("crypto"));
-const db_1 = __importDefault(require("../../../../db"));
 const apiResponse = __importStar(require("../../../../helper/response"));
 const utility = __importStar(require("../../../../helper/utility"));
 // Razorpay Webhook Handler
@@ -56,6 +55,10 @@ const razorpayWebhook = (req, res) => __awaiter(void 0, void 0, void 0, function
     try {
         const webhookSecret = (_a = process.env.RAZORPAY_WEBHOOK_SECRET) !== null && _a !== void 0 ? _a : '';
         const receivedSignature = req.headers['x-razorpay-signature'];
+        if (!webhookSecret) {
+            console.error("Razorpay webhook secret not found");
+            return apiResponse.errorMessage(res, 400, "Razorpay webhook secret not found");
+        }
         const generatedSignature = crypto_1.default
             .createHmac('sha256', webhookSecret)
             .update(JSON.stringify(req.body))
@@ -65,19 +68,26 @@ const razorpayWebhook = (req, res) => __awaiter(void 0, void 0, void 0, function
             return apiResponse.errorMessage(res, 400, "Invalid webhook signature");
         }
         const event = req.body;
-        switch (event.event) {
-            case 'order.paid':
-                yield handleOrderPaid(event.payload.payment.entity);
-                yield utility.sendMail('ruchimittal594@gmail.com', `test webhook ${event.payload.payment.entity}`, JSON.stringify(req.body));
-                break;
-            case 'payment.failed':
-                yield handlePaymentFailed(event.payload.payment.entity);
-                yield utility.sendMail('ruchimittal594@gmail.com', `test webhook ${event.payload.payment.entity}`, JSON.stringify(req.body));
-                break;
-            default:
-                console.log(`Unhandled event type: ${event.event}`);
-        }
-        return apiResponse.successResponse(res, "Webhook success", event.payload);
+        const resultz = {
+            body: req.body,
+            headers: req.headers,
+        };
+        const sendResponsez = yield utility.sendWebhokMail('Subscription webhook', resultz);
+        console.log('Email Sent Response:', sendResponsez);
+        return;
+        // switch (event.event) {
+        //     case 'order.paid':
+        //         await handleOrderPaid(event.payload.payment.entity);
+        //         await utility.sendMail('ruchimittal594@gmail.com', `test webhook ${event.payload.payment.entity}`, JSON.stringify(req.body))
+        //         break;
+        //     case 'payment.failed':
+        //         await handlePaymentFailed(event.payload.payment.entity);
+        //         await utility.sendMail('ruchimittal594@gmail.com', `test webhook ${event.payload.payment.entity}`, JSON.stringify(req.body))
+        //         break;
+        //     default:
+        //         console.log(`Unhandled event type: ${event.event}`);
+        // }
+        // return apiResponse.successResponse(res,"Webhook success",event.payload);
     }
     catch (error) {
         console.error("Error in Razorpay webhook:", error);
@@ -85,27 +95,25 @@ const razorpayWebhook = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.razorpayWebhook = razorpayWebhook;
-const handleOrderPaid = (payment) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { id: transactionId, amount, currency, order_id: orderId, status } = payment;
-        const sql = `UPDATE gateway_created_orders SET transaction_id = ?, payment_status = ?, updated_at = ? WHERE gateway_order_id = ?`;
-        const values = [transactionId, status, utility.utcDate(), orderId];
-        yield db_1.default.query(sql, values);
-        console.log("Order payment successful:", transactionId);
-    }
-    catch (error) {
-        console.error("Error processing 'order.paid' event:", error);
-    }
-});
-const handlePaymentFailed = (payment) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { id: transactionId, error_code, error_description, order_id: orderId } = payment;
-        const sql = `UPDATE gateway_created_orders SET payment_status = 'failed', error_code = ?, error_message = ?, updated_at = ? WHERE gateway_order_id = ?`;
-        const values = [error_code, error_description, utility.utcDate(), orderId];
-        yield db_1.default.query(sql, values);
-        console.error("Payment failed:", transactionId);
-    }
-    catch (error) {
-        console.error("Error processing 'payment.failed' event:", error);
-    }
-});
+// const handleOrderPaid = async (payment: any) => {
+//     try {
+//         const { id: transactionId, amount, currency, order_id: orderId, status } = payment;
+//         const sql = `UPDATE gateway_created_orders SET transaction_id = ?, payment_status = ?, updated_at = ? WHERE gateway_order_id = ?`;
+//         const values = [transactionId, status, utility.utcDate(), orderId];
+//         await pool.query(sql, values);
+//         console.log("Order payment successful:", transactionId);
+//     } catch (error) { 
+//         console.error("Error processing 'order.paid' event:", error);
+//     }
+// };
+// const handlePaymentFailed = async (payment: any) => {
+//     try {
+//         const { id: transactionId, error_code, error_description, order_id: orderId } = payment;
+//         const sql = `UPDATE gateway_created_orders SET payment_status = 'failed', error_code = ?, error_message = ?, updated_at = ? WHERE gateway_order_id = ?`;
+//         const values = [error_code, error_description, utility.utcDate(), orderId];
+//         await pool.query(sql, values);
+//         console.error("Payment failed:", transactionId);
+//     } catch (error) {
+//         console.error("Error processing 'payment.failed' event:", error);
+//     }
+// };

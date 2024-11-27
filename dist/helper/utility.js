@@ -12,14 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendMail = exports.jwtGenerate = exports.timeDiff = exports.utcDateWithExtraTime = exports.utcDate = void 0;
+exports.sendWebhokMail = exports.sendMail = exports.jwtGenerate = exports.timeDiff = exports.utcDateWithExtraTime = exports.utcDate = void 0;
 exports.randomString = randomString;
 exports.randomNumber = randomNumber;
 exports.uploadImage = uploadImage;
 const moment_1 = __importDefault(require("moment"));
 require("moment-timezone");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const nodemailer = require('nodemailer');
+const nodemailer_1 = __importDefault(require("nodemailer"));
 require("dotenv/config");
 const config_1 = __importDefault(require("../config/config"));
 const secretKey = process.env.SECRET;
@@ -84,7 +84,7 @@ const sendMail = (email, subject, message) => __awaiter(void 0, void 0, void 0, 
     let result;
     try {
         // create reusable transporter object using the default SMTP transport
-        let transporter = nodemailer.createTransport(config_1.default.smtp);
+        let transporter = nodemailer_1.default.createTransport(config_1.default.smtp);
         // send mail with defined transport object
         let info = yield transporter.sendMail({
             from: "noreply@bosone.com", // sender address
@@ -95,7 +95,7 @@ const sendMail = (email, subject, message) => __awaiter(void 0, void 0, void 0, 
         });
         result = info.messageId;
         console.log("Message sent: %s", info.messageId);
-        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        console.log("Preview URL: %s", nodemailer_1.default.getTestMessageUrl(info));
         // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
     }
     catch (err) {
@@ -132,3 +132,32 @@ function uploadImage() {
 }
 // ====================================================================================================
 // ====================================================================================================
+const sendWebhokMail = (subject, body) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = JSON.stringify(body);
+    var transport = nodemailer_1.default.createTransport({
+        host: "sandbox.smtp.mailtrap.io",
+        port: 2525,
+        auth: {
+            user: "9d775e4c80786e",
+            pass: "4672d9c2a36070"
+        }
+    });
+    const mailOptions = {
+        from: 'sandbox.smtp.mailtrap.io',
+        to: 'khandelwalharish75@gmail.com',
+        subject: subject,
+        text: result
+    };
+    let responseMail = true;
+    transport.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+            responseMail = false;
+        }
+        else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+    return responseMail;
+});
+exports.sendWebhokMail = sendWebhokMail;
