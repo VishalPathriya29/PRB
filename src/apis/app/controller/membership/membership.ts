@@ -5,6 +5,7 @@ import * as utility from '../../../../helper/utility';
 import Razorpay from "razorpay"
 import crypto from 'crypto';
 
+
 export const membershipList = async (req: Request, res: Response) => {
     try {
         const sql = `SELECT id, name, slug, details FROM membership_plans WHERE status = 1`;
@@ -49,7 +50,7 @@ export const purchaseMembership = async (req: Request, res: Response) => {
 
         const sql = `INSERT INTO payment_details (user_id, membership_plan_id, transaction_id, payment_signature, payment_timestamp, amount, currency, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
         const values = [userId, membership_plan_id, payment_details.transaction_id, payment_details.payment_signature, payment_details.payment_timestamp, membership?.price ?? 0, 'INR', created_at];
-
+        const [data]:any = await pool.query(sql, values);
         // const sql = `INSERT INTO user_memberships (membership_plan_id, user_id, transaction_id, payment_status, amount, created_at) VALUES (?, ?, ?, ?, ?, ?)`;
         // await pool.query(sql, [membership_plan_id, user_id, transaction_id, payment_status, payment_response, created_at]);
 
@@ -71,31 +72,19 @@ export const createOrder = async (req: Request, res: Response) => {
             key_id: process.env.RAZORPAY_KEY_ID ?? '',
             key_secret: process.env.RAZORPAY_KEY_SECRET
         });
-
- 
         const options = {
             amount: parseInt((amount * 100).toFixed(0)),
             currency: currency,
             receipt: `receipt_${Date.now()}`,
         }
-        // const options = {
-        //     amount: amount,
-        //     currency: currency,
-        //     receipt: receipt,
-        //     payment_capture: payment_capture
-        // }
-
-        console.log(options, "opeionss");
-        
-
-        instance.orders.create(options, async (err: any, order: any) => {
+         instance.orders.create(options, async (err: any, order: any) => {
             if (err) {
                 console.log("err", err);
                 return apiResponse.errorMessage(res, 400, "Failed to generate Razorpay order");
             }
             const resultResp = {
                 gatewayOrderId: order.id,
-            };
+           };
             const sql = `INSERT INTO gateway_created_orders(user_id, gateway_order_id, amount, currency, gateway_name, created_at) VALUES (?, ?, ?, ?, ?, ?)`;
             const values = [userId, order.id, amount, currency, 'razorpay', utility.utcDate()];
             const [rows]: any = await pool.query(sql, values);
@@ -108,6 +97,9 @@ export const createOrder = async (req: Request, res: Response) => {
         return apiResponse.somethingWentWrongMsg(res);
     }
 }
+
+
+
 
 // ====================================================================================================
 // ====================================================================================================

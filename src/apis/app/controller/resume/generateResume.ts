@@ -91,19 +91,19 @@ export const downloadResume = async (req: Request, res: Response) => {
             }
 
             // Email Replacement
-            if (content?.personalDetails?.email) {
-                dataNew = dataNew.replace('{email}', content.personalDetails.email);
+            if (content?.personaldetails?.email) {
+                dataNew = dataNew.replace('{email}', content.personaldetails.email);
                 dataNew = dataNew.replace('{emailone}', `<li> 
                     <div class="icon"><i class="fas fa-envelope"></i></div>
-                    <div class="data"> ${content.personalDetails.email} </div>
+                    <div class="data"> ${content.personaldetails.email} </div>
                 </li>`);
-                dataNew = dataNew.replace('{emailtwo}', `<li> <div class="data">${content.personalDetails.email}</div>
+                dataNew = dataNew.replace('{emailtwo}', `<li> <div class="data">${content.personaldetails.email}</div>
                     <div class="icon"><i class="fas fa-envelope"></i></div>
                 </li>`);
                 dataNew = dataNew.replace('{emailthree}', `<li><div class="icon">
-                <i class="fas fa-envelope"></i><span class="data">${content.personalDetails.email}</span>
+                <i class="fas fa-envelope"></i><span class="data">${content.personaldetails.email}</span>
             </div></li>`);
-                dataNew = dataNew.replace('{emailfour}', `<li class="exper_dot">${content.personalDetails.email}</li>`);
+                dataNew = dataNew.replace('{emailfour}', `<li class="exper_dot">${content.personaldetails.email}</li>`);
             } else {
                 dataNew = dataNew.replace('{email}', '');
                 dataNew = dataNew.replace('{emailone}', '');
@@ -113,15 +113,15 @@ export const downloadResume = async (req: Request, res: Response) => {
             }
 
             // Address Replacement
-            if (content?.personalDetails?.address) {
-                dataNew = dataNew.replace('{address}', content.personalDetails.address);
-                dataNew = dataNew.replace('{addresstwo}', `<li class="exper_dot">${content.personalDetails.address}</li>`);
+            if (content?.personaldetails?.address) {
+                dataNew = dataNew.replace('{address}', content.personaldetails.address);
+                dataNew = dataNew.replace('{addresstwo}', `<li class="exper_dot">${content.personaldetails.address}</li>`);
                 dataNew = dataNew.replace('{addressthree}', `<li> <div class="icon"> <i class="fas fa-map-marker-alt"></i>
-                    </div><div class="data"> ${content.personalDetails.address} </div></li>`);
-                dataNew = dataNew.replace('{addressfour}', `<li><div class="data"> ${content.personalDetails.address}</div>
+                    </div><div class="data"> ${content.personaldetails.address} </div></li>`);
+                dataNew = dataNew.replace('{addressfour}', `<li><div class="data"> ${content.personaldetails.address}</div>
                     <div class="icon"><i class="fas fa-map-marker-alt"></i></div></li>`);
                 dataNew = dataNew.replace('{addressone}', `<li><div class="icon"><i class="fas fa-map-marker-alt"></i>
-                    <span class="data">${content.personalDetails.address}</span></div></li>`);
+                    <span class="data">${content.personaldetails.address}</span></div></li>`);
             } else {
                 dataNew = dataNew.replace('{address}', '');
                 dataNew = dataNew.replace('{addresstwo}', '');
@@ -131,15 +131,15 @@ export const downloadResume = async (req: Request, res: Response) => {
             }
 
             // Phone Replacement
-            if (content?.personalDetails?.phone) {
-                dataNew = dataNew.replace('{phone}', content.personalDetails.phone);
+            if (content?.personaldetails?.phone) {
+                dataNew = dataNew.replace('{phone}', content.personaldetails.phone);
                 dataNew = dataNew.replace('{phonedesignone}', `<li><div class="icon"><i class="fas fa-phone-alt"></i></div>
-                    <div class="data"> ${content.personalDetails.phone} </div></li>`);
-                dataNew = dataNew.replace('{phonedesigntwo}', `<li><div class="data"> ${content.personalDetails.phone} </div>
+                    <div class="data"> ${content.personaldetails.phone} </div></li>`);
+                dataNew = dataNew.replace('{phonedesigntwo}', `<li><div class="data"> ${content.personaldetails.phone} </div>
                     <div class="icon"><i class="fas fa-phone-alt"></i></div></li>`);
                 dataNew = dataNew.replace('{phonedesignthree}', `<li><div class="icon"><i class="fas fa-phone-alt"></i>
-                    <span class="data">${content.personalDetails.phone}</span></div></li>`);
-                dataNew = dataNew.replace('{phonedesignfour}', `<li class="exper_dot">${content.personalDetails.phone}</li>`);
+                    <span class="data">${content.personaldetails.phone}</span></div></li>`);
+                dataNew = dataNew.replace('{phonedesignfour}', `<li class="exper_dot">${content.personaldetails.phone}</li>`);
             } else {
                 dataNew = dataNew.replace('{phone}', '');
                 dataNew = dataNew.replace('{phonedesignone}', '');
@@ -149,15 +149,15 @@ export const downloadResume = async (req: Request, res: Response) => {
             }
 
             // Date of Birth Replacement
-            if (content?.personalDetails?.dob) {
-                dataNew = dataNew.replace('{dob}', `<li>DOB: ${content.personalDetails.dob}</li>`);
-                dataNew = dataNew.replace('{dobone}', `<li class="exper_dot">${content.personalDetails.dob}</li>`);
+            if (content?.personaldetails?.dob) {
+                dataNew = dataNew.replace('{dob}', `<li>DOB: ${content.personaldetails.dob}</li>`);
+                dataNew = dataNew.replace('{dobone}', `<li class="exper_dot">${content.personaldetails.dob}</li>`);
                 dataNew = dataNew.replace('{dobdesign}', `<li><div class="icon"><i class="fas fa-birthday-cake"></i></div>
-                    <div class="data"> ${content.personalDetails.dob} </div></li>`);
-                dataNew = dataNew.replace('{dobdesignthree}', `<li><div class="data"> ${content.personalDetails.dob}</div>
+                    <div class="data"> ${content.personaldetails.dob} </div></li>`);
+                dataNew = dataNew.replace('{dobdesignthree}', `<li><div class="data"> ${content.personaldetails.dob}</div>
                     <div class="icon"><i class="fas fa-birthday-cake"></i></div></li>`);
                 dataNew = dataNew.replace('{dobdesignfour}', `<li><div class="icon"><i class="fas fa-birthday-cake"></i>
-                    <span class="data">${content.personalDetails.dob}</span></div></li>`);
+                    <span class="data">${content.personaldetails.dob}</span></div></li>`);
             } else {
                 dataNew = dataNew.replace('{dob}', '');
                 dataNew = dataNew.replace('{dobone}', '');
@@ -167,11 +167,11 @@ export const downloadResume = async (req: Request, res: Response) => {
             }
 
             // Nationality
-            if (content?.personalDetails?.nationality) {
-                dataNew = replaceData(dataNew, '{nationality}', `<li class="exper_dot"> ${content.personalDetails.nationality} </li>`);
-                dataNew = replaceData(dataNew, '{nationalitydesign}', `<li><div class="icon"><i class="fas fa-flag"></i></div><div class="data"> ${content.personalDetails.nationality} </div></li>`);
-                dataNew = replaceData(dataNew, '{nationalitydesigntwo}', `<li><div class="data"> ${content.personalDetails.nationality} </div><div class="icon"><i class="fas fa-flag"></i></div></li>`);
-                dataNew = replaceData(dataNew, '{nationalitydesignthree}', `<li><div class="icon"><i class="fas fa-flag"></i><span class="data">${content.personalDetails.nationality}</span></div></li>`);
+            if (content?.personaldetails?.nationality) {
+                dataNew = replaceData(dataNew, '{nationality}', `<li class="exper_dot"> ${content.personaldetails.nationality} </li>`);
+                dataNew = replaceData(dataNew, '{nationalitydesign}', `<li><div class="icon"><i class="fas fa-flag"></i></div><div class="data"> ${content.personaldetails.nationality} </div></li>`);
+                dataNew = replaceData(dataNew, '{nationalitydesigntwo}', `<li><div class="data"> ${content.personaldetails.nationality} </div><div class="icon"><i class="fas fa-flag"></i></div></li>`);
+                dataNew = replaceData(dataNew, '{nationalitydesignthree}', `<li><div class="icon"><i class="fas fa-flag"></i><span class="data">${content.personaldetails.nationality}</span></div></li>`);
             } else {
                 dataNew = replaceData(dataNew, '{nationality}', '');
                 dataNew = replaceData(dataNew, '{nationalitydesign}', '');
@@ -180,14 +180,14 @@ export const downloadResume = async (req: Request, res: Response) => {
             }
 
             // Marital Status
-            if (content?.personalDetails?.maritalStatus) {
-                dataNew = replaceData(dataNew, '{marital}', content.personalDetails.maritalStatus);
-                dataNew = replaceData(dataNew, '{maritaldesigntwo}', `<li><div class="data">${content.personalDetails.maritalStatus}</div><div class="icon"><i class="fa fa-heart"></i></div></li>`);
-                dataNew = replaceData(dataNew, '{maritaldesignthree}', `<li><div class="icon"><span class="data"><i class="fa fa-heart"></i>${content.personalDetails.maritalStatus}</span></div></li>`);
-                dataNew = replaceData(dataNew, '{maritaldesignfour}', `<li><div class="icon"><i class="fa fa-heart"></i></div><div class="data">${content.personalDetails.maritalStatus}</div></li>`);
-                dataNew = replaceData(dataNew, '{maritaldesignfive}', `<li class="exper_dot">${content.personalDetails.maritalStatus}</li>`);
-                dataNew = replaceData(dataNew, '{maritaldesignsix}', `<li><div class="icon"><i class="fa fa-heart"></i><span class="data">${content.personalDetails.maritalStatus}</span></div></li>`);
-                dataNew = replaceData(dataNew, '{maritaldesignseven}', `<li> Marital Status : ${content.personalDetails.maritalStatus} </li>`);
+            if (content?.personaldetails?.maritalStatus) {
+                dataNew = replaceData(dataNew, '{marital}', content.personaldetails.maritalStatus);
+                dataNew = replaceData(dataNew, '{maritaldesigntwo}', `<li><div class="data">${content.personaldetails.maritalStatus}</div><div class="icon"><i class="fa fa-heart"></i></div></li>`);
+                dataNew = replaceData(dataNew, '{maritaldesignthree}', `<li><div class="icon"><span class="data"><i class="fa fa-heart"></i>${content.personaldetails.maritalStatus}</span></div></li>`);
+                dataNew = replaceData(dataNew, '{maritaldesignfour}', `<li><div class="icon"><i class="fa fa-heart"></i></div><div class="data">${content.personaldetails.maritalStatus}</div></li>`);
+                dataNew = replaceData(dataNew, '{maritaldesignfive}', `<li class="exper_dot">${content.personaldetails.maritalStatus}</li>`);
+                dataNew = replaceData(dataNew, '{maritaldesignsix}', `<li><div class="icon"><i class="fa fa-heart"></i><span class="data">${content.personaldetails.maritalStatus}</span></div></li>`);
+                dataNew = replaceData(dataNew, '{maritaldesignseven}', `<li> Marital Status : ${content.personaldetails.maritalStatus} </li>`);
             } else {
                 dataNew = replaceData(dataNew, '{marital}', '');
                 dataNew = replaceData(dataNew, '{maritaldesigntwo}', '');
@@ -199,14 +199,14 @@ export const downloadResume = async (req: Request, res: Response) => {
             }
 
             // Father Name
-            if (content?.personalDetails?.fatherName) {
-                dataNew = replaceData(dataNew, '{ftName}', content.personalDetails.fatherName);
-                dataNew = replaceData(dataNew, '{ftNamedesigntwo}', `<li><div class="data">${content.personalDetails.fatherName}</div><div class="icon"><i class="fas fa-child"></i></div></li>`);
-                dataNew = replaceData(dataNew, '{ftNamedesignthree}', `<li><div class="icon"><span class="data"><i class="fas fa-child"></i>${content.personalDetails.fatherName}</span></div></li>`);
-                dataNew = replaceData(dataNew, '{ftNamedesignfour}', `<li><div class="icon"><i class="fas fa-child"></i></div><div class="data">${content.personalDetails.fatherName}</div></li>`);
-                dataNew = replaceData(dataNew, '{ftNamedesignfive}', `<li class="exper_dot">${content.personalDetails.fatherName}</li>`);
-                dataNew = replaceData(dataNew, '{ftNamedesignsix}', `<li><div class="icon"><i class="fas fa-child"></i><span class="data">${content.personalDetails.fatherName}</span></div></li>`);
-                dataNew = replaceData(dataNew, '{ftNamedesignseven}', `<li> Fathers Name : ${content.personalDetails.fatherName} </li>`);
+            if (content?.personaldetails?.fatherName) {
+                dataNew = replaceData(dataNew, '{ftName}', content.personaldetails.fatherName);
+                dataNew = replaceData(dataNew, '{ftNamedesigntwo}', `<li><div class="data">${content.personaldetails.fatherName}</div><div class="icon"><i class="fas fa-child"></i></div></li>`);
+                dataNew = replaceData(dataNew, '{ftNamedesignthree}', `<li><div class="icon"><span class="data"><i class="fas fa-child"></i>${content.personaldetails.fatherName}</span></div></li>`);
+                dataNew = replaceData(dataNew, '{ftNamedesignfour}', `<li><div class="icon"><i class="fas fa-child"></i></div><div class="data">${content.personaldetails.fatherName}</div></li>`);
+                dataNew = replaceData(dataNew, '{ftNamedesignfive}', `<li class="exper_dot">${content.personaldetails.fatherName}</li>`);
+                dataNew = replaceData(dataNew, '{ftNamedesignsix}', `<li><div class="icon"><i class="fas fa-child"></i><span class="data">${content.personaldetails.fatherName}</span></div></li>`);
+                dataNew = replaceData(dataNew, '{ftNamedesignseven}', `<li> Fathers Name : ${content.personaldetails.fatherName} </li>`);
             } else {
                 dataNew = replaceData(dataNew, '{ftName}', '');
                 dataNew = replaceData(dataNew, '{ftNamedesigntwo}', '');
@@ -218,22 +218,22 @@ export const downloadResume = async (req: Request, res: Response) => {
             }
 
             // Image
-            if (content?.personalDetails?.imageUrl) {
-                dataNew = replaceData(dataNew, '{image}', content.personalDetails.imageUrl);
-            } else if (content?.personalDetails?.gender === 'Male') {
+            if (content?.personaldetails?.imageUrl) {
+                dataNew = replaceData(dataNew, '{image}', content.personaldetails.imageUrl);
+            } else if (content?.personaldetails?.gender === 'Male') {
                 dataNew = replaceData(dataNew, '{image}', 'https://lookingforresume.com/images/male-img.png');
-            } else if (content?.personalDetails?.gender === 'Female') {
+            } else if (content?.personaldetails?.gender === 'Female') {
                 dataNew = replaceData(dataNew, '{image}', 'https://lookingforresume.com/images/female-img.png');
             } else {
                 dataNew = replaceData(dataNew, '{image}', 'http://lookingforresume.com/images/noavatar.png');
             }
 
             // Website
-            if (content?.personalDetails?.website) {
-                dataNew = replaceData(dataNew, '{website}', content.personalDetails.website);
-                dataNew = replaceData(dataNew, '{secoundwebsite}', `<li><div class="icon"><i class="fas fa-globe"></i></div><div class="data">${content.personalDetails.website}</div></li>`);
-                dataNew = replaceData(dataNew, '{websitethree}', `<li><div class="data">${content.personalDetails.website}</div><div class="icon"><i class="fas fa-globe"></i></div></li>`);
-                dataNew = replaceData(dataNew, '{websitefour}', `<li><div class="icon"><i class="fas fa-globe"></i><span class="data">${content.personalDetails.website}</span></div></li>`);
+            if (content?.personaldetails?.website) {
+                dataNew = replaceData(dataNew, '{website}', content.personaldetails.website);
+                dataNew = replaceData(dataNew, '{secoundwebsite}', `<li><div class="icon"><i class="fas fa-globe"></i></div><div class="data">${content.personaldetails.website}</div></li>`);
+                dataNew = replaceData(dataNew, '{websitethree}', `<li><div class="data">${content.personaldetails.website}</div><div class="icon"><i class="fas fa-globe"></i></div></li>`);
+                dataNew = replaceData(dataNew, '{websitefour}', `<li><div class="icon"><i class="fas fa-globe"></i><span class="data">${content.personaldetails.website}</span></div></li>`);
             } else {
                 dataNew = replaceData(dataNew, '{website}', '');
                 dataNew = replaceData(dataNew, '{secoundwebsite}', '');
@@ -242,8 +242,8 @@ export const downloadResume = async (req: Request, res: Response) => {
             }
 
             // Name
-            if (content?.personalDetails?.name) {
-                dataNew = replaceData(dataNew, '{name}', content.personalDetails.name);
+            if (content?.personaldetails?.name) {
+                dataNew = replaceData(dataNew, '{name}', content.personaldetails.name);
             } else {
                 dataNew = replaceData(dataNew, '{name}', '');
             }
@@ -412,13 +412,13 @@ export const downloadResume = async (req: Request, res: Response) => {
                 newexperienceone += '</div></div></div>';
                 newexperiencetwo += '</div></div>';
 
-                dataNew = replaceData(dataNew, '{experience}', newexperience);
-                dataNew = replaceData(dataNew, '{newexperienceone}', newexperienceone);
-                dataNew = replaceData(dataNew, '{newexperiencetwo}', newexperiencetwo);
+                dataNew = replaceData(dataNew, '{expericence}', newexperience);
+                dataNew = replaceData(dataNew, '{newexpericenceone}', newexperienceone);
+                dataNew = replaceData(dataNew, '{newexpericencetwo}', newexperiencetwo);
             } else {
-                dataNew = replaceData(dataNew, '{experience}', '');
-                dataNew = replaceData(dataNew, '{newexperienceone}', '');
-                dataNew = replaceData(dataNew, '{newexperiencetwo}', '');
+                dataNew = replaceData(dataNew, '{expericence}', '');
+                dataNew = replaceData(dataNew, '{newexpericenceone}', '');
+                dataNew = replaceData(dataNew, '{newexpericencetwo}', '');
             }
 
             // Process Project Details
@@ -837,8 +837,8 @@ export const downloadResume = async (req: Request, res: Response) => {
             }
 
             // Process About Me and Objective
-            if (content?.personalDetails?.aboutUs || content.objective) {
-                const aboutData = content?.personalDetails?.aboutUs;
+            if (content?.personaldetails?.aboutUs || content.objective) {
+                const aboutData = content?.personaldetails?.aboutUs;
                 const objectData = content.objective;
 
                 if (aboutData) {
@@ -989,7 +989,7 @@ export const downloadResume = async (req: Request, res: Response) => {
                 dataNew = replaceData(dataNew, '{objectivedatas}', '');
             }
 
-            if (content?.personalDetails?.aboutUs && content.objective) {
+            if (content?.personaldetails?.aboutUs && content.objective) {
                 // Replace placeholders with the content
                 dataNew = dataNew.replace('{aboutObjective}', `
                   <div class="polaroid">
@@ -998,7 +998,7 @@ export const downloadResume = async (req: Request, res: Response) => {
                         <div class="title">
                           <p class="bold resume_box resume_line">About ME</p>
                         </div>
-                        <p class="res-about experi-pd">${content.personalDetails.aboutUs}</p>
+                        <p class="res-about experi-pd">${content.personaldetails.aboutUs}</p>
                       </div>
                     </div>
                   </div>
@@ -1052,7 +1052,7 @@ export const downloadResume = async (req: Request, res: Response) => {
                           <div class="title-icon"><i class="fas fa-user"></i></div>
                           <p class="bold resume_box resume_line">About ME</p>
                         </div>
-                        <p class="res-about experi-pd">${content.personalDetails.aboutUs}</p>
+                        <p class="res-about experi-pd">${content.personaldetails.aboutUs}</p>
                       </div>
                     </div>
                   </div>
@@ -1140,59 +1140,65 @@ export const downloadResume = async (req: Request, res: Response) => {
             }
 
             if (content?.socialLinks) {
-                let socialLinksHtml = '';
-                let socialLinksIcons = '';
-
                 const socialLinks = {
-                    facebook: { icon: 'fab fa-facebook-f', url: content?.socialLinks?.facebook?.url },
-                    twitter: { icon: 'fab fa-twitter', url: content?.socialLinks?.twitter?.url },
-                    youtube: { icon: 'fab fa-youtube', url: content?.socialLinks?.youtube?.url },
-                    linkedin: { icon: 'fab fa-linkedin-in', url: content?.socialLinks?.linkedin?.url },
-                    skype: { icon: 'fab fa-skype', url: content?.socialLinks?.skype?.url },
-                    github: { icon: 'fab fa-github', url: content?.socialLinks?.github?.url },
-                    lfj: { icon: 'fas fa-briefcase', url: content?.socialLinks?.lfj?.url },
-                    instagram: { icon: 'fab fa-instagram', url: content?.socialLinks?.instagram?.url }
+                  facebook: { icon: 'fab fa-facebook-f', url: content?.socialLinks?.facebook?.url },
+                  twitter: { icon: 'fab fa-twitter', url: content?.socialLinks?.twitter?.url },
+                  youtube: { icon: 'fab fa-youtube', url: content?.socialLinks?.youtube?.url },
+                  linkedin: { icon: 'fab fa-linkedin-in', url: content?.socialLinks?.linkedin?.url },
+                  skype: { icon: 'fab fa-skype', url: content?.socialLinks?.skype?.url },
+                  github: { icon: 'fab fa-github', url: content?.socialLinks?.github?.url },
+                  lfj: { icon: 'fas fa-briefcase', url: content?.socialLinks?.lfj?.url },
+                  instagram: { icon: 'fab fa-instagram', url: content?.socialLinks?.instagram?.url }
                 };
-
+              
+               
+              
+                let hasSocialLinks = false;
+              
+                // Loop through each social link to replace or clear placeholders
                 for (const [key, { icon, url }] of Object.entries(socialLinks)) {
-                    if (url) {
-                        socialLinksHtml += `<li><div class="icon"><i class="${icon}"></i></div><div class="data">${url}</div></li>`;
-                        socialLinksIcons += `<li><div class="data">${url}</div><div class="icon"><i class="${icon}"></i></div></li>`;
-                    }
+                  if (url) {
+                    hasSocialLinks = true;
+                    // Replace placeholders with the actual content
+                    dataNew = dataNew.replace(`{${key}}`, `<li><div class="icon"><i class="${icon}"></i></div><div class="data">${url}</div></li>`);
+                    dataNew = dataNew.replace(`{${key}design}`, `<li><div class="data">${url}</div><div class="icon"><i class="${icon}"></i></div></li>`);
+                    dataNew = dataNew.replace(`{${key}one}`, `<li><div class="icon"><i class="${icon}"></i><span class="data">${url}</span></div></li>`);
+                  } else {
+                    // Clear the placeholders if the URL is not present
+                    dataNew = dataNew.replace(`{${key}}`, "");
+                    dataNew = dataNew.replace(`{${key}design}`, "");
+                    dataNew = dataNew.replace(`{${key}one}`, "");
+                  }
                 }
-
-                if (socialLinksHtml) {
-                    dataNew = dataNew.replace('{socialtitle}', `
+              
+                // Add title if there are social links
+                if (hasSocialLinks) {
+                  dataNew = dataNew.replace('{socialtitle}', `
                     <div class="title">
                       <p class="bold lang resume_color resume_line resume_box">Social Links</p>
-                    </div>`)
-                        .replace('{socialtitles}', `
+                    </div>`);
+                  dataNew = dataNew.replace('{socialtitles}', `
                     <div class="title">
                       <div class="title-icon"><i class="fas fa-link"></i></div>
                       <p class="bold lang resume_color resume_line resume_box">Social Links</p>
-                    </div>`)
-                        .replace('{socialLinks}', socialLinksHtml)
-                        .replace('{socialLinksIcons}', socialLinksIcons);
+                    </div>`);
                 } else {
-                    const socialPlaceholders = [
-                        '{socialtitle}', '{socialtitles}', '{socialLinks}', '{socialLinksIcons}'
-                    ];
-                    socialPlaceholders.forEach(placeholder => {
-                        dataNew = dataNew.replace(placeholder, '');
-                    });
+                 
+                  dataNew = dataNew.replace('{socialtitle}', '');
+                  dataNew = dataNew.replace('{socialtitles}', '');
                 }
-            } else {
-                const socialPlaceholders = [
-                    '{socialtitle}', '{socialtitles}', '{facebook}', '{facebookdesign}', '{facebookone}',
-                    '{twitter}', '{twitterdesign}', '{twitterone}', '{youtube}', '{youtubedesign}', '{youtubeone}',
-                    '{linkedin}', '{linkedindesign}', '{linkedinone}', '{skype}', '{skypedesign}', '{skypeone}',
-                    '{lfj}', '{lfjdesign}', '{lfjone}', '{instagram}', '{instagramdesign}', '{instagramone}',
-                    '{github}', '{githubdesign}', '{githubone}'
+              } else {
+                // Clear all social link placeholders if there are no social links
+                const placeholders = [
+                  '{facebook}', '{twitter}', '{youtube}', '{linkedin}', '{skype}', '{github}', '{lfj}', '{instagram}',
+                  '{facebookdesign}', '{twitterdesign}', '{youtubedesign}', '{linkedindesign}', '{skypedesign}', '{githubdesign}', '{lfjdesign}', '{instagramdesign}',
+                  '{facebookone}', '{twitterone}', '{youtubeone}', '{linkedinone}', '{skypeone}', '{githubone}', '{lfjone}', '{instagramone}',
+                  '{socialtitle}', '{socialtitles}'
                 ];
-                socialPlaceholders.forEach(placeholder => {
-                    dataNew = dataNew.replace(placeholder, '');
+                placeholders.forEach(placeholder => {
+                  dataNew = dataNew.replace(placeholder, '');
                 });
-            }
+              }
 
             let newDeclaration = '';
 
@@ -1397,19 +1403,19 @@ export const createResume = async (req: Request, res: Response) => {
             }
 
             // Email Replacementf
-            if (content?.personalDetails?.email) {
-                dataNew = dataNew.replace('{email}', content.personalDetails.email);
+            if (content?.personaldetails?.email) {
+                dataNew = dataNew.replace('{email}', content.personaldetails.email);
                 dataNew = dataNew.replace('{emailone}', `<li> 
                     <div class="icon"><i class="fas fa-envelope"></i></div>
-                    <div class="data"> ${content.personalDetails.email} </div>
+                    <div class="data"> ${content.personaldetails.email} </div>
                 </li>`);
-                dataNew = dataNew.replace('{emailtwo}', `<li> <div class="data">${content.personalDetails.email}</div>
+                dataNew = dataNew.replace('{emailtwo}', `<li> <div class="data">${content.personaldetails.email}</div>
                     <div class="icon"><i class="fas fa-envelope"></i></div>
                 </li>`);
                 dataNew = dataNew.replace('{emailthree}', `<li><div class="icon">
-                <i class="fas fa-envelope"></i><span class="data">${content.personalDetails.email}</span>
+                <i class="fas fa-envelope"></i><span class="data">${content.personaldetails.email}</span>
             </div></li>`);
-                dataNew = dataNew.replace('{emailfour}', `<li class="exper_dot">${content.personalDetails.email}</li>`);
+                dataNew = dataNew.replace('{emailfour}', `<li class="exper_dot">${content.personaldetails.email}</li>`);
             } else {
                 dataNew = dataNew.replace('{email}', '');
                 dataNew = dataNew.replace('{emailone}', '');
@@ -1419,15 +1425,15 @@ export const createResume = async (req: Request, res: Response) => {
             }
 
             // Address Replacement
-            if (content?.personalDetails?.address) {
-                dataNew = dataNew.replace('{address}', content.personalDetails.address);
-                dataNew = dataNew.replace('{addresstwo}', `<li class="exper_dot">${content.personalDetails.address}</li>`);
+            if (content?.personaldetails?.address) {
+                dataNew = dataNew.replace('{address}', content.personaldetails.address);
+                dataNew = dataNew.replace('{addresstwo}', `<li class="exper_dot">${content.personaldetails.address}</li>`);
                 dataNew = dataNew.replace('{addressthree}', `<li> <div class="icon"> <i class="fas fa-map-marker-alt"></i>
-                    </div><div class="data"> ${content.personalDetails.address} </div></li>`);
-                dataNew = dataNew.replace('{addressfour}', `<li><div class="data"> ${content.personalDetails.address}</div>
+                    </div><div class="data"> ${content.personaldetails.address} </div></li>`);
+                dataNew = dataNew.replace('{addressfour}', `<li><div class="data"> ${content.personaldetails.address}</div>
                     <div class="icon"><i class="fas fa-map-marker-alt"></i></div></li>`);
                 dataNew = dataNew.replace('{addressone}', `<li><div class="icon"><i class="fas fa-map-marker-alt"></i>
-                    <span class="data">${content.personalDetails.address}</span></div></li>`);
+                    <span class="data">${content.personaldetails.address}</span></div></li>`);
             } else {
                 dataNew = dataNew.replace('{address}', '');
                 dataNew = dataNew.replace('{addresstwo}', '');
@@ -1437,15 +1443,15 @@ export const createResume = async (req: Request, res: Response) => {
             }
 
             // Phone Replacement
-            if (content?.personalDetails?.phone) {
-                dataNew = dataNew.replace('{phone}', content.personalDetails.phone);
+            if (content?.personaldetails?.phone) {
+                dataNew = dataNew.replace('{phone}', content.personaldetails.phone);
                 dataNew = dataNew.replace('{phonedesignone}', `<li><div class="icon"><i class="fas fa-phone-alt"></i></div>
-                    <div class="data"> ${content.personalDetails.phone} </div></li>`);
-                dataNew = dataNew.replace('{phonedesigntwo}', `<li><div class="data"> ${content.personalDetails.phone} </div>
+                    <div class="data"> ${content.personaldetails.phone} </div></li>`);
+                dataNew = dataNew.replace('{phonedesigntwo}', `<li><div class="data"> ${content.personaldetails.phone} </div>
                     <div class="icon"><i class="fas fa-phone-alt"></i></div></li>`);
                 dataNew = dataNew.replace('{phonedesignthree}', `<li><div class="icon"><i class="fas fa-phone-alt"></i>
-                    <span class="data">${content.personalDetails.phone}</span></div></li>`);
-                dataNew = dataNew.replace('{phonedesignfour}', `<li class="exper_dot">${content.personalDetails.phone}</li>`);
+                    <span class="data">${content.personaldetails.phone}</span></div></li>`);
+                dataNew = dataNew.replace('{phonedesignfour}', `<li class="exper_dot">${content.personaldetails.phone}</li>`);
             } else {
                 dataNew = dataNew.replace('{phone}', '');
                 dataNew = dataNew.replace('{phonedesignone}', '');
@@ -1455,15 +1461,15 @@ export const createResume = async (req: Request, res: Response) => {
             }
 
             // Date of Birth Replacement
-            if (content?.personalDetails?.dob) {
-                dataNew = dataNew.replace('{dob}', `<li>DOB: ${content.personalDetails.dob}</li>`);
-                dataNew = dataNew.replace('{dobone}', `<li class="exper_dot">${content.personalDetails.dob}</li>`);
+            if (content?.personaldetails?.dob) {
+                dataNew = dataNew.replace('{dob}', `<li>DOB: ${content.personaldetails.dob}</li>`);
+                dataNew = dataNew.replace('{dobone}', `<li class="exper_dot">${content.personaldetails.dob}</li>`);
                 dataNew = dataNew.replace('{dobdesign}', `<li><div class="icon"><i class="fas fa-birthday-cake"></i></div>
-                    <div class="data"> ${content.personalDetails.dob} </div></li>`);
-                dataNew = dataNew.replace('{dobdesignthree}', `<li><div class="data"> ${content.personalDetails.dob}</div>
+                    <div class="data"> ${content.personaldetails.dob} </div></li>`);
+                dataNew = dataNew.replace('{dobdesignthree}', `<li><div class="data"> ${content.personaldetails.dob}</div>
                     <div class="icon"><i class="fas fa-birthday-cake"></i></div></li>`);
                 dataNew = dataNew.replace('{dobdesignfour}', `<li><div class="icon"><i class="fas fa-birthday-cake"></i>
-                    <span class="data">${content.personalDetails.dob}</span></div></li>`);
+                    <span class="data">${content.personaldetails.dob}</span></div></li>`);
             } else {
                 dataNew = dataNew.replace('{dob}', '');
                 dataNew = dataNew.replace('{dobone}', '');
@@ -1473,11 +1479,11 @@ export const createResume = async (req: Request, res: Response) => {
             }
 
             // Nationality
-            if (content?.personalDetails?.nationality) {
-                dataNew = replaceData(dataNew, '{nationality}', `<li class="exper_dot"> ${content.personalDetails.nationality} </li>`);
-                dataNew = replaceData(dataNew, '{nationalitydesign}', `<li><div class="icon"><i class="fas fa-flag"></i></div><div class="data"> ${content.personalDetails.nationality} </div></li>`);
-                dataNew = replaceData(dataNew, '{nationalitydesigntwo}', `<li><div class="data"> ${content.personalDetails.nationality} </div><div class="icon"><i class="fas fa-flag"></i></div></li>`);
-                dataNew = replaceData(dataNew, '{nationalitydesignthree}', `<li><div class="icon"><i class="fas fa-flag"></i><span class="data">${content.personalDetails.nationality}</span></div></li>`);
+            if (content?.personaldetails?.nationality) {
+                dataNew = replaceData(dataNew, '{nationality}', `<li class="exper_dot"> ${content.personaldetails.nationality} </li>`);
+                dataNew = replaceData(dataNew, '{nationalitydesign}', `<li><div class="icon"><i class="fas fa-flag"></i></div><div class="data"> ${content.personaldetails.nationality} </div></li>`);
+                dataNew = replaceData(dataNew, '{nationalitydesigntwo}', `<li><div class="data"> ${content.personaldetails.nationality} </div><div class="icon"><i class="fas fa-flag"></i></div></li>`);
+                dataNew = replaceData(dataNew, '{nationalitydesignthree}', `<li><div class="icon"><i class="fas fa-flag"></i><span class="data">${content.personaldetails.nationality}</span></div></li>`);
             } else {
                 dataNew = replaceData(dataNew, '{nationality}', '');
                 dataNew = replaceData(dataNew, '{nationalitydesign}', '');
@@ -1486,14 +1492,14 @@ export const createResume = async (req: Request, res: Response) => {
             }
 
             // Marital Status
-            if (content?.personalDetails?.maritalStatus) {
-                dataNew = replaceData(dataNew, '{marital}', content.personalDetails.maritalStatus);
-                dataNew = replaceData(dataNew, '{maritaldesigntwo}', `<li><div class="data">${content.personalDetails.maritalStatus}</div><div class="icon"><i class="fa fa-heart"></i></div></li>`);
-                dataNew = replaceData(dataNew, '{maritaldesignthree}', `<li><div class="icon"><span class="data"><i class="fa fa-heart"></i>${content.personalDetails.maritalStatus}</span></div></li>`);
-                dataNew = replaceData(dataNew, '{maritaldesignfour}', `<li><div class="icon"><i class="fa fa-heart"></i></div><div class="data">${content.personalDetails.maritalStatus}</div></li>`);
-                dataNew = replaceData(dataNew, '{maritaldesignfive}', `<li class="exper_dot">${content.personalDetails.maritalStatus}</li>`);
-                dataNew = replaceData(dataNew, '{maritaldesignsix}', `<li><div class="icon"><i class="fa fa-heart"></i><span class="data">${content.personalDetails.maritalStatus}</span></div></li>`);
-                dataNew = replaceData(dataNew, '{maritaldesignseven}', `<li> Marital Status : ${content.personalDetails.maritalStatus} </li>`);
+            if (content?.personaldetails?.maritalStatus) {
+                dataNew = replaceData(dataNew, '{marital}', content.personaldetails.maritalStatus);
+                dataNew = replaceData(dataNew, '{maritaldesigntwo}', `<li><div class="data">${content.personaldetails.maritalStatus}</div><div class="icon"><i class="fa fa-heart"></i></div></li>`);
+                dataNew = replaceData(dataNew, '{maritaldesignthree}', `<li><div class="icon"><span class="data"><i class="fa fa-heart"></i>${content.personaldetails.maritalStatus}</span></div></li>`);
+                dataNew = replaceData(dataNew, '{maritaldesignfour}', `<li><div class="icon"><i class="fa fa-heart"></i></div><div class="data">${content.personaldetails.maritalStatus}</div></li>`);
+                dataNew = replaceData(dataNew, '{maritaldesignfive}', `<li class="exper_dot">${content.personaldetails.maritalStatus}</li>`);
+                dataNew = replaceData(dataNew, '{maritaldesignsix}', `<li><div class="icon"><i class="fa fa-heart"></i><span class="data">${content.personaldetails.maritalStatus}</span></div></li>`);
+                dataNew = replaceData(dataNew, '{maritaldesignseven}', `<li> Marital Status : ${content.personaldetails.maritalStatus} </li>`);
             } else {
                 dataNew = replaceData(dataNew, '{marital}', '');
                 dataNew = replaceData(dataNew, '{maritaldesigntwo}', '');
@@ -1505,14 +1511,14 @@ export const createResume = async (req: Request, res: Response) => {
             }
 
             // Father Name
-            if (content?.personalDetails?.fatherName) {
-                dataNew = replaceData(dataNew, '{ftName}', content.personalDetails.fatherName);
-                dataNew = replaceData(dataNew, '{ftNamedesigntwo}', `<li><div class="data">${content.personalDetails.fatherName}</div><div class="icon"><i class="fas fa-child"></i></div></li>`);
-                dataNew = replaceData(dataNew, '{ftNamedesignthree}', `<li><div class="icon"><span class="data"><i class="fas fa-child"></i>${content.personalDetails.fatherName}</span></div></li>`);
-                dataNew = replaceData(dataNew, '{ftNamedesignfour}', `<li><div class="icon"><i class="fas fa-child"></i></div><div class="data">${content.personalDetails.fatherName}</div></li>`);
-                dataNew = replaceData(dataNew, '{ftNamedesignfive}', `<li class="exper_dot">${content.personalDetails.fatherName}</li>`);
-                dataNew = replaceData(dataNew, '{ftNamedesignsix}', `<li><div class="icon"><i class="fas fa-child"></i><span class="data">${content.personalDetails.fatherName}</span></div></li>`);
-                dataNew = replaceData(dataNew, '{ftNamedesignseven}', `<li> Fathers Name : ${content.personalDetails.fatherName} </li>`);
+            if (content?.personaldetails?.fatherName) {
+                dataNew = replaceData(dataNew, '{ftName}', content.personaldetails.fatherName);
+                dataNew = replaceData(dataNew, '{ftNamedesigntwo}', `<li><div class="data">${content.personaldetails.fatherName}</div><div class="icon"><i class="fas fa-child"></i></div></li>`);
+                dataNew = replaceData(dataNew, '{ftNamedesignthree}', `<li><div class="icon"><span class="data"><i class="fas fa-child"></i>${content.personaldetails.fatherName}</span></div></li>`);
+                dataNew = replaceData(dataNew, '{ftNamedesignfour}', `<li><div class="icon"><i class="fas fa-child"></i></div><div class="data">${content.personaldetails.fatherName}</div></li>`);
+                dataNew = replaceData(dataNew, '{ftNamedesignfive}', `<li class="exper_dot">${content.personaldetails.fatherName}</li>`);
+                dataNew = replaceData(dataNew, '{ftNamedesignsix}', `<li><div class="icon"><i class="fas fa-child"></i><span class="data">${content.personaldetails.fatherName}</span></div></li>`);
+                dataNew = replaceData(dataNew, '{ftNamedesignseven}', `<li> Fathers Name : ${content.personaldetails.fatherName} </li>`);
             } else {
                 dataNew = replaceData(dataNew, '{ftName}', '');
                 dataNew = replaceData(dataNew, '{ftNamedesigntwo}', '');
@@ -1524,22 +1530,22 @@ export const createResume = async (req: Request, res: Response) => {
             }
 
             // Image
-            if (content?.personalDetails?.imageUrl) {
-                dataNew = replaceData(dataNew, '{image}', content.personalDetails.imageUrl);
-            } else if (content?.personalDetails?.gender === 'Male') {
+            if (content?.personaldetails?.imageUrl) {
+                dataNew = replaceData(dataNew, '{image}', content.personaldetails.imageUrl);
+            } else if (content?.personaldetails?.gender === 'Male') {
                 dataNew = replaceData(dataNew, '{image}', 'https://lookingforresume.com/images/male-img.png');
-            } else if (content?.personalDetails?.gender === 'Female') {
+            } else if (content?.personaldetails?.gender === 'Female') {
                 dataNew = replaceData(dataNew, '{image}', 'https://lookingforresume.com/images/female-img.png');
             } else {
                 dataNew = replaceData(dataNew, '{image}', 'http://lookingforresume.com/images/noavatar.png');
             }
 
             // Website
-            if (content?.personalDetails?.website) {
-                dataNew = replaceData(dataNew, '{website}', content.personalDetails.website);
-                dataNew = replaceData(dataNew, '{secoundwebsite}', `<li><div class="icon"><i class="fas fa-globe"></i></div><div class="data">${content.personalDetails.website}</div></li>`);
-                dataNew = replaceData(dataNew, '{websitethree}', `<li><div class="data">${content.personalDetails.website}</div><div class="icon"><i class="fas fa-globe"></i></div></li>`);
-                dataNew = replaceData(dataNew, '{websitefour}', `<li><div class="icon"><i class="fas fa-globe"></i><span class="data">${content.personalDetails.website}</span></div></li>`);
+            if (content?.personaldetails?.website) {
+                dataNew = replaceData(dataNew, '{website}', content.personaldetails.website);
+                dataNew = replaceData(dataNew, '{secoundwebsite}', `<li><div class="icon"><i class="fas fa-globe"></i></div><div class="data">${content.personaldetails.website}</div></li>`);
+                dataNew = replaceData(dataNew, '{websitethree}', `<li><div class="data">${content.personaldetails.website}</div><div class="icon"><i class="fas fa-globe"></i></div></li>`);
+                dataNew = replaceData(dataNew, '{websitefour}', `<li><div class="icon"><i class="fas fa-globe"></i><span class="data">${content.personaldetails.website}</span></div></li>`);
             } else {
                 dataNew = replaceData(dataNew, '{website}', '');
                 dataNew = replaceData(dataNew, '{secoundwebsite}', '');
@@ -1548,8 +1554,8 @@ export const createResume = async (req: Request, res: Response) => {
             }
 
             // Name
-            if (content?.personalDetails?.name) {
-                dataNew = replaceData(dataNew, '{name}', content.personalDetails.name);
+            if (content?.personaldetails?.name) {
+                dataNew = replaceData(dataNew, '{name}', content.personaldetails.name);
             } else {
                 dataNew = replaceData(dataNew, '{name}', '');
             }
@@ -2143,8 +2149,8 @@ export const createResume = async (req: Request, res: Response) => {
             }
 
             // Process About Me and Objective
-            if (content?.personalDetails?.aboutUs || content.objective) {
-                const aboutData = content?.personalDetails?.aboutUs;
+            if (content?.personaldetails?.aboutUs || content.objective) {
+                const aboutData = content?.personaldetails?.aboutUs;
                 const objectData = content.objective;
 
                 if (aboutData) {
@@ -2295,7 +2301,7 @@ export const createResume = async (req: Request, res: Response) => {
                 dataNew = replaceData(dataNew, '{objectivedatas}', '');
             }
 
-            if (content?.personalDetails?.aboutUs && content.objective) {
+            if (content?.personaldetails?.aboutUs && content.objective) {
                 // Replace placeholders with the content
                 dataNew = dataNew.replace('{aboutObjective}', `
                   <div class="polaroid">
@@ -2304,7 +2310,7 @@ export const createResume = async (req: Request, res: Response) => {
                         <div class="title">
                           <p class="bold resume_box resume_line">About ME</p>
                         </div>
-                        <p class="res-about experi-pd">${content.personalDetails.aboutUs}</p>
+                        <p class="res-about experi-pd">${content.personaldetails.aboutUs}</p>
                       </div>
                     </div>
                   </div>
@@ -2358,7 +2364,7 @@ export const createResume = async (req: Request, res: Response) => {
                           <div class="title-icon"><i class="fas fa-user"></i></div>
                           <p class="bold resume_box resume_line">About ME</p>
                         </div>
-                        <p class="res-about experi-pd">${content.personalDetails.aboutUs}</p>
+                        <p class="res-about experi-pd">${content.personaldetails.aboutUs}</p>
                       </div>
                     </div>
                   </div>
