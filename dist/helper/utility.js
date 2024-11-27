@@ -12,15 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.jwtGenerate = exports.timeDiff = exports.utcDateWithExtraTime = exports.utcDate = void 0;
+exports.sendMail = exports.jwtGenerate = exports.timeDiff = exports.utcDateWithExtraTime = exports.utcDate = void 0;
 exports.randomString = randomString;
 exports.randomNumber = randomNumber;
 exports.uploadImage = uploadImage;
 const moment_1 = __importDefault(require("moment"));
 require("moment-timezone");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-// import nodemailer from "nodemailer";
+const nodemailer = require('nodemailer');
 require("dotenv/config");
+const config_1 = __importDefault(require("../config/config"));
 const secretKey = process.env.SECRET;
 const utcDate = () => {
     const format = "YYYY-MM-DD HH:mm:ss";
@@ -79,30 +80,32 @@ const jwtGenerate = (id) => __awaiter(void 0, void 0, void 0, function* () {
 exports.jwtGenerate = jwtGenerate;
 // ====================================================================================================
 // ====================================================================================================
-// export const sendMail = async (email: string, subject: string, message: string) => {
-// 	let result:any;
-// 	try {
-// 		// create reusable transporter object using the default SMTP transport
-// 		let transporter = nodemailer.createTransport(config.smtp);
-// 		// send mail with defined transport object
-// 		let info = await transporter.sendMail({
-// 			from: "noreply@bosone.com", // sender address
-// 			to: email, // list of receivers
-// 			subject: subject, // Subject line
-// 			text: message, // plain text body
-// 			html: "", // html body
-// 		})
-// 		result = info.messageId;
-// 		console.log("Message sent: %s", info.messageId);
-// 		console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-// 		// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-// 	} catch (err) {
-// 		console.log("error", err);
-// 		result = false;
-// 		throw err;
-// 	}
-// 	return result;
-// };
+const sendMail = (email, subject, message) => __awaiter(void 0, void 0, void 0, function* () {
+    let result;
+    try {
+        // create reusable transporter object using the default SMTP transport
+        let transporter = nodemailer.createTransport(config_1.default.smtp);
+        // send mail with defined transport object
+        let info = yield transporter.sendMail({
+            from: "noreply@bosone.com", // sender address
+            to: email, // list of receivers
+            subject: subject, // Subject line
+            text: message, // plain text body
+            html: "", // html body
+        });
+        result = info.messageId;
+        console.log("Message sent: %s", info.messageId);
+        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+    }
+    catch (err) {
+        console.log("error", err);
+        result = false;
+        throw err;
+    }
+    return result;
+});
+exports.sendMail = sendMail;
 // ====================================================================================================
 // ====================================================================================================
 function randomString(length) {

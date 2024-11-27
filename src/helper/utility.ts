@@ -1,7 +1,7 @@
 import moment from "moment";
 import 'moment-timezone';
 import jwt from "jsonwebtoken";
-// import nodemailer from "nodemailer";
+const nodemailer = require('nodemailer');
 import 'dotenv/config';
 import config from "../config/config";
 
@@ -78,31 +78,31 @@ export const jwtGenerate = async (id: string) => {
 // ====================================================================================================
 // ====================================================================================================
 
-// export const sendMail = async (email: string, subject: string, message: string) => {
-// 	let result:any;
-// 	try {
-// 		// create reusable transporter object using the default SMTP transport
-// 		let transporter = nodemailer.createTransport(config.smtp);
-// 		// send mail with defined transport object
-// 		let info = await transporter.sendMail({
-// 			from: "noreply@bosone.com", // sender address
-// 			to: email, // list of receivers
-// 			subject: subject, // Subject line
-// 			text: message, // plain text body
-// 			html: "", // html body
-// 		})
-// 		result = info.messageId;
+export const sendMail = async (email: string, subject: string, message: string) => {
+	let result:any;
+	try {
+		// create reusable transporter object using the default SMTP transport
+		let transporter = nodemailer.createTransport(config.smtp);
+		// send mail with defined transport object
+		let info = await transporter.sendMail({
+			from: "noreply@bosone.com", // sender address
+			to: email, // list of receivers
+			subject: subject, // Subject line
+			text: message, // plain text body
+			html: "", // html body
+		})
+		result = info.messageId;
 
-// 		console.log("Message sent: %s", info.messageId);
-// 		console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-// 		// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-// 	} catch (err) {
-// 		console.log("error", err);
-// 		result = false;
-// 		throw err;
-// 	}
-// 	return result;
-// };
+		console.log("Message sent: %s", info.messageId);
+		console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+		// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+	} catch (err) {
+		console.log("error", err);
+		result = false;
+		throw err;
+	}
+	return result;
+};
 
 // ====================================================================================================
 // ====================================================================================================

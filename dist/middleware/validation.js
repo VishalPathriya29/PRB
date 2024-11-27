@@ -117,6 +117,7 @@ exports.updateProfileValidation = updateProfileValidation;
 const addResumeValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const schema = joi_1.default.object({
         resume_data: joi_1.default.required(),
+        templates_id: joi_1.default.number().required(),
     });
     const value = schema.validate(req.body);
     if (value.error) {

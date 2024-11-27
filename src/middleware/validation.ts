@@ -85,6 +85,7 @@ export const updateProfileValidation = async (req: Request, res: Response, next:
 export const addResumeValidation = async (req: Request, res: Response, next: NextFunction) => {
     const schema = Joi.object({
         resume_data: Joi.required(),
+        templates_id: Joi.number().required(),
     });
     const value = schema.validate(req.body);
 
