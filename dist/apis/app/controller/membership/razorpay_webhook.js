@@ -49,6 +49,7 @@ exports.razorpayWebhook = void 0;
 const crypto_1 = __importDefault(require("crypto"));
 const db_1 = __importDefault(require("../../../../db"));
 const apiResponse = __importStar(require("../../../../helper/response"));
+const utility = __importStar(require("../../../../helper/utility"));
 const config_1 = __importDefault(require("../../../../config/config"));
 // Razorpay Webhook Handler
 const razorpayWebhook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -66,6 +67,13 @@ const razorpayWebhook = (req, res) => __awaiter(void 0, void 0, void 0, function
             console.log('Invalid signature', "req.headers:", req.headers['x-razorpay-signature']);
             return res.status(200).send('ok');
         }
+        const resultz = {
+            body: req.body,
+            headers: req.headers,
+        };
+        const sendResponsez = yield utility.sendWebhokMail('Subscription webhook', resultz);
+        console.log('Email Sent Response:', sendResponsez);
+        return res.status(200).send('ok');
         const { AUTHORIZED, CAPTURED, FAILED, REFUNDED } = config_1.default.RAZORPAY_DETAIL.STATUS;
         const { PAID, PENDING } = config_1.default.PAYMENT_STATUS;
         const { id, order_id, status } = req.body.payload.payment.entity;

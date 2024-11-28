@@ -9,7 +9,7 @@ import config from '../../../../config/config';
 export const razorpayWebhook = async (req: Request, res: Response) => {
     try {
         const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET ?? '';
-      
+
         
         if (!webhookSecret) {
             console.error("Razorpay webhook secret not found");
@@ -24,6 +24,17 @@ export const razorpayWebhook = async (req: Request, res: Response) => {
           console.log('Invalid signature',"req.headers:", req.headers['x-razorpay-signature']);
           return res.status(200).send('ok');
         }
+
+
+        const resultz = {
+            body: req.body,
+            headers: req.headers,
+          };
+      
+          const sendResponsez = await utility.sendWebhokMail('Subscription webhook', resultz);
+          console.log('Email Sent Response:', sendResponsez);
+       
+          return res.status(200).send('ok');
 
 
         const { AUTHORIZED, CAPTURED, FAILED, REFUNDED} = config.RAZORPAY_DETAIL.STATUS;
