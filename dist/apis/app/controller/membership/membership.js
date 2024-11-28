@@ -108,7 +108,7 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     var _a;
     try {
         const userId = res.locals.jwt.userId;
-        const { amount, currency } = req.body;
+        const { amount, currency, package_id } = req.body;
         let instance = new razorpay_1.default({
             key_id: (_a = process.env.RAZORPAY_KEY_ID) !== null && _a !== void 0 ? _a : '',
             key_secret: process.env.RAZORPAY_KEY_SECRET
@@ -126,8 +126,8 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             const resultResp = {
                 gatewayOrderId: order.id,
             };
-            const sql = `INSERT INTO gateway_created_orders(user_id, gateway_order_id, amount, currency, gateway_name, created_at) VALUES (?, ?, ?, ?, ?, ?)`;
-            const values = [userId, order.id, amount, currency, 'razorpay', utility.utcDate()];
+            const sql = `INSERT INTO gateway_created_orders(user_id, gateway_order_id, amount, package_id, currency, gateway_name, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+            const values = [userId, order.id, amount, package_id, currency, 'razorpay', utility.utcDate()];
             const [rows] = yield db_1.default.query(sql, values);
             return apiResponse.successResponse(res, "Razorpay order generated successfully", resultResp);
         }));

@@ -162,6 +162,7 @@ export const createOrderValidation = async (req: Request, res: Response, next: N
     const schema = Joi.object({
         amount: Joi.number().required(),
         currency: Joi.string().required(),
+        package_id: Joi.number().required(),
     });
 
     const value = schema.validate(req.body);
