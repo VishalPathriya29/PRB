@@ -26,15 +26,15 @@ export const razorpayWebhook = async (req: Request, res: Response) => {
         }
 
 
-        const resultz = {
-            body: req.body,
-            headers: req.headers,
-          };
+        // const resultz = {
+        //     body: req.body,
+        //     headers: req.headers,
+        //   };
       
-          const sendResponsez = await utility.sendWebhokMail('Subscription webhook', resultz);
-          console.log('Email Sent Response:', sendResponsez);
+        //   const sendResponsez = await utility.sendWebhokMail('Subscription webhook', resultz);
+        //   console.log('Email Sent Response:', sendResponsez);
        
-          return res.status(200).send('ok');
+        //   return res.status(200).send('ok');
 
 
         const { AUTHORIZED, CAPTURED, FAILED, REFUNDED} = config.RAZORPAY_DETAIL.STATUS;

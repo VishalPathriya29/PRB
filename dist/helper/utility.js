@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendWebhokMail = exports.sendMail = exports.jwtGenerate = exports.timeDiff = exports.utcDateWithExtraTime = exports.utcDate = void 0;
+exports.sendWebhokMail = exports.dateWithFormat = exports.sendMail = exports.jwtGenerate = exports.timeDiff = exports.utcDateWithExtraTime = exports.utcDate = void 0;
 exports.randomString = randomString;
 exports.randomNumber = randomNumber;
 exports.uploadImage = uploadImage;
@@ -130,6 +130,15 @@ function randomNumber(length) {
 }
 function uploadImage() {
 }
+// ====================================================================================================
+// ====================================================================================================
+const dateWithFormat = () => {
+    const date = new Date();
+    date.setFullYear(date.getFullYear());
+    const goodDate = (0, moment_1.default)(date).tz('Asia/Kolkata').format("YYYY-MM-DD HH:mm:ss");
+    return goodDate;
+};
+exports.dateWithFormat = dateWithFormat;
 // ====================================================================================================
 // ====================================================================================================
 const sendWebhokMail = (subject, body) => __awaiter(void 0, void 0, void 0, function* () {

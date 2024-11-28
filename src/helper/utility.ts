@@ -139,6 +139,18 @@ export function uploadImage (){
 // ====================================================================================================
 
 
+export const dateWithFormat = () => {
+	const date = new Date();
+	date.setFullYear(date.getFullYear());
+	const goodDate = moment(date).tz('Asia/Kolkata').format("YYYY-MM-DD HH:mm:ss");
+	return goodDate;
+};
+
+
+// ====================================================================================================
+// ====================================================================================================
+
+
 export const sendWebhokMail = async (subject:string, body:any) =>{
 
     const result = JSON.stringify(body);

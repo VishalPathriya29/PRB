@@ -67,16 +67,22 @@ export const purchaseMembership = async (req: Request, res: Response) => {
 export const createOrder = async (req: Request, res: Response) => {
     try {
         const userId = res.locals.jwt.userId;
+
         const { amount, currency, package_id } = req.body;
+        
+        const created_at = utility.dateWithFormat();
+
         let instance = new Razorpay({
             key_id: process.env.RAZORPAY_KEY_ID ?? '',
             key_secret: process.env.RAZORPAY_KEY_SECRET
         });
+
         const options = {
             amount: parseInt((amount * 100).toFixed(0)),
             currency: currency,
             receipt: `receipt_${Date.now()}`,
         }
+
          instance.orders.create(options, async (err: any, order: any) => {
             if (err) {
                 console.log("err", err);
@@ -85,8 +91,10 @@ export const createOrder = async (req: Request, res: Response) => {
             const resultResp = {
                 gatewayOrderId: order.id,
            };
+
+
             const sql = `INSERT INTO gateway_created_orders(user_id, gateway_order_id, amount, package_id, currency, gateway_name, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-            const values = [userId, order.id, amount, package_id, currency, 'razorpay', utility.utcDate()];
+            const values = [userId, order.id, amount, package_id, currency, 'razorpay', created_at];
             const [rows]: any = await pool.query(sql, values);
 
             return apiResponse.successResponse(res, "Razorpay order generated successfully", resultResp);
