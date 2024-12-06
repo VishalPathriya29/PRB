@@ -8,10 +8,10 @@ import crypto from 'crypto';
 
 export const membershipList = async (req: Request, res: Response) => {
     try {
-        const sql = `SELECT id, name, slug, details FROM membership_plans WHERE status = 1`;
+        const sql = `SELECT id, name, slug, details, type FROM membership_plans WHERE status = 1`;
         const [rows]: any = await pool.query(sql);
 
-        const membershipList = `SELECT membership_plan_id, name, currency, price, duration FROM membership_prices WHERE status = 1`;
+        const membershipList = `SELECT membership_plan_id, name, currency, inr_price, duration, usd_price FROM membership_prices WHERE status = 1`;
         const [prices]: any = await pool.query(membershipList);
         let index = -1;
         for (const iterator of rows) {
@@ -37,6 +37,8 @@ export const membershipList = async (req: Request, res: Response) => {
 // =======================================================================
 
 // Purchase Membership
+
+// 
 export const purchaseMembership = async (req: Request, res: Response) => {
     try {
         const userId = res.locals.jwt.userId;
@@ -68,7 +70,7 @@ export const createOrder = async (req: Request, res: Response) => {
     try {
         const userId = res.locals.jwt.userId;
 
-        const { amount, currency, package_id } = req.body;
+        const { amount, currency, package_id , type } = req.body;
         
         const created_at = utility.dateWithFormat();
 
@@ -91,10 +93,9 @@ export const createOrder = async (req: Request, res: Response) => {
             const resultResp = {
                 gatewayOrderId: order.id,
            };
-
-
-            const sql = `INSERT INTO gateway_created_orders(user_id, gateway_order_id, amount, package_id, currency, gateway_name, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-            const values = [userId, order.id, amount, package_id, currency, 'razorpay', created_at];
+           
+            const sql = `INSERT INTO gateway_created_orders(user_id, gateway_order_id, amount, package_id, currency, gateway_name, type, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+            const values = [userId, order.id, amount, package_id, currency, 'razorpay', type, created_at];
             const [rows]: any = await pool.query(sql, values);
 
             return apiResponse.successResponse(res, "Razorpay order generated successfully", resultResp);

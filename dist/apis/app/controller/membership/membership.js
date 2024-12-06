@@ -52,9 +52,9 @@ const utility = __importStar(require("../../../../helper/utility"));
 const razorpay_1 = __importDefault(require("razorpay"));
 const membershipList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const sql = `SELECT id, name, slug, details FROM membership_plans WHERE status = 1`;
+        const sql = `SELECT id, name, slug, details, type FROM membership_plans WHERE status = 1`;
         const [rows] = yield db_1.default.query(sql);
-        const membershipList = `SELECT membership_plan_id, name, currency, price, duration FROM membership_prices WHERE status = 1`;
+        const membershipList = `SELECT membership_plan_id, name, currency, inr_price, duration, usd_price FROM membership_prices WHERE status = 1`;
         const [prices] = yield db_1.default.query(membershipList);
         let index = -1;
         for (const iterator of rows) {
@@ -80,6 +80,7 @@ exports.membershipList = membershipList;
 // =======================================================================
 // =======================================================================
 // Purchase Membership
+// 
 const purchaseMembership = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
@@ -108,7 +109,7 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     var _a;
     try {
         const userId = res.locals.jwt.userId;
-        const { amount, currency, package_id } = req.body;
+        const { amount, currency, package_id, type } = req.body;
         const created_at = utility.dateWithFormat();
         let instance = new razorpay_1.default({
             key_id: (_a = process.env.RAZORPAY_KEY_ID) !== null && _a !== void 0 ? _a : '',
@@ -127,8 +128,8 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             const resultResp = {
                 gatewayOrderId: order.id,
             };
-            const sql = `INSERT INTO gateway_created_orders(user_id, gateway_order_id, amount, package_id, currency, gateway_name, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-            const values = [userId, order.id, amount, package_id, currency, 'razorpay', created_at];
+            const sql = `INSERT INTO gateway_created_orders(user_id, gateway_order_id, amount, package_id, currency, gateway_name, type, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+            const values = [userId, order.id, amount, package_id, currency, 'razorpay', type, created_at];
             const [rows] = yield db_1.default.query(sql, values);
             return apiResponse.successResponse(res, "Razorpay order generated successfully", resultResp);
         }));

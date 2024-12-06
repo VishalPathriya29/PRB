@@ -190,3 +190,35 @@ export const sendWebhokMail = async (subject:string, body:any) =>{
 
 
 }
+
+
+// ====================================================================================================
+// ====================================================================================================
+
+
+export const packageType = (type: string) => {
+	const date = new Date();
+	var endDate = "0000-00-00 00:00:00";
+	if (type === "yearly" || type === "year") {
+		date.setFullYear(date.getFullYear() + 1);
+		endDate = moment(date).tz('Asia/Kolkata').format("YYYY-MM-DD HH:mm:ss");
+	} else if (type === "monthly" || type === "trial" || type === "month") {
+		date.setMonth(date.getMonth() + 1);
+		endDate = moment(date).tz('Asia/Kolkata').format("YYYY-MM-DD HH:mm:ss");
+	} else if (type === "quarterly" || type === "quarter") {
+		date.setDate(date.getMonth() + 3);
+		endDate = moment(date).tz('Asia/Kolkata').format("YYYY-MM-DD HH:mm:ss");
+	}
+	return endDate;
+};
+
+
+// ====================================================================================================	
+// ====================================================================================================
+
+export const getTimeAndDate = async () => {
+	var m = moment.tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm');
+	let str = (m).toString().split(" ");
+
+	return [str[0], str[1]]; // [str[0], str[1]];
+}

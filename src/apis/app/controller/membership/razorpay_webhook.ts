@@ -36,9 +36,15 @@ export const razorpayWebhook = async (req: Request, res: Response) => {
        
         //   return res.status(200).send('ok');
 
+        const getUserPackageDetils = `SELECT user_id, package_id, type FROM gateway_created_orders WHERE gateway_order_id = ?`;
+        const [userPackage]: any = await pool.query(getUserPackageDetils, [req.body.payload.payment.entity.order_id]);
+
+        const {user_id, package_id, type} = userPackage[0];
+
 
         const { AUTHORIZED, CAPTURED, FAILED, REFUNDED} = config.RAZORPAY_DETAIL.STATUS;
         const { PAID, PENDING} = config.PAYMENT_STATUS;
+        const { ACTIVE, INACTIVE, PACKAGESLUG} = config.PACKAGE_STATUS;
     
     
         const { id, order_id, status} = req.body.payload.payment.entity;
@@ -55,6 +61,27 @@ export const razorpayWebhook = async (req: Request, res: Response) => {
         const updateOrder = `UPDATE gateway_created_orders SET payment_status = ?, order_status = ?, transaction_id = ? WHERE gateway_order_id = ? `;
         const updateOrderVal = [status, paymentStatus, id, order_id];
         const [rows]: any = await pool.query(updateOrder, updateOrderVal);
+
+        const checkPackageSql = `SELECT * FROM users_package WHERE user_id = ? LIMIT 1`;
+        const value = [user_id]
+        const [packageData]: any = await pool.query(checkPackageSql, value);
+
+        const packageTimeDifferent = utility.packageType(`${type}`);
+        const createdAt = utility.dateWithFormat();
+
+        let packageSql: any;
+        let packageVALUES: any;
+        // isme is is_expired ka ab koi roll nhi hai isme bs esse hi add kar rakhi hai 
+
+        if (packageData.length > 0) {
+          packageSql = `UPDATE users_package SET package_slug = ?, start_date = ?, package_status = ?, end_date = ?, updated_at = ?, package_id = ? WHERE user_id = ?`;
+          packageVALUES = [PACKAGESLUG, createdAt, ACTIVE, packageTimeDifferent, createdAt, package_id, user_id];
+        }
+        else {
+          packageSql = `INSERT INTO users_package(user_id, package_slug, start_date, end_date, package_status, created_at, package_id) VALUES(  ?, ?, ?, ?, ?, ?, ?)`;
+          packageVALUES = [user_id, PACKAGESLUG, createdAt, packageTimeDifferent, ACTIVE, createdAt, package_id];
+        }
+        const [packageRows]: any = await pool.query(packageSql, packageVALUES);
 
 
         return res.status(200).send('ok');

@@ -18,6 +18,12 @@ exports.default = {
         //     rejectUnauthorized: false
         // }
     },
+    PACKAGE_STATUS: {
+        ACTIVE: "active",
+        INACTIVE: "inactive",
+        DELETED: "deleted",
+        PACKAGESLUG: "pro"
+    },
     RAZORPAY_DETAIL: {
         STATUS: {
             // created, authorized, captured, refunded, failed

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendWebhokMail = exports.dateWithFormat = exports.sendMail = exports.jwtGenerate = exports.timeDiff = exports.utcDateWithExtraTime = exports.utcDate = void 0;
+exports.getTimeAndDate = exports.packageType = exports.sendWebhokMail = exports.dateWithFormat = exports.sendMail = exports.jwtGenerate = exports.timeDiff = exports.utcDateWithExtraTime = exports.utcDate = void 0;
 exports.randomString = randomString;
 exports.randomNumber = randomNumber;
 exports.uploadImage = uploadImage;
@@ -170,3 +170,31 @@ const sendWebhokMail = (subject, body) => __awaiter(void 0, void 0, void 0, func
     return responseMail;
 });
 exports.sendWebhokMail = sendWebhokMail;
+// ====================================================================================================
+// ====================================================================================================
+const packageType = (type) => {
+    const date = new Date();
+    var endDate = "0000-00-00 00:00:00";
+    if (type === "yearly" || type === "year") {
+        date.setFullYear(date.getFullYear() + 1);
+        endDate = (0, moment_1.default)(date).tz('Asia/Kolkata').format("YYYY-MM-DD HH:mm:ss");
+    }
+    else if (type === "monthly" || type === "trial" || type === "month") {
+        date.setMonth(date.getMonth() + 1);
+        endDate = (0, moment_1.default)(date).tz('Asia/Kolkata').format("YYYY-MM-DD HH:mm:ss");
+    }
+    else if (type === "quarterly" || type === "quarter") {
+        date.setDate(date.getMonth() + 3);
+        endDate = (0, moment_1.default)(date).tz('Asia/Kolkata').format("YYYY-MM-DD HH:mm:ss");
+    }
+    return endDate;
+};
+exports.packageType = packageType;
+// ====================================================================================================	
+// ====================================================================================================
+const getTimeAndDate = () => __awaiter(void 0, void 0, void 0, function* () {
+    var m = moment_1.default.tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm');
+    let str = (m).toString().split(" ");
+    return [str[0], str[1]]; // [str[0], str[1]];
+});
+exports.getTimeAndDate = getTimeAndDate;

@@ -8,6 +8,8 @@ import fs from 'fs';
 import apiRouter from "./apis/index.route";
 import path from 'path'
 // import { rateLimiterUsingThirdParty } from './middleware/rateLimiter';
+import cron from "node-cron";
+import * as cronFn from "./apis/app/controller/cronJobs/packageCronJob";
 
 export default (app: Express) => {
 
@@ -25,6 +27,7 @@ export default (app: Express) => {
         stream: fs.createWriteStream(__dirname+ '/access.log', {flags: 'a'})
     }));
 
+
     // app.use('/api', rateLimiterUsingThirdParty, apiRouter);
     app.use('/api', apiRouter);
     app.get('/', (req, res) => {
@@ -33,6 +36,19 @@ export default (app: Express) => {
     app.use('*', (req, res) => {
         res.status(404).json({message: 'Resource not available'});
     })
+
+
+    cron.schedule("0 1 * * *", async function() {
+        console.log("Running a cron job");
+        await cronFn.packageExpireCronJob();
+        fs.appendFile("logs.txt", "running cron job every day (hh/mm/05)/n", function(err:any) {
+            if (err) throw err;
+        });
+    }, {
+        scheduled: true, //true/false
+        timezone: "Asia/Kolkata"         
+    });
+    
     app.use((err: any, req: any, res: any, next: any) => {
         if(err){ 
             res.status(500).json({
