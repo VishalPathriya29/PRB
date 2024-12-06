@@ -186,6 +186,7 @@ const createOrderValidation = (req, res, next) => __awaiter(void 0, void 0, void
         amount: joi_1.default.number().required(),
         currency: joi_1.default.string().required(),
         package_id: joi_1.default.number().required(),
+        type: joi_1.default.string().required(),
     });
     const value = schema.validate(req.body);
     if (value.error) {
