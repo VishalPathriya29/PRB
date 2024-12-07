@@ -38,6 +38,7 @@
     "mysql2": "^3.9.2",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.16",
+    "puppeteer": "^23.10.1",
     "razorpay": "^2.9.4"
   },
   "devDependencies": {

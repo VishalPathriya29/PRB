@@ -45,7 +45,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createOrderValidation = exports.generateResumeValidation = exports.purchaseMembershipValidation = exports.updateResumeValidation = exports.addResumeValidation = exports.updateProfileValidation = exports.loginValidation = exports.registrationValidation = void 0;
+exports.generateResumeValidation = exports.createOrderValidation = exports.downloadResumeValidation = exports.purchaseMembershipValidation = exports.updateResumeValidation = exports.addResumeValidation = exports.updateProfileValidation = exports.loginValidation = exports.registrationValidation = void 0;
 const joi_1 = __importDefault(require("joi"));
 const apiResponse = __importStar(require("../helper/response"));
 const validationCheck = (value) => __awaiter(void 0, void 0, void 0, function* () {
@@ -165,7 +165,7 @@ exports.purchaseMembershipValidation = purchaseMembershipValidation;
 // ===========================================================================
 // ===========================================================================
 // Generate Resume Validation
-const generateResumeValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const downloadResumeValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const schema = joi_1.default.object({
         type: joi_1.default.string(),
         resume_id: joi_1.default.number().required(),
@@ -178,7 +178,7 @@ const generateResumeValidation = (req, res, next) => __awaiter(void 0, void 0, v
     }
     next();
 });
-exports.generateResumeValidation = generateResumeValidation;
+exports.downloadResumeValidation = downloadResumeValidation;
 // ===========================================================================
 // ===========================================================================
 const createOrderValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -198,3 +198,16 @@ const createOrderValidation = (req, res, next) => __awaiter(void 0, void 0, void
 exports.createOrderValidation = createOrderValidation;
 // ====================================================================================================
 // ====================================================================================================
+const generateResumeValidation = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const schema = joi_1.default.object({
+        resume_id: joi_1.default.number().required(),
+        template_id: joi_1.default.number().required(),
+    });
+    const value = schema.validate(req.body);
+    if (value.error) {
+        const errMsg = yield validationCheck(value);
+        return yield apiResponse.validationErrorWithData(res, errMsg);
+    }
+    next();
+});
+exports.generateResumeValidation = generateResumeValidation;

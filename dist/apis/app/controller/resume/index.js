@@ -46,5 +46,5 @@ resumeRouter.patch('/updateResume', authorization_1.authenticatingToken, validat
 resumeRouter.delete('/deleteResume', authorization_1.authenticatingToken, resumeController.deleteResume);
 resumeRouter.get('/template', templateController.templateList);
 resumeRouter.post('/generateResume', authorization_1.authenticatingToken, validation.generateResumeValidation, generateResumeController.createResume);
-resumeRouter.post('/downloadResume', authorization_1.authenticatingToken, validation.generateResumeValidation, generateResumeController.downloadResume);
+resumeRouter.post('/downloadResume', authorization_1.authenticatingToken, validation.downloadResumeValidation, generateResumeController.downloadResume);
 exports.default = resumeRouter;

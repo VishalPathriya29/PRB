@@ -24,6 +24,11 @@ exports.default = {
         DELETED: "deleted",
         PACKAGESLUG: "pro"
     },
+    DOWNLOAD_TYPE: {
+        DOCUMENT: "document",
+        PDF: "pdf",
+        TEXT: "text",
+    },
     RAZORPAY_DETAIL: {
         STATUS: {
             // created, authorized, captured, refunded, failed
