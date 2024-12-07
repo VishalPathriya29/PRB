@@ -74,7 +74,7 @@ export const razorpayWebhook = async (req: Request, res: Response) => {
         // isme is is_expired ka ab koi roll nhi hai isme bs esse hi add kar rakhi hai 
 
         if (packageData.length > 0) {
-          packageSql = `UPDATE users_package SET package_slug = ?, start_date = ?, package_status = ?, end_date = ?, updated_at = ?, package_id = ? WHERE user_id = ?`;
+          packageSql = `UPDATE users_package SET package_slug = ?, start_date = ?, package_status = ?, end_date = ?, update_at = ?, package_id = ? WHERE user_id = ?`;
           packageVALUES = [PACKAGESLUG, createdAt, ACTIVE, packageTimeDifferent, createdAt, package_id, user_id];
         }
         else {
