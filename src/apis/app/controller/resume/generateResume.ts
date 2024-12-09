@@ -7,10 +7,10 @@ import * as apiResponse from '../../../../helper/response';
 import * as utility from '../../../../helper/utility';
 import pdf from 'html-pdf';
 import axios from "axios";
-import  htmlDocx from 'html-docx-js'; 
-import mammoth from 'mammoth' ;
+import htmlDocx from 'html-docx-js';
+import mammoth from 'mammoth';
 import config from '../../../../config/config';
-const HtmlToDocx:any = require('html-to-docx');
+const HtmlToDocx: any = require('html-to-docx');
 import puppeteer from 'puppeteer';
 
 
@@ -1149,11 +1149,11 @@ import puppeteer from 'puppeteer';
 //                   lfj: { icon: 'fas fa-briefcase', url: content?.socialLinks?.lfj?.url },
 //                   instagram: { icon: 'fab fa-instagram', url: content?.socialLinks?.instagram?.url }
 //                 };
-              
-               
-              
+
+
+
 //                 let hasSocialLinks = false;
-              
+
 //                 // Loop through each social link to replace or clear placeholders
 //                 for (const [key, { icon, url }] of Object.entries(socialLinks)) {
 //                   if (url) {
@@ -1169,7 +1169,7 @@ import puppeteer from 'puppeteer';
 //                     dataNew = dataNew.replace(`{${key}one}`, "");
 //                   }
 //                 }
-              
+
 //                 // Add title if there are social links
 //                 if (hasSocialLinks) {
 //                   dataNew = dataNew.replace('{socialtitle}', `
@@ -1182,7 +1182,7 @@ import puppeteer from 'puppeteer';
 //                       <p class="bold lang resume_color resume_line resume_box">Social Links</p>
 //                     </div>`);
 //                 } else {
-                 
+
 //                   dataNew = dataNew.replace('{socialtitle}', '');
 //                   dataNew = dataNew.replace('{socialtitles}', '');
 //                 }
@@ -1274,7 +1274,7 @@ import puppeteer from 'puppeteer';
 //         </html>
 //         `;
 //         */
-        
+
 //         // create resume pdf
 //         // if (type === 'pdf') {
 //             // PDF Generation (same as before)
@@ -1315,7 +1315,7 @@ import puppeteer from 'puppeteer';
 //         //     // fs.writeFileSync(filePath, (docxBuffer).toString());
 
 //         //     return apiResponse.successResponse(res, "Resume Generated Successfully", { url });
-           
+
 //         // } else {
 //         //     return apiResponse.errorMessage(res, 400, "Invalid resume type");
 //         // }
@@ -1335,10 +1335,10 @@ export const createResume = async (req: Request, res: Response) => {
     try {
         const userId = res.locals.jwt.userId;
 
-        const {template_id, resume_id}  = req.body;
+        const { template_id, resume_id } = req.body;
 
         const getTemplateDataSql = `SELECT template_data FROM templates WHERE id = ${template_id}`;
-        const [templateRow]:any = await pool.query(getTemplateDataSql);
+        const [templateRow]: any = await pool.query(getTemplateDataSql);
 
         if (templateRow.length === 0) {
             return apiResponse.errorMessage(res, 400, "Template Not Found")
@@ -1346,7 +1346,7 @@ export const createResume = async (req: Request, res: Response) => {
 
         const getResumeDataSql = `SELECT * FROM resumes WHERE id = ? AND user_id = ?`;
         const Value = [resume_id, userId];
-        const [resumeData]:any = await pool.query(getResumeDataSql, Value);
+        const [resumeData]: any = await pool.query(getResumeDataSql, Value);
 
         if (resumeData.length === 0) {
             return apiResponse.errorMessage(res, 400, "Resume Not Found")
@@ -1354,7 +1354,7 @@ export const createResume = async (req: Request, res: Response) => {
 
         const userJson = JSON.parse(resumeData[0].resume_data);
         console.log(userJson, "userJson");
-        
+
         const templateData = Handlebars.compile(templateRow[0].template_data);
 
         const UserHtmlData = {
@@ -1366,9 +1366,9 @@ export const createResume = async (req: Request, res: Response) => {
             nationality: userJson.personaldetails.nationality,
             dob: userJson.personaldetails.dob,
             maritalStatus: userJson.personaldetails.maritalStatus,
-            educationDetails:userJson.educationDetails,
+            educationDetails: userJson.educationDetails,
             skill: userJson.skill,
-            languageDetails:userJson.languageDetails,
+            languageDetails: userJson.languageDetails,
             interest: userJson.interest,
             achievementDetails: userJson.achievementDetails,
             socialLinks: userJson.socialLinks,
@@ -1381,12 +1381,12 @@ export const createResume = async (req: Request, res: Response) => {
             certificateDetails: userJson.certificateDetails,
             referenceDetails: userJson.referenceDetails,
             Declaration: userJson.Declaration,
-         } 
+        }
 
         const resumeHTML = templateData(UserHtmlData);
-  
+
         return res.send(resumeHTML);
-        
+
     } catch (error) {
         console.log(error);
         return apiResponse.errorMessage(res, 400, "Something Went Wrong")
@@ -1400,12 +1400,12 @@ export const downloadResume = async (req: Request, res: Response) => {
     try {
         const userId = res.locals.jwt.userId;
 
-        const {template_id, resume_id, type}  = req.body;
+        const { template_id, resume_id, type } = req.body;
 
-        const {DOCUMENT, PDF, TEXT} = config.DOWNLOAD_TYPE
+        const { DOCUMENT, PDF, TEXT } = config.DOWNLOAD_TYPE
 
         const getTemplateDataSql = `SELECT template_data FROM templates WHERE id = ${template_id}`;
-        const [templateRow]:any = await pool.query(getTemplateDataSql);
+        const [templateRow]: any = await pool.query(getTemplateDataSql);
 
         if (templateRow.length === 0) {
             return apiResponse.errorMessage(res, 400, "Template Not Found")
@@ -1413,7 +1413,7 @@ export const downloadResume = async (req: Request, res: Response) => {
 
         const getResumeDataSql = `SELECT * FROM resumes WHERE id = ? AND user_id = ?`;
         const Value = [resume_id, userId];
-        const [resumeData]:any = await pool.query(getResumeDataSql, Value);
+        const [resumeData]: any = await pool.query(getResumeDataSql, Value);
 
         if (resumeData.length === 0) {
             return apiResponse.errorMessage(res, 400, "Resume Not Found")
@@ -1421,7 +1421,7 @@ export const downloadResume = async (req: Request, res: Response) => {
 
         const userJson = JSON.parse(resumeData[0].resume_data);
         console.log(userJson, "userJson");
-        
+
         const templateData = Handlebars.compile(templateRow[0].template_data);
 
         const UserHtmlData = {
@@ -1433,9 +1433,9 @@ export const downloadResume = async (req: Request, res: Response) => {
             nationality: userJson.personaldetails.nationality,
             dob: userJson.personaldetails.dob,
             maritalStatus: userJson.personaldetails.maritalStatus,
-            educationDetails:userJson.educationDetails,
+            educationDetails: userJson.educationDetails,
             skill: userJson.skill,
-            languageDetails:userJson.languageDetails,
+            languageDetails: userJson.languageDetails,
             interest: userJson.interest,
             achievementDetails: userJson.achievementDetails,
             socialLinks: userJson.socialLinks,
@@ -1448,86 +1448,73 @@ export const downloadResume = async (req: Request, res: Response) => {
             certificateDetails: userJson.certificateDetails,
             referenceDetails: userJson.referenceDetails,
             Declaration: userJson.Declaration,
-         } 
+        }
 
         const resumeHTML = templateData(UserHtmlData);
-  
 
-        if (type === DOCUMENT){
-            const converted:any = htmlDocx.asBlob(resumeHTML, { orientation: 'landscape', margins: { top: 720 } });
 
-            // Step 5: Save the DOCX file to a temporary directory
-            const docxFileName = `resume_${userJson.personaldetails.name}.docx`;
-            const filePath = path.join(__dirname, 'downloads', docxFileName);
-
-            const arrayBuffer = await converted.arrayBuffer();
-
-            const buffer = Buffer.from(arrayBuffer);
+        if (type === DOCUMENT) {
+            const options: any = { format: 'A4' };
             
-            // Create the 'downloads' directory if it doesn't exist
-            if (!fs.existsSync(path.dirname(filePath))) {
-                fs.mkdirSync(path.dirname(filePath), { recursive: true });
-            }
-
-            // Save the DOCX file to the filesystem
-            fs.writeFileSync(filePath, buffer);
-
-            // Step 6: Generate a URL for the download link (use your server path)
-            const downloadLink = `http://localhost:3000/downloads/${docxFileName}`;
-
-            // Return the download link in the response
-            return res.status(200).json({
-                message: 'Resume generated successfully',
-                downloadLink: downloadLink,
-            });
-        }else if(type === PDF){
+                            const fileName = `${utility.randomString(10)}.docx`;
+                            
+                            const filePath = path.join(__dirname, '../../../../../public/resumes', fileName);
+                
+                            const url = 'localhost:3000/' + fileName;
+                
+                            const docxsBuffer = htmlDocx.asBlob(resumeHTML);
+                            fs.writeFileSync(filePath, (docxsBuffer).toString());
+                
+                            return apiResponse.successResponse(res, "Resume Generated Successfully", { url });
+                
+        } else if (type === PDF) {
 
             const options: any = { format: 'A4' };
             const fileName = `${utility.randomString(10)}.pdf`;
-            const filePath = path.join(__dirname, '../../../../../public/resumes', fileName);
+            const filePath = path.join(__dirname, '../../../../../public', fileName);
 
             console.log(filePath, "filePath");
-            
+
 
             const browser = await puppeteer.launch();
             const page = await browser.newPage();
-            
+
             // Set content and wait for rendering
             await page.setContent(resumeHTML, { waitUntil: 'networkidle0' });
-            
+
             // Generate PDF with more options
-           const pdfName = await page.pdf({
-              path: filePath,
-              format: 'A4',
-              printBackground: true,
-              margin: {
-                top: '10mm',
-                right: '10mm',
-                bottom: '10mm',
-                left: '10mm'
-              }
+            const pdfName = await page.pdf({
+                path: filePath,
+                format: 'A4',
+                printBackground: true,
+                margin: {
+                    top: '10mm',
+                    right: '10mm',
+                    bottom: '10mm',
+                    left: '10mm'
+                }
             });
-            
+
             await browser.close();
 
-           const pdfLink = `http://localhost:3000/resumes/${fileName}`;
+            const pdfLink = `http://localhost:3000/resumes/${fileName}`;
 
             return apiResponse.successResponse(res, "Resume Generated Successfully", { pdfLink });
-          };
+        };
 
-            // pdf.create(resumeHTML, options).toFile(filePath, async function (err: any, response: any) {
-            //     if (err) {
-            //         console.log(err);
-            //         return apiResponse.errorMessage(res, 400, "Failed to Generate Resume, Please try again later");
-            //     }
+        // pdf.create(resumeHTML, options).toFile(filePath, async function (err: any, response: any) {
+        //     if (err) {
+        //         console.log(err);
+        //         return apiResponse.errorMessage(res, 400, "Failed to Generate Resume, Please try again later");
+        //     }
 
-            //     const url = `http://localhost:3000/resumes/${fileName}`;
-            //     return apiResponse.successResponse(res, "Resume Generated Successfully", { url });
-            // });
-      //  }
+        //     const url = `http://localhost:3000/resumes/${fileName}`;
+        //     return apiResponse.successResponse(res, "Resume Generated Successfully", { url });
+        // });
+        //  }
 
-            
-        
+
+
     } catch (error) {
         console.log(error);
         return apiResponse.errorMessage(res, 400, "Something Went Wrong")

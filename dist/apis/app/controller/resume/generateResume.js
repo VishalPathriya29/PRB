@@ -1322,30 +1322,18 @@ const downloadResume = (req, res) => __awaiter(void 0, void 0, void 0, function*
         };
         const resumeHTML = templateData(UserHtmlData);
         if (type === DOCUMENT) {
-            const converted = html_docx_js_1.default.asBlob(resumeHTML, { orientation: 'landscape', margins: { top: 720 } });
-            // Step 5: Save the DOCX file to a temporary directory
-            const docxFileName = `resume_${userJson.personaldetails.name}.docx`;
-            const filePath = path_1.default.join(__dirname, 'downloads', docxFileName);
-            const arrayBuffer = yield converted.arrayBuffer();
-            const buffer = Buffer.from(arrayBuffer);
-            // Create the 'downloads' directory if it doesn't exist
-            if (!fs_1.default.existsSync(path_1.default.dirname(filePath))) {
-                fs_1.default.mkdirSync(path_1.default.dirname(filePath), { recursive: true });
-            }
-            // Save the DOCX file to the filesystem
-            fs_1.default.writeFileSync(filePath, buffer);
-            // Step 6: Generate a URL for the download link (use your server path)
-            const downloadLink = `http://localhost:3000/downloads/${docxFileName}`;
-            // Return the download link in the response
-            return res.status(200).json({
-                message: 'Resume generated successfully',
-                downloadLink: downloadLink,
-            });
+            const options = { format: 'A4' };
+            const fileName = `${utility.randomString(10)}.docx`;
+            const filePath = path_1.default.join(__dirname, '../../../../../public/resumes', fileName);
+            const url = 'localhost:3000/' + fileName;
+            const docxsBuffer = html_docx_js_1.default.asBlob(resumeHTML);
+            fs_1.default.writeFileSync(filePath, (docxsBuffer).toString());
+            return apiResponse.successResponse(res, "Resume Generated Successfully", { url });
         }
         else if (type === PDF) {
             const options = { format: 'A4' };
             const fileName = `${utility.randomString(10)}.pdf`;
-            const filePath = path_1.default.join(__dirname, '../../../../../public/resumes', fileName);
+            const filePath = path_1.default.join(__dirname, '../../../../../public', fileName);
             console.log(filePath, "filePath");
             const browser = yield puppeteer_1.default.launch();
             const page = yield browser.newPage();
