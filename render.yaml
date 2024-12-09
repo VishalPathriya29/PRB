@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: puppeteer-service
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+        value: 'false'
+      - key: CHROME_BIN
+        value: '/usr/bin/google-chrome-stable'
