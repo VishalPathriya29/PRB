@@ -53,11 +53,11 @@ const morgan_1 = __importDefault(require("morgan"));
 const fs_1 = __importDefault(require("fs"));
 const index_route_1 = __importDefault(require("./apis/index.route"));
 const path_1 = __importDefault(require("path"));
-// import { rateLimiterUsingThirdParty } from '';
+// import { rateLimiterUsingThirdParty } from '../public';yyy
 const node_cron_1 = __importDefault(require("node-cron"));
 const cronFn = __importStar(require("./apis/app/controller/cronJobs/packageCronJob"));
 exports.default = (app) => {
-    app.use(express_1.default.static(path_1.default.join(__dirname, '..', 'public')));
+    app.use('/public', express_1.default.static(path_1.default.join(__dirname, '../public')));
     app.use('/uploads/signatures', express_1.default.static(path_1.default.join(__dirname, '../uploads/signatures')));
     app.use(express_1.default.json());
     app.use(express_1.default.urlencoded({ extended: true, limit: '50mb' }));

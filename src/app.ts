@@ -7,14 +7,14 @@ import morgan from 'morgan';
 import fs from 'fs';
 import apiRouter from "./apis/index.route";
 import path from 'path'
-// import { rateLimiterUsingThirdParty } from '';
+// import { rateLimiterUsingThirdParty } from '../public';yyy
 import cron from "node-cron";
 import * as cronFn from "./apis/app/controller/cronJobs/packageCronJob";
 
 export default (app: Express) => {
 
 
-    app.use(express.static(path.join(__dirname, '..', 'public')));
+    app.use('/public', express.static(path.join(__dirname, '../public')));
     app.use('/uploads/signatures', express.static(path.join(__dirname, '../uploads/signatures')));
     app.use(express.json());
     app.use(express.urlencoded({extended: true, limit: '50mb'}));

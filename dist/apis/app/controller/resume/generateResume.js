@@ -52,7 +52,7 @@ const handlebars_1 = __importDefault(require("handlebars"));
 const db_1 = __importDefault(require("../../../../db"));
 const apiResponse = __importStar(require("../../../../helper/response"));
 const utility = __importStar(require("../../../../helper/utility"));
-const html_docx_js_1 = __importDefault(require("html-docx-js"));
+// import mammoth from '';
 const config_1 = __importDefault(require("../../../../config/config"));
 const HtmlToDocx = require('html-to-docx');
 const puppeteer_1 = __importDefault(require("puppeteer"));
@@ -1293,7 +1293,6 @@ const downloadResume = (req, res) => __awaiter(void 0, void 0, void 0, function*
             return apiResponse.errorMessage(res, 400, "Resume Not Found");
         }
         const userJson = JSON.parse(resumeData[0].resume_data);
-        console.log(userJson, "userJson");
         const templateData = handlebars_1.default.compile(templateRow[0].template_data);
         const UserHtmlData = {
             name: userJson.personaldetails.name,
@@ -1322,13 +1321,57 @@ const downloadResume = (req, res) => __awaiter(void 0, void 0, void 0, function*
         };
         const resumeHTML = templateData(UserHtmlData);
         if (type === DOCUMENT) {
-            const options = { format: 'A4' };
+            // const browser = await puppeteer.launch();
+            // const page = await browser.newPage();
+            // await page.setContent(resumeHTML, { waitUntil: "networkidle0" });
+            // // Adjust viewport to ensure proper rendering
+            // await page.setViewport({ width: 1200, height: 800 });
+            // // Capture the rendered HTML as an image
+            // const screenshotBuffer = await page.screenshot({ type: "png", fullPage: true });
+            // await browser.close();
+            // // Step 2: Create a DOCX Document and Embed the Image
+            // const doc =  new Document({
+            //   sections: [
+            //     {
+            //       children: [
+            //         new Paragraph({
+            //           children: [
+            //             new ImageRun({
+            //               data: screenshotBuffer,
+            //               transformation: { width: 600, height: 800 }, // Adjust image size
+            //             }),
+            //           ],
+            //         }),
+            //       ],
+            //     },
+            //   ],
+            // });
+            // // Step 3: Save the DOCX File in the Public Folder
+            // const fileName = `${utility.randomString(10)}.docx`;
+            // const filePath = path.join(__dirname, '../../../../../public', fileName);
+            // const buffer = await Packer.toBuffer(doc);
+            // fs.writeFileSync(filePath, buffer);
+            // // Step 4: Create Download URL
+            // const downloadUrl = `http://localhost:3000/resumes/${fileName}`;
+            // console.log(downloadUrl, "downloadUrl");
+            // return res.send(downloadUrl);
+            const options = {
+                format: "A4", // Page format
+                orientation: "Landscape", // Page orientation (Portrait or Landscape)
+                margins: { top: 720, right: 720, bottom: 720, left: 720 }, // Margins in twips (1 inch = 1440 twips)
+                table: { rowStyle: "default" }, // Word-compatible table styles
+            };
             const fileName = `${utility.randomString(10)}.docx`;
-            const filePath = path_1.default.join(__dirname, '../../../../../public/resumes', fileName);
-            const url = 'localhost:3000/' + fileName;
-            const docxsBuffer = html_docx_js_1.default.asBlob(resumeHTML);
-            fs_1.default.writeFileSync(filePath, (docxsBuffer).toString());
-            return apiResponse.successResponse(res, "Resume Generated Successfully", { url });
+            const filePath = path_1.default.join(__dirname, '../../../../../public', fileName);
+            // Convert HTML to DOCX buffer
+            const docxBuffer = yield HtmlToDocx(resumeHTML, null, options);
+            console.log(docxBuffer, "docxBuffer");
+            // Write the buffer to a DOCX file
+            fs_1.default.writeFileSync(filePath, docxBuffer);
+            // Step 4: Create Download URL
+            const downloadUrl = `http://localhost:3000/public/${fileName}`;
+            console.log(downloadUrl, "downloadUrl");
+            return res.send(downloadUrl);
         }
         else if (type === PDF) {
             const options = { format: 'A4' };
@@ -1355,7 +1398,7 @@ const downloadResume = (req, res) => __awaiter(void 0, void 0, void 0, function*
                 }
             });
             yield browser.close();
-            const pdfLink = `http://localhost:3000/resumes/${fileName}`;
+            const pdfLink = `http://localhost:3000/public/${fileName}`;
             return apiResponse.successResponse(res, "Resume Generated Successfully", { pdfLink });
         }
         ;
