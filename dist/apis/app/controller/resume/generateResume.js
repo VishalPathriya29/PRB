@@ -55,7 +55,8 @@ const utility = __importStar(require("../../../../helper/utility"));
 // import mammoth from '';
 const config_1 = __importDefault(require("../../../../config/config"));
 const HtmlToDocx = require('html-to-docx');
-const puppeteer_1 = __importDefault(require("puppeteer"));
+// import puppeteer from 'puppeteer';
+const playwright_1 = require("playwright");
 // export const downloadResume = async (req: Request, res: Response) => {
 //     try {
 //         const userId = res.locals.jwt.userId;
@@ -1378,13 +1379,13 @@ const downloadResume = (req, res) => __awaiter(void 0, void 0, void 0, function*
             const fileName = `${utility.randomString(10)}.pdf`;
             const filePath = path_1.default.join(__dirname, '../../../../../public', fileName);
             console.log(filePath, "filePath");
-            const browser = yield puppeteer_1.default.launch({
-                args: ['--no-sandbox', '--disable-setuid-sandbox'],
-                executablePath: process.env.CHROME_BIN || undefined,
+            const browser = yield playwright_1.chromium.launch({
+                args: ['--no-sandbox', '--disable-setuid-sandbox'], // Required for headless environments
+                headless: true, // Ensure it runs in headless mode
             });
             const page = yield browser.newPage();
             // Set content and wait for rendering
-            yield page.setContent(resumeHTML, { waitUntil: 'networkidle0' });
+            yield page.setContent(resumeHTML, { waitUntil: 'networkidle' });
             // Generate PDF with more options
             const pdfName = yield page.pdf({
                 path: filePath,

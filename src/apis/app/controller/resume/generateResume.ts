@@ -11,7 +11,8 @@ import htmlDocx from 'html-docx-js';
 // import mammoth from '';
 import config from '../../../../config/config';
 const HtmlToDocx: any = require('html-to-docx');
-import puppeteer from 'puppeteer';
+// import puppeteer from 'puppeteer';
+import { chromium } from 'playwright'
 import { Document, Packer, Paragraph, ImageRun } from "docx";
 
 
@@ -1541,15 +1542,15 @@ export const downloadResume = async (req: Request, res: Response) => {
             console.log(filePath, "filePath");
 
 
-            const browser = await puppeteer.launch({
-                args: ['--no-sandbox', '--disable-setuid-sandbox'],
-                executablePath: process.env.CHROME_BIN || undefined,
-            });            
-            
-            const page = await browser.newPage();
-
-            // Set content and wait for rendering
-            await page.setContent(resumeHTML, { waitUntil: 'networkidle0' });
+            const browser = await chromium.launch({
+                args: ['--no-sandbox', '--disable-setuid-sandbox'], // Required for headless environments
+                headless: true, // Ensure it runs in headless mode
+              });
+          
+              const page = await browser.newPage();
+          
+              // Set content and wait for rendering
+              await page.setContent(resumeHTML, { waitUntil: 'networkidle' });
 
             // Generate PDF with more options
             const pdfName = await page.pdf({
