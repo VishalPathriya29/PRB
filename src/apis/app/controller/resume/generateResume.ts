@@ -43,8 +43,18 @@ export const createResume = async (req: Request, res: Response) => {
 
         const templateData = Handlebars.compile(templateRow[0].template_data);
 
+
+        let Base_URL = config.Base_URL;
+        let imageUrl = userJson.personaldetails.imageUrl;
+   
+        let fileImageUrl:any 
+        if (imageUrl===null || imageUrl=== undefined || imageUrl==="") {
+            fileImageUrl = null
+        }else
+        fileImageUrl = Base_URL+imageUrl
+        
         const UserHtmlData = {
-            
+
             name: userJson.personaldetails.name,
             address: userJson.personaldetails.address,
             phone: userJson.personaldetails.phone,
@@ -53,6 +63,7 @@ export const createResume = async (req: Request, res: Response) => {
             nationality: userJson.personaldetails.nationality,
             dob: userJson.personaldetails.dob,
             maritalStatus: userJson.personaldetails.maritalStatus,
+            imageUrl: fileImageUrl,
             educationDetails: userJson.educationDetails,
             skill: userJson.skill,
             languageDetails: userJson.languageDetails,
@@ -111,6 +122,16 @@ export const downloadResume = async (req: Request, res: Response) => {
 
         const templateData = Handlebars.compile(templateRow[0].template_data);
 
+
+        let Base_URL = config.Base_URL;
+        let imageUrl = userJson.personaldetails.imageUrl;
+ 
+        let fileImageUrl:any 
+        if (imageUrl===null || imageUrl=== undefined || imageUrl==="") {
+            fileImageUrl = null
+        }else
+        fileImageUrl = Base_URL+imageUrl
+
         const UserHtmlData = {
             name: userJson.personaldetails.name,
             address: userJson.personaldetails.address,
@@ -120,6 +141,7 @@ export const downloadResume = async (req: Request, res: Response) => {
             nationality: userJson.personaldetails.nationality,
             dob: userJson.personaldetails.dob,
             maritalStatus: userJson.personaldetails.maritalStatus,
+            imageUrl: fileImageUrl,
             educationDetails: userJson.educationDetails,
             skill: userJson.skill,
             languageDetails: userJson.languageDetails,

@@ -18,6 +18,7 @@ exports.default = {
         //     rejectUnauthorized: false
         // }
     },
+    Base_URL: process.env.BASE_URL,
     PACKAGE_STATUS: {
         ACTIVE: "active",
         INACTIVE: "inactive",

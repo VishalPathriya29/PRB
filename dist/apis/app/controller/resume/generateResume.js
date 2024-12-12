@@ -77,6 +77,14 @@ const createResume = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const userJson = JSON.parse(resumeData[0].resume_data);
         console.log(userJson, "userJson");
         const templateData = handlebars_1.default.compile(templateRow[0].template_data);
+        let Base_URL = config_1.default.Base_URL;
+        let imageUrl = userJson.personaldetails.imageUrl;
+        let fileImageUrl;
+        if (imageUrl === null || imageUrl === undefined || imageUrl === "") {
+            fileImageUrl = null;
+        }
+        else
+            fileImageUrl = Base_URL + imageUrl;
         const UserHtmlData = {
             name: userJson.personaldetails.name,
             address: userJson.personaldetails.address,
@@ -86,6 +94,7 @@ const createResume = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             nationality: userJson.personaldetails.nationality,
             dob: userJson.personaldetails.dob,
             maritalStatus: userJson.personaldetails.maritalStatus,
+            imageUrl: fileImageUrl,
             educationDetails: userJson.educationDetails,
             skill: userJson.skill,
             languageDetails: userJson.languageDetails,
@@ -131,6 +140,14 @@ const downloadResume = (req, res) => __awaiter(void 0, void 0, void 0, function*
         }
         const userJson = JSON.parse(resumeData[0].resume_data);
         const templateData = handlebars_1.default.compile(templateRow[0].template_data);
+        let Base_URL = config_1.default.Base_URL;
+        let imageUrl = userJson.personaldetails.imageUrl;
+        let fileImageUrl;
+        if (imageUrl === null || imageUrl === undefined || imageUrl === "") {
+            fileImageUrl = null;
+        }
+        else
+            fileImageUrl = Base_URL + imageUrl;
         const UserHtmlData = {
             name: userJson.personaldetails.name,
             address: userJson.personaldetails.address,
@@ -140,6 +157,7 @@ const downloadResume = (req, res) => __awaiter(void 0, void 0, void 0, function*
             nationality: userJson.personaldetails.nationality,
             dob: userJson.personaldetails.dob,
             maritalStatus: userJson.personaldetails.maritalStatus,
+            imageUrl: fileImageUrl,
             educationDetails: userJson.educationDetails,
             skill: userJson.skill,
             languageDetails: userJson.languageDetails,
