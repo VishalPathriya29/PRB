@@ -52,11 +52,14 @@ const handlebars_1 = __importDefault(require("handlebars"));
 const db_1 = __importDefault(require("../../../../db"));
 const apiResponse = __importStar(require("../../../../helper/response"));
 const utility = __importStar(require("../../../../helper/utility"));
+const html_docx_js_1 = __importDefault(require("html-docx-js"));
 // import mammoth from '';
 const config_1 = __importDefault(require("../../../../config/config"));
 const HtmlToDocx = require('html-to-docx');
-// import puppeteer from 'puppeteer';
-const playwright_1 = require("playwright");
+const puppeteer_1 = __importDefault(require("puppeteer"));
+// import { chromium } from 'playwright'
+// import { Document, Packer, Paragraph, ImageRun } from "docx";
+// import pdf from 'html-pdf-node';
 // export const downloadResume = async (req: Request, res: Response) => {
 //     try {
 //         const userId = res.locals.jwt.userId;
@@ -1321,73 +1324,36 @@ const downloadResume = (req, res) => __awaiter(void 0, void 0, void 0, function*
             Declaration: userJson.Declaration,
         };
         const resumeHTML = templateData(UserHtmlData);
+        console.log("h1");
         if (type === DOCUMENT) {
-            // const browser = await puppeteer.launch();
-            // const page = await browser.newPage();
-            // await page.setContent(resumeHTML, { waitUntil: "networkidle0" });
-            // // Adjust viewport to ensure proper rendering
-            // await page.setViewport({ width: 1200, height: 800 });
-            // // Capture the rendered HTML as an image
-            // const screenshotBuffer = await page.screenshot({ type: "png", fullPage: true });
-            // await browser.close();
-            // // Step 2: Create a DOCX Document and Embed the Image
-            // const doc =  new Document({
-            //   sections: [
-            //     {
-            //       children: [
-            //         new Paragraph({
-            //           children: [
-            //             new ImageRun({
-            //               data: screenshotBuffer,
-            //               transformation: { width: 600, height: 800 }, // Adjust image size
-            //             }),
-            //           ],
-            //         }),
-            //       ],
-            //     },
-            //   ],
-            // });
-            // // Step 3: Save the DOCX File in the Public Folder
-            // const fileName = `${utility.randomString(10)}.docx`;
-            // const filePath = path.join(__dirname, '../../../../../public', fileName);
-            // const buffer = await Packer.toBuffer(doc);
-            // fs.writeFileSync(filePath, buffer);
-            // // Step 4: Create Download URL
-            // const downloadUrl = `http://localhost:3000/resumes/${fileName}`;
-            // console.log(downloadUrl, "downloadUrl");
-            // return res.send(downloadUrl);
-            const options = {
-                format: "A4", // Page format
-                orientation: "Landscape", // Page orientation (Portrait or Landscape)
-                margins: { top: 720, right: 720, bottom: 720, left: 720 }, // Margins in twips (1 inch = 1440 twips)
-                table: { rowStyle: "default" }, // Word-compatible table styles
-            };
+            const options = { format: 'A4' };
             const fileName = `${utility.randomString(10)}.docx`;
-            const filePath = path_1.default.join(__dirname, '../../../../../public', fileName);
-            // Convert HTML to DOCX buffer
-            const docxBuffer = yield HtmlToDocx(resumeHTML, null, options);
-            console.log(docxBuffer, "docxBuffer");
-            // Write the buffer to a DOCX file
-            fs_1.default.writeFileSync(filePath, docxBuffer);
-            // Step 4: Create Download URL
-            const downloadUrl = `http://localhost:3000/public/${fileName}`;
-            console.log(downloadUrl, "downloadUrl");
-            return res.send(downloadUrl);
+            const filePath = path_1.default.join(__dirname, '../../../../../public/resumes', fileName);
+            const url = 'localhost:3000/' + fileName;
+            const docxsBuffer = html_docx_js_1.default.asBlob(resumeHTML);
+            fs_1.default.writeFileSync(filePath, (docxsBuffer).toString());
+            return apiResponse.successResponse(res, "Resume Generated Successfully", { url });
         }
         else if (type === PDF) {
             const options = { format: 'A4' };
             const fileName = `${utility.randomString(10)}.pdf`;
             const filePath = path_1.default.join(__dirname, '../../../../../public', fileName);
-            console.log(filePath, "filePath");
-            const browser = yield playwright_1.chromium.launch({
-                args: ['--no-sandbox', '--disable-setuid-sandbox'], // Required for headless environments
-                headless: true, // Ensure it runs in headless mode
+            console.log("h2", filePath);
+            const browser = yield puppeteer_1.default.launch({
+                args: [
+                    "--disable-setuid-sandbox",
+                    "--no-sandbox",
+                    "--single-process",
+                    "--no-zygote",
+                ],
+                headless: true
             });
             const page = yield browser.newPage();
+            yield page.setUserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36");
             // Set content and wait for rendering
-            yield page.setContent(resumeHTML, { waitUntil: 'networkidle' });
+            yield page.setContent(resumeHTML, { waitUntil: 'networkidle0' });
             // Generate PDF with more options
-            const pdfName = yield page.pdf({
+            yield page.pdf({
                 path: filePath,
                 format: 'A4',
                 printBackground: true,
@@ -1398,8 +1364,10 @@ const downloadResume = (req, res) => __awaiter(void 0, void 0, void 0, function*
                     left: '10mm'
                 }
             });
+            console.log("h5");
             yield browser.close();
-            const pdfLink = `http://localhost:3000/public/${fileName}`;
+            const pdfLink = `http://localhost:3000/resumes/${fileName}`;
+            console.log("h6");
             return apiResponse.successResponse(res, "Resume Generated Successfully", { pdfLink });
         }
         ;
@@ -1412,6 +1380,8 @@ const downloadResume = (req, res) => __awaiter(void 0, void 0, void 0, function*
         //     return apiResponse.successResponse(res, "Resume Generated Successfully", { url });
         // });
         //  }
+        console.log("h7");
+        return res.send("Else case !");
     }
     catch (error) {
         console.log(error);

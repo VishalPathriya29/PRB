@@ -14,7 +14,7 @@ import * as cronFn from "./apis/app/controller/cronJobs/packageCronJob";
 export default (app: Express) => {
 
 
-    app.use('/public', express.static(path.join(__dirname, '../public')));
+    app.use('/', express.static(path.join(__dirname, '../public')));
     app.use('/uploads/signatures', express.static(path.join(__dirname, '../uploads/signatures')));
     app.use(express.json());
     app.use(express.urlencoded({extended: true, limit: '50mb'}));
