@@ -79,7 +79,7 @@ const uploadSignatures = (req, res) => __awaiter(void 0, void 0, void 0, functio
         // }
         const signatureUrl = `/uploads/signatures/${file.filename}`;
         try {
-            const [result] = yield db_1.default.query('INSERT INTO user_signatures (user_id, signature_url) VALUES (?, ?)', [null, signatureUrl]);
+            const [result] = yield db_1.default.query('INSERT INTO user_signatures (user_id, signature_url, type) VALUES (?, ?, ?)', [null, signatureUrl, "signature_url"]);
             return apiResponse.successResponse(res, "Signature uploaded successfully", {
                 signature: signatureUrl
             });

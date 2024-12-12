@@ -41,8 +41,8 @@ export const uploadSignatures = async (req: Request, res: Response) => {
         const signatureUrl = `/uploads/signatures/${file.filename}`;
         try {
             const [result] = await pool.query(
-                'INSERT INTO user_signatures (user_id, signature_url) VALUES (?, ?)',
-                [null, signatureUrl]
+                'INSERT INTO user_signatures (user_id, signature_url, type) VALUES (?, ?, ?)',
+                [null, signatureUrl, "signature_url"]
             );
             return apiResponse.successResponse(res, "Signature uploaded successfully", {
                 signature: signatureUrl
