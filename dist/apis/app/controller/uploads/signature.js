@@ -67,19 +67,19 @@ const uploadSignatures = (req, res) => __awaiter(void 0, void 0, void 0, functio
             console.log(err);
             return apiResponse.errorMessage(res, 400, 'Error uploading file');
         }
-        const userId = req.body.user_id;
+        // const userId = req.body.user_id;
         const file = req.file;
-        if (!userId || !file) {
-            console.log(userId, file);
-            return apiResponse.errorMessage(res, 400, "User id and signature file are required");
-        }
-        const [rows] = yield db_1.default.query('SELECT id FROM users WHERE id = ?', [userId]);
-        if (rows.length === 0) {
-            return res.status(404).json({ message: 'User not found' });
-        }
+        // if (!userId || !file) {
+        //     console.log(userId, file);
+        //     return apiResponse.errorMessage(res, 400, "User id and signature file are required");
+        // }
+        // const [rows]: any = await pool.query('SELECT id FROM users WHERE id = ?', [userId]);
+        // if (rows.length === 0) {
+        //     return res.status(404).json({ message: 'User not found' });
+        // }
         const signatureUrl = `/uploads/signatures/${file.filename}`;
         try {
-            const [result] = yield db_1.default.query('INSERT INTO user_signatures (user_id, signature_url) VALUES (?, ?)', [userId, signatureUrl]);
+            const [result] = yield db_1.default.query('INSERT INTO user_signatures (user_id, signature_url) VALUES (?, ?)', [null, signatureUrl]);
             return apiResponse.successResponse(res, "Signature uploaded successfully", {
                 signature: signatureUrl
             });

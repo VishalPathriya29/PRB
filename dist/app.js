@@ -58,7 +58,7 @@ const node_cron_1 = __importDefault(require("node-cron"));
 const cronFn = __importStar(require("./apis/app/controller/cronJobs/packageCronJob"));
 exports.default = (app) => {
     app.use('/', express_1.default.static(path_1.default.join(__dirname, '../public')));
-    app.use('/uploads/signatures', express_1.default.static(path_1.default.join(__dirname, '../uploads/signatures')));
+    app.use('/', express_1.default.static(path_1.default.join(__dirname, '../uploads/signatures')));
     app.use(express_1.default.json());
     app.use(express_1.default.urlencoded({ extended: true, limit: '50mb' }));
     app.use((0, cors_1.default)());
