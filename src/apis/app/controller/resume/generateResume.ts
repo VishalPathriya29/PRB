@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import path from 'path';
-import fs from 'fs';
+import fs, { linkSync } from 'fs';
 import Handlebars from 'handlebars';
 import pool from "../../../../db";
 import * as apiResponse from '../../../../helper/response';
@@ -39,11 +39,10 @@ export const createResume = async (req: Request, res: Response) => {
         }
 
         const userJson = JSON.parse(resumeData[0].resume_data);
-        console.log(userJson, "userJson");
-
+        
         const templateData = Handlebars.compile(templateRow[0].template_data);
 
-
+      
         let Base_URL = config.Base_URL;
         let imageUrl = userJson.personaldetails.imageUrl;
    
@@ -52,7 +51,10 @@ export const createResume = async (req: Request, res: Response) => {
             fileImageUrl = null
         }else
         fileImageUrl = Base_URL+imageUrl
-        
+       
+
+
+       
         const UserHtmlData = {
 
             name: userJson.personaldetails.name,
@@ -63,26 +65,25 @@ export const createResume = async (req: Request, res: Response) => {
             nationality: userJson.personaldetails.nationality,
             dob: userJson.personaldetails.dob,
             maritalStatus: userJson.personaldetails.maritalStatus,
-            imageUrl: fileImageUrl,
-            educationDetails: userJson.educationDetails,
-            skill: userJson.skill,
+            imageUrl: fileImageUrl??null,
+            educationDetails: userJson.educationDetails??null,
+            skill: userJson.skill??null,
             languageDetails: userJson.languageDetails,
-            interest: userJson.interest,
-            achievementDetails: userJson.achievementDetails,
+            interest: userJson.interest??null,
+            achievementDetails: userJson.achievementDetails??null,
             socialLinks: userJson.socialLinks,
-            experienceDetails: userJson.experienceDetails,
-            activities: userJson.activities,
-            strength: userJson.strength,
+            experienceDetails: userJson.experienceDetails??null,
+            activities: userJson.activities??null,
+            strength: userJson.strength??null,
             // aboutUser: userJson.aboutUser,
             internshipDetails: userJson.internshipDetails,
             projectDetails: userJson.projectDetails,
-            certificateDetails: userJson.certificateDetails,
-            referenceDetails: userJson.referenceDetails,
-            Declaration: userJson.Declaration,
+            certificateDetails: userJson.certificateDetails??null,
+            referenceDetails: userJson.referenceDetails??null,
+            Declaration: userJson.declarations??null,
         }
 
         const resumeHTML = templateData(UserHtmlData);
-
         return res.send(resumeHTML);
 
     } catch (error) {
@@ -118,13 +119,23 @@ export const downloadResume = async (req: Request, res: Response) => {
             return apiResponse.errorMessage(res, 400, "Resume Not Found")
         }
 
+        const checkUserSusbcription = `SELECT * FROM users_package WHERE user_id = ?`;
+        console.log(userId, "here is user id");
+        const [subscriptionData]: any = await pool.query(checkUserSusbcription, userId);
+
+        if(subscriptionData.length === 0){
+            return apiResponse.errorMessage(res, 400, "You have not subscribed to any package")
+        }
+
         const userJson = JSON.parse(resumeData[0].resume_data);
+      
 
         const templateData = Handlebars.compile(templateRow[0].template_data);
 
 
         let Base_URL = config.Base_URL;
         let imageUrl = userJson.personaldetails.imageUrl;
+        
  
         let fileImageUrl:any 
         if (imageUrl===null || imageUrl=== undefined || imageUrl==="") {
@@ -156,94 +167,97 @@ export const downloadResume = async (req: Request, res: Response) => {
             projectDetails: userJson.projectDetails,
             certificateDetails: userJson.certificateDetails,
             referenceDetails: userJson.referenceDetails,
-            Declaration: userJson.Declaration,
+            Declaration: userJson.declarations,
         }
 
         const resumeHTML = templateData(UserHtmlData);
 
-
         if (type === DOCUMENT) {
-            const options: any = { format: 'A4' };
-            
-                            const fileName = `${utility.randomString(10)}.docx`;
-                            
-                            const filePath = path.join(__dirname, '../../../../../public/resumes', fileName);
+            try {
+                const fileName = `${utility.randomString(10)}.docx`;
+                const filePath = path.resolve(__dirname, '../../../../../public', fileName);
                 
-                            const url = 'localhost:3000/' + fileName;
-                
-                            const docxsBuffer = htmlDocx.asBlob(resumeHTML);
-                            fs.writeFileSync(filePath, (docxsBuffer).toString());
-                
-                            return apiResponse.successResponse(res, "Resume Generated Successfully", { url });
-                
-        } else if (type === PDF) {
-
-            const options: any = { format: 'A4' };
+                const url = `http://localhost:3000/${fileName}`;
+        
+                // Generate Word document as Blob or Buffer
+                const docxBuffer = htmlDocx.asBlob(resumeHTML);
+        
+                // Convert Blob to Buffer if required
+                const bufferData = docxBuffer instanceof Buffer
+                    ? docxBuffer
+                    : Buffer.from(await docxBuffer.arrayBuffer());
+        
+                // Write Buffer to file
+                fs.writeFileSync(filePath, bufferData);
+        
+                return apiResponse.successResponse(res, "Resume Generated Successfully", { url });
+            } catch (error) {
+                console.error("Error generating document:", error);
+                return apiResponse.errorMessage(res,400, "Failed to generate resume");
+            }
+        }
+        
+        
+        else if (type === PDF) {
             const fileName = `${utility.randomString(10)}.pdf`;
             const filePath = path.join(__dirname, '../../../../../public', fileName);
-
-  
             const browser = await puppeteer.launch({
-                args: [
-                    "--disable-setuid-sandbox",
-                    "--no-sandbox",
-                    "--single-process",
-                    "--no-zygote",
-                  ],
-                  headless: true
-            });   
-            
-            
-            const page = await browser.newPage();
+                    args: [
+                        '--disable-gpu',
+                        '--disable-dev-shm-usage',
+                        '--no-sandbox',
+                        '--disable-setuid-sandbox',
+                        '--single-process',
+                        '--no-zygote',
+                    ],
+                    headless: false,
+                    pipe: true,
 
-            await page.setUserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36")
-
-            // Set content and wait for rendering
-            await page.setContent(resumeHTML, { waitUntil: 'networkidle0' });
-
-            // Generate PDF with more options
-            await page.pdf({
-                path: filePath,
-                format: 'A4',
-                printBackground: true,
-                margin: {
-                    top: '10mm',
-                    right: '10mm',
-                    bottom: '10mm',
-                    left: '10mm'
-                }
-            });
-
-            console.log("h5")
-
-            await browser.close();
-
-            const pdfLink = `https://prb-vqqd.onrender.com/${fileName}`;
-
-            console.log("h6")
-
-            return apiResponse.successResponse(res, "Resume Generated Successfully", { pdfLink });
-        };
-
-        // pdf.create(resumeHTML, options).toFile(filePath, async function (err: any, response: any) {
-        //     if (err) {
-        //         console.log(err);
-        //         return apiResponse.errorMessage(res, 400, "Failed to Generate Resume, Please try again later");
-        //     }
-
-        //     const url = `http://localhost:3000/resumes/${fileName}`;
-        //     return apiResponse.successResponse(res, "Resume Generated Successfully", { url });
-        // });
-        //  }
-
-        console.log("h7")
-
-        return res.send("Else case !")
+                });
+            try{
+                const page = await browser.newPage();
+              
+        
+                await page.setUserAgent(
+                    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36'
+                );
+               
+                await page.setContent(resumeHTML, {   waitUntil: 'networkidle2',
+                });
+                console.log("HTML content loaded into page");
+                
+                await page.pdf({
+                    path: filePath,
+                    format: 'A4',
+                    printBackground: true,
+                    margin: {
+                        top: '10mm',
+                        right: '10mm',
+                        bottom: '10mm',
+                        left: '10mm',
+                    },
+                });
 
 
+                await browser.close(); 
 
-    } catch (error) {
+                console.log("PDF generated successfully");
+        
+                const pdfLink = `https://prb-vqqd.onrender.com/${fileName}`;
+                return apiResponse.successResponse(res, 'Resume Generated Successfully', { pdfLink });
+
+
+            } catch (err) {
+                console.error("Error generating PDF:", err);
+                return apiResponse.errorMessage(res, 400, "Failed to Generate Resume, Please try again later");
+            } finally {
+                console.log("Browser instance closed");
+            }
+        }
+        
+        } catch (error) {
         console.log(error);
         return apiResponse.errorMessage(res, 400, "Something Went Wrong")
     }
 }
+

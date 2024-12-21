@@ -17,41 +17,43 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage }).single('signature'); 
+const upload = multer({
+    storage,
+    fileFilter: (req, file, cb) => {
+        console.log("File being uploaded:", file);
+        cb(null, true); 
+    },
+}).single('signature');
+
+
 export const uploadSignatures = async (req: Request, res: Response) => {
     upload(req, res, async (err: any) => {
         if (err) {
-            console.log(err);
+            console.log("Upload error:", err);
             return apiResponse.errorMessage(res, 400, 'Error uploading file');
         }
-
-        // const userId = req.body.user_id;
-        const file:any = req.file;
-        // if (!userId || !file) {
-        //     console.log(userId, file);
-        //     return apiResponse.errorMessage(res, 400, "User id and signature file are required");
-        // }
-
-        // const [rows]: any = await pool.query('SELECT id FROM users WHERE id = ?', [userId]);
-
-        // if (rows.length === 0) {
-        //     return res.status(404).json({ message: 'User not found' });
-        // }
-
+    
+        const file = req.file;
+        if (!file) {
+            console.log("File upload issue: req.file is undefined");
+            return apiResponse.errorMessage(res, 400, "No file uploaded");
+        }
+    
         const signatureUrl = `/uploads/signatures/${file.filename}`;
         try {
             const [result] = await pool.query(
-                'INSERT INTO user_signatures (user_id, signature_url, type) VALUES (?, ?, ?)',
-                [null, signatureUrl, "signature_url"]
+                'INSERT INTO user_signatures ( signature_url, type) VALUES (?, ?)',
+                [ signatureUrl, "signature_url"]
             );
             return apiResponse.successResponse(res, "Signature uploaded successfully", {
                 signature: signatureUrl
             });
         } catch (error) {
-            console.log(error);
+            console.log("Error uploading signature:", error);
             return apiResponse.errorMessage(res, 400, "Something went wrong");
         }
     });
+    
 };
 
 export default uploadSignatures;
