@@ -7,6 +7,9 @@ import resumeRouter from "./controller/resume";
 import settingRouter from "./controller/setting";
 import promptsRouter from "./controller/prompts";
 import uploadSignatures from "./controller/uploads";
+import dashboardRouter from "./controller/dashboard";
+
+
 
 const appRoute = Router();
 
@@ -17,5 +20,6 @@ appRoute.use('/resume', resumeRouter);
 appRoute.use('/setting', settingRouter);
 appRoute.use('/prompts', promptsRouter);
 appRoute.use('/upload', uploadSignatures);
+appRoute.use('/dashboard', dashboardRouter);
 
 export default appRoute;

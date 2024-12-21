@@ -40,7 +40,7 @@ export const addResume = async (req: Request, res: Response) => {
 
         if (resume.length === 0) return apiResponse.errorMessage(res, 400, "Resume Not Found");
 
-        return apiResponse.successResponse(res, "Resume Added Successfully", { id: resumeId });
+        return apiResponse.successResponse(res, "Resume Added", { id: resumeId });
     } catch (error) {
         console.log(error);
         return apiResponse.errorMessage(res, 400, "Something Went Wrong");

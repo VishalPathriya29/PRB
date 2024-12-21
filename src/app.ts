@@ -11,6 +11,14 @@ import path from 'path'
 import cron from "node-cron";
 import * as cronFn from "./apis/app/controller/cronJobs/packageCronJob";
 
+
+const corsOptions ={
+    origin: "http://localhost:3000",
+    // origin:process.env.BASE_URL, //Access-Control-Allow-Origin
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200
+}
+
 export default (app: Express) => {
 
 
@@ -18,7 +26,7 @@ export default (app: Express) => {
     app.use('/uploads/signatures', express.static(path.join(__dirname, '../uploads/signatures')));
     app.use(express.json());
     app.use(express.urlencoded({extended: true, limit: '50mb'}));
-    app.use(cors());
+    app.use(cors(corsOptions));
     app.use(compression());
     app.use(helmet());
     // app.use(morgan('dev'));
@@ -53,6 +61,7 @@ export default (app: Express) => {
         if(err){ 
             res.status(500).json({
                 status: false, 
+                
                 message: "Something went wrong",
                 error : err 
             });

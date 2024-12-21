@@ -3,18 +3,17 @@ import 'dotenv/config';
 
 let dbConfig;
 if (process.env.ENVIRONMENT === 'development') {
+    console.log("development");
     dbConfig = {
         host: "localhost",
         user: "root",
         password: "",
-        database: "todo_resume",
-        // connectTimeout: 10000,
+        database: "todo",
     };
 } else {
     dbConfig = {
         host: process.env.DB_HOST,
         user: process.env.DB_USER,
-        // port: 23621,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
         connectTimeout: 10000,
@@ -23,17 +22,15 @@ if (process.env.ENVIRONMENT === 'development') {
 const pool = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
-    // port: 23621,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    // port: process.env.DB_PORT,
-    // connectTimeout: 10000,
+    port: 14120,
 });
 
 pool.getConnection((err, connection) => {
     if (err) throw err;
     console.log("Database connected successfully");
     connection.release();
-});
+}); 
 
 export default pool.promise();
